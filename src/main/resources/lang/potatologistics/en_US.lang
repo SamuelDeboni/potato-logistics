@@ -1,0 +1,11 @@
+item.potatologistics.potato.name=Potato
+item.potatologistics.wrench.name=Wrench
+
+tile.potatologistics.block.potato.name=Potato Block
+tile.potatologistics.block.potato.desc=Don't thrust him
+
+tile.potatologistics.pipe.name=Pipe
+tile.potatologistics.pipe.desc=It does not fit a Italian
+
+tile.potatologistics.directional_pipe.name=Directional Pipe
+tile.potatologistics.directional_pipe.desc=Shiny

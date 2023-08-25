@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "potatologistics",
+  "version": "${version}",
+
+  "name": "Potato Logistics",
+  "description": "Maybe better than BC",
+  "authors": [
+    "Samuel Deboni"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "CC0-1.0",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+        "deboni.potatologistics.PotatoLogisticsMod"
+    ]
+  },
+  "mixins": [
+      "potatologistics.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3"
+  },
+  "suggests": {
+  }
+}
