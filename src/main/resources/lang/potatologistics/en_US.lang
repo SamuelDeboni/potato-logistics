@@ -1,11 +1,15 @@
 item.potatologistics.potato.name=Potato
 item.potatologistics.wrench.name=Wrench
+item.potatologistics.auto_basket.name=Auto Basket
 
 tile.potatologistics.block.potato.name=Potato Block
 tile.potatologistics.block.potato.desc=Don't thrust him
 
 tile.potatologistics.pipe.name=Pipe
 tile.potatologistics.pipe.desc=It does not fit a Italian
+
+tile.potatologistics.block.filter.name=Filter
+tile.potatologistics.block.filter.desc=It works like magic
 
 tile.potatologistics.directional_pipe.name=Directional Pipe
 tile.potatologistics.directional_pipe.desc=Shiny

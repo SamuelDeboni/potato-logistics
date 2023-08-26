@@ -69,7 +69,7 @@ public class BlockPipe extends BlockTileEntity {
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         ItemStack heldItem = player.getHeldItem();
-        if (heldItem != null && heldItem.itemID == PotatoLogisticsMod.wrench.id) {
+        if (heldItem != null && heldItem.itemID == PotatoLogisticsMod.itemWrench.id) {
             int meta = world.getBlockMetadata(x, y, z);
             int type = meta & 3;
             type = (type + 1) % 3;
