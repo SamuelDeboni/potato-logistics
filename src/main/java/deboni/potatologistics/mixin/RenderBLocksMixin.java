@@ -132,6 +132,7 @@ public abstract class RenderBLocksMixin {
             if(te instanceof TileEntityPipe
                     || type != 0 && te instanceof IInventory
                     || Direction.getDirectionById(i) == Direction.UP && nid == PotatoLogisticsMod.blockAutoBasket.id
+                    || nid == PotatoLogisticsMod.blockBlockBreaker.id
             ) {
                 block.setBlockBounds(coord[0], coord[1], coord[2], coord[3], coord[4], coord[5]);
                 if (te instanceof TileEntityPipe) {

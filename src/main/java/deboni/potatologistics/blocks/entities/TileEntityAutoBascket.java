@@ -2,10 +2,8 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
-import net.minecraft.client.render.RenderBlocks;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.entity.TileEntityBasket;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.player.EntityPlayer;
@@ -78,31 +76,30 @@ public class TileEntityAutoBascket extends TileEntity {
     }
 
     public void givePlayerAllItems(World world, EntityPlayer player) {
-        ArrayList<TileEntityAutoBascket.BasketEntry> toRemove = new ArrayList<>();
-        for (Map.Entry<TileEntityAutoBascket.BasketEntry, Integer> entry : this.contents.entrySet()) {
-            int numItems;
-            int stackSize;
-            TileEntityAutoBascket.BasketEntry be = entry.getKey();
-            for (numItems = entry.getValue().intValue(); numItems > 0; numItems -= stackSize) {
-                int maxStackSize;
-                stackSize = maxStackSize = be.getItem().getItemStackLimit();
-                int remainingItems = numItems - maxStackSize;
-                if (remainingItems >= 0) continue;
-                stackSize = numItems;
-                if (player.inventory.addItemStackToInventory(new ItemStack(be.id, stackSize, be.metadata, be.tag))) continue;
-                break;
-            }
-            this.contents.put(be, numItems);
-            if (numItems > 0) continue;
-            toRemove.add(be);
-        }
-        for (TileEntityAutoBascket.BasketEntry basketEntry : toRemove) {
-            this.contents.remove(basketEntry);
-        }
-        this.worldObj.notifyBlockChange(this.xCoord, this.yCoord, this.zCoord, Block.basket.id);
-        this.updateNumUnits();
-    }
+        List<BasketEntry> toRemove = new ArrayList<>();
+        Iterator var4 = this.contents.entrySet().iterator();
 
+        while(var4.hasNext()) {
+            Map.Entry entry = (Map.Entry)var4.next();
+            BasketEntry basketEntry = (BasketEntry)entry.getKey();
+            ItemStack basketEntryStack = new ItemStack(basketEntry.id, (Integer)entry.getValue(), basketEntry.metadata, basketEntry.tag);
+            player.inventory.insertItem(basketEntryStack, true);
+            this.contents.put(basketEntry, basketEntryStack.stackSize);
+            if (basketEntryStack.stackSize <= 0) {
+                toRemove.add(basketEntry);
+            }
+        }
+
+        var4 = toRemove.iterator();
+
+        while(var4.hasNext()) {
+            BasketEntry entry = (BasketEntry)var4.next();
+            this.contents.remove(entry);
+        }
+
+        this.updateNumUnits();
+        this.worldObj.notifyBlockChange(this.xCoord, this.yCoord, this.zCoord, Block.basket.id);
+    }
     public ItemStack removeOneItem() {
         TileEntityAutoBascket.BasketEntry firstKey = null;
         int itemCount = 0;
@@ -139,7 +136,7 @@ public class TileEntityAutoBascket extends TileEntity {
             CompoundTag itemTag = (CompoundTag)itemsTag.tagAt(i);
             TileEntityAutoBascket.BasketEntry entry = TileEntityAutoBascket.BasketEntry.read(itemTag);
             short count = itemTag.getShort("Count");
-            this.contents.put(entry, Integer.valueOf(count));
+            this.contents.put(entry, (int) count);
         }
         this.updateNumUnits();
     }
@@ -169,7 +166,7 @@ public class TileEntityAutoBascket extends TileEntity {
     }
 
     private boolean importItemStack(ItemStack stack) {
-        TileEntityAutoBascket.BasketEntry entry = new TileEntityAutoBascket.BasketEntry(stack.itemID, stack.getMetadata(), stack.tag);
+        TileEntityAutoBascket.BasketEntry entry = new TileEntityAutoBascket.BasketEntry(stack.itemID, stack.getMetadata(), stack.getData());
         int sizeUnits = this.getItemSizeUnits(stack.getItem());
         int freeUnits = this.getMaxUnits() - this.numUnitsInside;
         int itemsToTake = Math.min(freeUnits / sizeUnits, stack.stackSize);

@@ -1,9 +1,6 @@
 package deboni.potatologistics;
 
-import deboni.potatologistics.blocks.BlockAutoBasket;
-import deboni.potatologistics.blocks.BlockFilter;
-import deboni.potatologistics.blocks.BlockPipe;
-import deboni.potatologistics.blocks.BlockPotato;
+import deboni.potatologistics.blocks.*;
 import deboni.potatologistics.blocks.entities.TileEntityAutoBascket;
 import deboni.potatologistics.blocks.entities.TileEntityFilter;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
@@ -29,6 +26,7 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Block blockDirectionalPipe;
     public static Block blockFilter;
     public static Block blockAutoBasket;
+    public static Block blockBlockBreaker;
 
     @Override
     public void onInitialize() {
@@ -56,9 +54,15 @@ public class PotatoLogisticsMod implements ModInitializer {
         blockAutoBasket = new BlockBuilder(MOD_ID)
                 .setTopTexture(4, 9)
                 .setBottomTexture("auto_basket_bottom.png")
-                .setSides("auto_basket_sides.png")
+                .setSideTextures("auto_basket_sides.png")
                 .setLightOpacity(0)
                 .build(new BlockAutoBasket("block.auto_basket", blockNum++, Material.cloth));
+
+        blockBlockBreaker = new BlockBuilder(MOD_ID)
+                .setSideTextures(14, 3)
+                .setBottomTexture("block_breaker.png")
+                .setTopTexture("block_breaker_back.png")
+                .build(new BlockBlockBreaker("block.block_breaker", blockNum++, Material.stone));
 
         int itemNum = 16999 + 1000;
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");

@@ -3,8 +3,6 @@ package deboni.potatologistics.blocks;
 import deboni.potatologistics.blocks.entities.TileEntityFilter;
 import deboni.potatologistics.gui.ContainerFilter;
 import deboni.potatologistics.gui.GuiFilter;
-import net.minecraft.client.gui.GuiChest;
-import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.BlockTileEntity;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
@@ -14,6 +12,7 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.EnergyAPI;
+//import sunsetsatellite.energyapi.EnergyAPI;
 
 public class BlockFilter extends BlockTileEntity {
     public BlockFilter(String key, int id, Material material) {

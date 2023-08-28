@@ -13,3 +13,6 @@ tile.potatologistics.block.filter.desc=It works like magic
 
 tile.potatologistics.directional_pipe.name=Directional Pipe
 tile.potatologistics.directional_pipe.desc=Shiny
+
+tile.potatologistics.block.block_breaker.name=Block Breaker
+tile.potatologistics.block.block_breaker.desc=It break blocks

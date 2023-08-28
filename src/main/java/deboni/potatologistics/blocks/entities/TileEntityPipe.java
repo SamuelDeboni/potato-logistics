@@ -10,15 +10,15 @@ import net.minecraft.core.block.BlockBasket;
 import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityBasket;
+import net.minecraft.core.block.entity.TileEntityChest;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
+import sunsetsatellite.sunsetutils.util.IItemIO;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 class PipeStack {
     public ItemStack stack;
@@ -58,7 +58,7 @@ class PipeStack {
 }
 
 public class TileEntityPipe extends TileEntity {
-    private List<PipeStack> stacks;
+    public List<PipeStack> stacks;
     public int timer = 5;
     public int stackLimit = 1;
     public TileEntityPipe() {
@@ -86,6 +86,12 @@ public class TileEntityPipe extends TileEntity {
             l.add(stack.stack);
         }
         return l;
+    }
+
+    public boolean addToStack(ItemStack stack, Direction dir) {
+        if (!this.stacks.isEmpty()) return false;
+        this.stacks.add(new PipeStack(stack, dir));
+        return true;
     }
 
     public List<float[]> getStacksInPipePosition() {
@@ -170,7 +176,9 @@ public class TileEntityPipe extends TileEntity {
                 int nid = worldObj.getBlockId(x, y, z);
 
                 TileEntity te = worldObj.getBlockTileEntity(x, y, z);
-                if (te instanceof IInventory) {
+                if (te instanceof IItemIO) {
+
+                } else if (te instanceof IInventory) {
                     IInventory inventory = (IInventory) te;
                     String inventoryName = inventory.getInvName();
 
@@ -240,8 +248,8 @@ public class TileEntityPipe extends TileEntity {
                 List<IInventory> inventories = new ArrayList<>(6);
                 //List<IInventory> furnaces = new ArrayList<>(6);
                 List<Direction> inventoriesDirection = new ArrayList<>(6);
-
                 List<Direction> directions = new ArrayList<>(6);
+
                 for (int i = 0; i < offsets.length; i++) {
                     int x = xCoord + offsets[i][0];
                     int y = yCoord + offsets[i][1];
@@ -258,9 +266,8 @@ public class TileEntityPipe extends TileEntity {
                         }
                     } else if (te instanceof IInventory) {
                         IInventory inventory = (IInventory) te;
-                        String inventoryName = inventory.getInvName();
 
-                        if (Objects.equals(inventoryName, "Chest")) {
+                        if (inventory instanceof TileEntityChest) {
                             inventory = BlockChest.getInventory(worldObj, x, y ,z);
                         }
 
@@ -274,71 +281,12 @@ public class TileEntityPipe extends TileEntity {
                 boolean hasInsertedInChest = false;
                 if (!inventories.isEmpty()) {
                     int idx = (int)(Math.random() * (double) inventories.size());
-
                     IInventory inventory = inventories.get(idx);
-                    int inventorySize = inventory.getSizeInventory();
-                    String inventoryName = inventory.getInvName();
-
-                    if (inventoryName == "Chest" || inventoryName == "Trap" || inventoryName == "Filter") {
-                        int j = 0;
-                        ItemStack chestStack;
-                        while (j < inventorySize) {
-                            chestStack = inventory.getStackInSlot(j);
-
-                            if (chestStack == null) {
-                                if (inventoryName != "Filter") {
-                                    inventory.setInventorySlotContents(j, stack.stack);
-                                    hasInsertedInChest = true;
-                                }
-                                break;
-                            }
-
-                            if (chestStack.itemID == stack.stack.itemID && chestStack.stackSize < chestStack.getMaxStackSize()) {
-                                chestStack.stackSize++;
-                                inventory.setInventorySlotContents(j, chestStack);
-
-                                hasInsertedInChest = true;
-                                break;
-                            }
-
-                            j++;
-                        }
-
-                    } else {
-                        Direction direction = inventoriesDirection.get(idx);
-
-                        int fuelSlot = 1;
-                        int inputSlot = 0;
-
-                        if (inventoryName == "Trommel") {
-                            fuelSlot = 4;
-                            for (; inputSlot < 3; inputSlot++) {
-                                ItemStack s = inventory.getStackInSlot(inputSlot);
-                                if (s == null || s.itemID == stack.stack.itemID && s.stackSize < s.getMaxStackSize()) break;
-                            }
-                        }
-
-                        int targetSlot = direction == Direction.UP ? fuelSlot : inputSlot;
-
-                        ItemStack furnaceStack = inventory.getStackInSlot(targetSlot);
-
-                        if (furnaceStack == null) {
-                            inventory.setInventorySlotContents(targetSlot, stack.stack);
-                            hasInsertedInChest = true;
-                        } else {
-                            int maxStackSize = furnaceStack.getMaxStackSize();
-                            if (!pipes.isEmpty()) {
-                                maxStackSize = Math.min(maxStackSize, 8);
-                            }
-
-                            if (furnaceStack.itemID == stack.stack.itemID && furnaceStack.stackSize < maxStackSize) {
-                                furnaceStack.stackSize++;
-                                inventory.setInventorySlotContents(targetSlot, furnaceStack);
-                                hasInsertedInChest = true;
-                            }
-                        }
-                    }
+                    TileEntityPipe[] pipesArray = new TileEntityPipe[pipes.size()];
+                    for (int i = 0; i < pipes.size(); i++) pipesArray[i] = pipes.get(i);
+                    hasInsertedInChest = insertOnInventory(inventory, stack.stack, inventoriesDirection.get(idx), pipesArray);
                 }
+
 
                 if (!hasInsertedInChest) {
                     if (!pipes.isEmpty()) {
@@ -348,11 +296,6 @@ public class TileEntityPipe extends TileEntity {
                         stack.direction = directions.get(idx).getOpposite();
                         pipe.stacks.add(stack);
                     } else {
-                        Direction d = stack.direction.getOpposite();
-                        int xOff = d.getOffsetX();
-                        int yOff = d.getOffsetY();
-                        int zOff = d.getOffsetZ();
-                        //worldObj.dropItem(xCoord + xOff, yCoord + yOff, zCoord + zOff, stack.stack);
                         continue;
                     }
                 }
@@ -363,5 +306,70 @@ public class TileEntityPipe extends TileEntity {
                 stack.timer--;
             }
         }
+    }
+
+    public static boolean insertOnInventory(IInventory inventory, ItemStack stack, Direction direction, TileEntityPipe[] pipes) {
+        boolean hasInserted = false;
+        int inventorySize = inventory.getSizeInventory();
+        String inventoryName = inventory.getInvName();
+
+        if (inventoryName == "Chest" || inventoryName == "Large Chest" || inventoryName == "Trap" || inventoryName == "Filter") {
+            int j = 0;
+            ItemStack chestStack;
+            while (j < inventorySize) {
+                chestStack = inventory.getStackInSlot(j);
+
+                if (chestStack == null) {
+                    if (inventoryName != "Filter") {
+                        inventory.setInventorySlotContents(j, stack);
+                        hasInserted = true;
+                    }
+                    break;
+                }
+
+                if (chestStack.itemID == stack.itemID && chestStack.stackSize < chestStack.getMaxStackSize()) {
+                    chestStack.stackSize++;
+                    inventory.setInventorySlotContents(j, chestStack);
+
+                    hasInserted = true;
+                    break;
+                }
+
+                j++;
+            }
+        } else {
+            int fuelSlot = 1;
+            int inputSlot = 0;
+
+            if (inventoryName == "Trommel") {
+                fuelSlot = 4;
+                for (; inputSlot < 3; inputSlot++) {
+                    ItemStack s = inventory.getStackInSlot(inputSlot);
+                    if (s == null || s.itemID == stack.itemID && s.stackSize < s.getMaxStackSize()) break;
+                }
+            }
+
+            int targetSlot = direction == Direction.UP ? fuelSlot : inputSlot;
+
+            ItemStack furnaceStack = inventory.getStackInSlot(targetSlot);
+
+            if (furnaceStack == null) {
+                inventory.setInventorySlotContents(targetSlot, stack);
+                hasInserted = true;
+            } else {
+                int maxStackSize = furnaceStack.getMaxStackSize();
+                if (pipes.length > 0) {
+                    maxStackSize = Math.min(maxStackSize, 8);
+                }
+
+                if (furnaceStack.itemID == stack.itemID && furnaceStack.stackSize < maxStackSize) {
+                    furnaceStack.stackSize++;
+                    inventory.setInventorySlotContents(targetSlot, furnaceStack);
+                    hasInserted = true;
+                }
+            }
+        }
+
+        return  hasInserted;
     }
 }
