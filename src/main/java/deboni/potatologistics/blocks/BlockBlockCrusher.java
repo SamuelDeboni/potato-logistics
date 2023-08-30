@@ -1,25 +1,25 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
-import net.minecraft.client.sound.SoundPoolEntry;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.BlockRotatable;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.entity.TileEntityBasket;
 import net.minecraft.core.block.entity.TileEntityChest;
 import net.minecraft.core.block.material.Material;
+import net.minecraft.core.entity.EntityLiving;
 import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
-import net.minecraft.core.sound.SoundType;
 import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
 import java.util.Random;
 
-public class BlockBlockBreaker extends BlockRotatable {
-    public BlockBlockBreaker(String key, int id, Material material) {
+public class BlockBlockCrusher extends BlockRotatable {
+    public BlockBlockCrusher(String key, int id, Material material) {
         super(key, id, material);
     }
 
@@ -34,12 +34,25 @@ public class BlockBlockBreaker extends BlockRotatable {
     }
 
     @Override
+    public void onBlockPlaced(World world, int x, int y, int z, Side side, EntityLiving entity, double sideHeight) {
+        Direction dir = entity.getPlacementDirection(side);
+        if (dir == Direction.UP || dir == Direction.DOWN) dir = dir.getOpposite();
+        if (!entity.isSneaking()) dir = dir.getOpposite();
+        world.setBlockMetadataWithNotify(x, y, z, dir.getId());
+    }
+
+    @Override
+    public void onBlockAdded(World world, int i, int j, int k) {
+        super.onBlockAdded(world, i, j, k);
+        this.setDefaultDirection(world, i, j, k);
+    }
+
+    @Override
     public void updateTick(World world, int x, int y, int z, Random rand) {
         if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z)) {
             int meta = world.getBlockMetadata(x, y, z);
-            Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta));
+            Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta)).getOpposite();
             if (dir != Direction.UP && dir != Direction.DOWN) dir = dir.getOpposite();
-
 
             int ix = x - dir.getOffsetX();
             int iy = y - dir.getOffsetY();
@@ -57,12 +70,19 @@ public class BlockBlockBreaker extends BlockRotatable {
             int tmeta = world.getBlockMetadata(tx, ty, tz);
             TileEntity te = world.getBlockTileEntity(tx, ty ,tz);
 
+
             ItemStack[] breakResult;
-            //if (te != null) {
-            breakResult = block.getBreakResult(world, EnumDropCause.PROPER_TOOL, tx, ty, tz, tmeta, te);
+            if (block.id == Block.bedrock.id) {
+            } if (block.id == Block.cobbleStone.id) {
+                breakResult = new ItemStack[1];
+                breakResult[0] = new ItemStack(Block.gravel.asItem());
+            } else if (block.id == Block.gravel.id) {
+                breakResult = new ItemStack[1];
+                breakResult[0] = new ItemStack(Block.sand.asItem());
+            } else {
+                breakResult = block.getBreakResult(world, EnumDropCause.PROPER_TOOL, tx, ty, tz, tmeta, te);
+            }
             //} else {
-                //breakResult = new ItemStack[1];
-                //breakResult[0] = new ItemStack(block.asItem());
             //}
 
             if (breakResult != null && breakResult.length > 0) {
@@ -75,7 +95,7 @@ public class BlockBlockBreaker extends BlockRotatable {
                     }
                     if (inventory != null) {
                         for (ItemStack stack : breakResult) {
-                            boolean hasInserted = TileEntityPipe.insertOnInventory(inventory, stack, dir, new TileEntityPipe[0]);
+                            boolean hasInserted = Util.insertOnInventory(inventory, stack, dir, new TileEntityPipe[0]);
                             if (!hasInserted) return;
                         }
                     }

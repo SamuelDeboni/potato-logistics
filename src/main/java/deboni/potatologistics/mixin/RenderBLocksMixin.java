@@ -5,6 +5,7 @@ import deboni.potatologistics.blocks.BlockAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.client.render.RenderBlocks;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockRotatable;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
@@ -127,12 +128,19 @@ public abstract class RenderBLocksMixin {
                 coord = coordsOpen[i];
             }
 
-            int nid  = blockAccess.getBlockId(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            int blockBreakerDirId = 0;
+            Block blockN = blockAccess.getBlock(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            int blockNMeta = blockAccess.getBlockMetadata(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            if (blockN instanceof BlockRotatable) {
+                blockBreakerDirId = BlockRotatable.getOrientation(blockNMeta);
+            }
+
+            int nid = blockAccess.getBlockId(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
             TileEntity te = blockAccess.getBlockTileEntity(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
             if(te instanceof TileEntityPipe
                     || type != 0 && te instanceof IInventory
                     || Direction.getDirectionById(i) == Direction.UP && nid == PotatoLogisticsMod.blockAutoBasket.id
-                    || nid == PotatoLogisticsMod.blockBlockBreaker.id
+                    || nid == PotatoLogisticsMod.blockBlockCrusher.id && blockBreakerDirId == i
             ) {
                 block.setBlockBounds(coord[0], coord[1], coord[2], coord[3], coord[4], coord[5]);
                 if (te instanceof TileEntityPipe) {

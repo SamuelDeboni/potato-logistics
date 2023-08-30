@@ -26,7 +26,9 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Block blockDirectionalPipe;
     public static Block blockFilter;
     public static Block blockAutoBasket;
-    public static Block blockBlockBreaker;
+    public static Block blockBlockCrusher;
+    public static Block blockBlockPlacer;
+    public static Block blockTreeChoper;
 
     @Override
     public void onInitialize() {
@@ -58,11 +60,23 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setLightOpacity(0)
                 .build(new BlockAutoBasket("block.auto_basket", blockNum++, Material.cloth));
 
-        blockBlockBreaker = new BlockBuilder(MOD_ID)
+        blockBlockCrusher = new BlockBuilder(MOD_ID)
                 .setSideTextures(14, 3)
-                .setBottomTexture("block_breaker.png")
-                .setTopTexture("block_breaker_back.png")
-                .build(new BlockBlockBreaker("block.block_breaker", blockNum++, Material.stone));
+                .setTopTexture("block_crusher_front.png")
+                .setBottomTexture("block_crusher_back.png")
+                .build(new BlockBlockCrusher("block.block_crusher", blockNum++, Material.stone));
+
+        blockBlockPlacer = new BlockBuilder(MOD_ID)
+                .setSideTextures(14, 3)
+                .setTopTexture("block_placer_front.png")
+                .setBottomTexture("block_crusher_back.png")
+                .build(new BlockBlockPlacer("block.block_placer", blockNum++, Material.stone));
+
+        blockTreeChoper = new BlockBuilder(MOD_ID)
+                .setSideTextures(14, 3)
+                .setTopTexture("tree_choper_front.png")
+                .setBottomTexture("block_crusher_back.png")
+                .build(new BlockTreeChopper("block.tree_chopper", blockNum++, Material.stone));
 
         int itemNum = 16999 + 1000;
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
@@ -84,6 +98,10 @@ public class PotatoLogisticsMod implements ModInitializer {
         RecipeHelper.Crafting.createRecipe(itemWrench, 1, new Object[]{" A ", "AA ", "  A", 'A', Item.ingotIron, 'B', Block.glass});
 
         RecipeHelper.Crafting.createRecipe(blockFilter, 1, new Object[]{"ABA", "BCB", "ABA", 'A', Block.planksOak, 'B', Item.dustRedstone, 'C', Block.mesh});
-        RecipeHelper.Crafting.createRecipe(blockAutoBasket, 1, new Object[]{"AAA", "CBC", "CCC", 'A', Item.leather, 'B', Item.dustRedstone, 'C', Item.wheat});
+        RecipeHelper.Crafting.createRecipe(itemAutoBasket, 1, new Object[]{"AAA", "CBC", "CCC", 'A', Item.leather, 'B', Item.dustRedstone, 'C', Item.wheat});
+        RecipeHelper.Crafting.createRecipe(blockBlockCrusher, 1, new Object[]{"ABA", "ECF", "ADA", 'A', Block.cobbleStone, 'B', Block.obsidian, 'C', Item.toolPickaxeDiamond, 'D', Block.pistonBaseSticky, 'E', blockPipe, 'F', Item.dustRedstone});
+        RecipeHelper.Crafting.createRecipe(blockBlockPlacer, 1, new Object[]{"ADA", "ACA", "ABA", 'A', Block.cobbleStone, 'B', blockPipe, 'C', Item.dustRedstone, 'D', Block.pistonBase});
+        RecipeHelper.Crafting.createRecipe(blockTreeChoper, 1, new Object[]{"ABA", "ECF", "ADA", 'A', Block.cobbleStone, 'B', Block.obsidian, 'C', Item.toolAxeDiamond, 'D', Block.pistonBaseSticky, 'E', blockPipe, 'F', Item.dustRedstone});
+
     }
 }

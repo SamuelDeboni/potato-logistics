@@ -12,7 +12,6 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.EnergyAPI;
-//import sunsetsatellite.energyapi.EnergyAPI;
 
 public class BlockFilter extends BlockTileEntity {
     public BlockFilter(String key, int id, Material material) {

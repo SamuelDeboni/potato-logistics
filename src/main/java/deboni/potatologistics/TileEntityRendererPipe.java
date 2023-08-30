@@ -43,6 +43,16 @@ public class TileEntityRendererPipe extends TileEntityRenderer<TileEntityPipe> {
             itemEntity.item = stack;
 
             double yOffset = stack.itemID < Block.blocksList.length ? 0.1 : 0.3;
+            if (stack.itemID == Block.saplingOak.id
+                    || stack.itemID == Block.saplingPine.id
+                    || stack.itemID == Block.saplingBirch.id
+                    || stack.itemID == Block.saplingCherry.id
+                    || stack.itemID == Block.saplingOakRetro.id
+                    || stack.itemID == Block.saplingEucalyptus.id
+            ) {
+                yOffset = 0.3;
+            }
+
             itemEntityRenderer.doRenderItem(itemEntity, x + pos[0], y + pos[1] - yOffset, z + pos[2], 0, 0);
         }
     }

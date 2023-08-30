@@ -14,5 +14,11 @@ tile.potatologistics.block.filter.desc=It works like magic
 tile.potatologistics.directional_pipe.name=Directional Pipe
 tile.potatologistics.directional_pipe.desc=Shiny
 
-tile.potatologistics.block.block_breaker.name=Block Breaker
-tile.potatologistics.block.block_breaker.desc=It break blocks
+tile.potatologistics.block.block_crusher.name=Block Crusher
+tile.potatologistics.block.block_crusher.desc=It crushes blocks
+
+tile.potatologistics.block.block_placer.name=Block Placer
+tile.potatologistics.block.block_placer.desc=It will rePlace your job
+
+tile.potatologistics.block.tree_chopper.name=Tree Chopper
+tile.potatologistics.block.tree_chopper.desc=
