@@ -73,9 +73,9 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .build(new BlockBlockPlacer("block.block_placer", blockNum++, Material.stone));
 
         blockTreeChoper = new BlockBuilder(MOD_ID)
-                .setSideTextures(14, 3)
+                .setSideTextures("iron_machine_block.png")
                 .setTopTexture("tree_choper_front.png")
-                .setBottomTexture("block_crusher_back.png")
+                .setBottomTexture("iron_machine_out.png")
                 .build(new BlockTreeChopper("block.tree_chopper", blockNum++, Material.stone));
 
         int itemNum = 16999 + 1000;
