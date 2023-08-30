@@ -2,6 +2,7 @@ package deboni.potatologistics.blocks;
 
 import deboni.potatologistics.Util;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
+import deboni.potatologistics.blocks.entities.TileEntiyTreeChopper;
 import net.minecraft.core.block.*;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityChest;
@@ -12,15 +13,50 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
+import net.minecraft.core.util.helper.Sides;
 import net.minecraft.core.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockTreeChopper extends BlockRotatable {
+public class BlockTreeChopper extends BlockTileEntityRotatable {
+
     public BlockTreeChopper(String key, int id, Material material) {
         super(key, id, material);
+    }
+
+    private void setTreeChopperDefaultDirection(World world, int x, int y, int z) {
+        if (!world.isClientSide) {
+            int l = world.getBlockId(x, y, z - 1);
+            int i1 = world.getBlockId(x, y, z + 1);
+            int j1 = world.getBlockId(x - 1, y, z);
+            int k1 = world.getBlockId(x + 1, y, z);
+            byte byte0 = 3;
+            if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1]) {
+                byte0 = 3;
+            }
+
+            if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l]) {
+                byte0 = 2;
+            }
+
+            if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1]) {
+                byte0 = 5;
+            }
+
+            if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1]) {
+                byte0 = 4;
+            }
+
+            world.setBlockMetadataWithNotify(x, y, z, byte0);
+        }
+    }
+
+    @Override
+    public int getBlockTextureFromSideAndMetadata(Side side, int meta) {
+        int index = Sides.orientationLookUp[6 * meta + side.getId()];
+        return this.atlasIndices[index];
     }
 
     @Override
@@ -34,17 +70,19 @@ public class BlockTreeChopper extends BlockRotatable {
     }
 
     @Override
-    public void onBlockPlaced(World world, int x, int y, int z, Side side, EntityLiving entity, double sideHeight) {
-        Direction dir = entity.getPlacementDirection(side);
-        if (dir == Direction.UP || dir == Direction.DOWN) dir = dir.getOpposite();
-        if (!entity.isSneaking()) dir = dir.getOpposite();
-        world.setBlockMetadataWithNotify(x, y, z, dir.getId());
+    public boolean isOpaqueCube() {
+        return false;
     }
 
     @Override
     public void onBlockAdded(World world, int i, int j, int k) {
         super.onBlockAdded(world, i, j, k);
-        this.setDefaultDirection(world, i, j, k);
+        this.setTreeChopperDefaultDirection(world, i, j, k);
+    }
+
+    @Override
+    protected TileEntity getNewBlockEntity() {
+        return new TileEntiyTreeChopper();
     }
 
     private List<ItemStack> breakBlock(World world, int x, int y, int z, int depth) {
@@ -73,12 +111,12 @@ public class BlockTreeChopper extends BlockRotatable {
         for (int i = 0; i < 6; i++) {
             Direction dir = Direction.getDirectionById(i);
             List<ItemStack> res = breakBlock(world, x + dir.getOffsetX(), y + dir.getOffsetY(), z + dir.getOffsetZ(), depth + 1);
-            if (res != null && res.size() > 0) {
+            if (res != null && !res.isEmpty()) {
                 list.addAll(res);
             }
         }
 
-        if (removed && breakResult != null && breakResult.length > 0) {
+        if (removed && breakResult != null) {
             for (ItemStack r: breakResult) list.add(r.copy());
             return list;
         }
@@ -111,7 +149,7 @@ public class BlockTreeChopper extends BlockRotatable {
 
             TileEntity outTe = world.getBlockTileEntity(ix, iy, iz) ;
 
-            if (breakResult != null && breakResult.size() > 0) {
+            if (!breakResult.isEmpty()) {
                 if (outTe instanceof IInventory) {
                     IInventory inventory;
                     if (outTe instanceof TileEntityChest) {

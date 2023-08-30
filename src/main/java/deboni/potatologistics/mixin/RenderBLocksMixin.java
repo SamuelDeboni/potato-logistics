@@ -76,13 +76,50 @@ public abstract class RenderBLocksMixin {
     @Unique
     private static boolean renderTreeChopper(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {
         int meta = blockAccess.getBlockMetadata(x, y, z);
-        Direction pipeDirection = Direction.getDirectionById(meta & 7);
 
-        PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(0.1f, 0.8f, 0.45f, 0.9f, 1.0f, 0.55f);
+        Direction direction = Direction.getDirectionById(meta & 7);
+        float pixelSize = 1.0f / 16.0f;
+        float halfPixelSize = pixelSize * 0.5f;
+
+        float offset = pixelSize * 6;
+        float size = 1.0f;
+        float min = 0.5f - size * 0.5f;
+        float max = 0.5f + size * 0.5f;
+
+        if (direction == Direction.NORTH) {
+            block.setBlockBounds(0.0f, 0.0f, pixelSize, 1.0f, 1.0f, 1.0f);
+
+            PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(
+                    pixelSize * 2, 0.5f, min - offset,
+                    1.0f - pixelSize * 2, 0.5f, max - offset
+            );
+        } else if (direction == Direction.SOUTH) {
+            block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f - pixelSize);
+
+            PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(
+                    pixelSize * 2, 0.5f, min + offset,
+                    1.0f - pixelSize * 2, 0.5f, max + offset
+            );
+        } else if (direction == Direction.EAST) {
+            block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f - pixelSize, 1.0f, 1.0f);
+
+            PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(
+                    min + offset, 0.5f, pixelSize * 2,
+                    max + offset, 0.5f, 1.0f - pixelSize * 2
+            );
+        } else {
+            block.setBlockBounds(pixelSize, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+
+            PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(
+                    min - offset, 0.5f, pixelSize * 2,
+                    max - offset, 0.5f, 1.0f - pixelSize * 2
+            );
+        }
+
         renderblocks.renderStandardBlock(PotatoLogisticsMod.blockTreeChopperSaw, x, y, z);
-
-        block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 0.8f, 1.0f);
         renderblocks.renderStandardBlock(block, x, y, z);
+
+        block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
         return true;
     }

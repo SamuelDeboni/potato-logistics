@@ -38,6 +38,8 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Block blockIronMachineBlock;
     public static Block blockSteelMachineBlock;
 
+    public static Block blockTestAreaMaker;
+
     @Override
     public void onInitialize() {
         LOGGER.info("PotatoLogistics initialized.");
@@ -84,6 +86,7 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setSideTextures("iron_machine_block.png")
                 .setTopTexture("tree_choper_front.png")
                 .setBottomTexture("iron_machine_out.png")
+                .setLightOpacity(0)
                 .build(new BlockTreeChopper("tree_chopper", blockNum++, Material.metal));
 
         blockTreeChopperSaw = new BlockBuilder(MOD_ID)
@@ -97,6 +100,10 @@ public class PotatoLogisticsMod implements ModInitializer {
         blockSteelMachineBlock = new BlockBuilder(MOD_ID)
                 .setTextures("steel_machine_block.png")
                 .build(new Block("steel_machine_block", blockNum++, Material.metal));
+
+        blockTestAreaMaker = new BlockBuilder(MOD_ID)
+                .setTextures("potato.png")
+                .build(new BlockTestAreaMaker("test_area_maker", blockNum++, Material.metal));
 
         int itemNum = 16999 + 1000;
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
