@@ -1,24 +1,41 @@
 item.potatologistics.potato.name=Potato
-item.potatologistics.wrench.name=Wrench
-item.potatologistics.auto_basket.name=Auto Basket
+item.potatologistics.potato.desc=Not an evil AI
 
-tile.potatologistics.block.potato.name=Potato Block
-tile.potatologistics.block.potato.desc=Don't thrust him
+item.potatologistics.wrench.name=Wrench
+item.potatologistics.wrench.name=You can change pipes
+
+item.potatologistics.auto_basket.name=Auto Basket
+item.potatologistics.auto_basket.desc=Automate item collection
+
+tile.potatologistics.potato.name=Potato Block
+tile.potatologistics.potato.desc=Don't thrust him
+
+tile.potatologistics.iron_gear.name=Iron Gear
+tile.potatologistics.iron_gear.desc=TODO
+
+tile.potatologistics.iron_gear.name=Steel Gear
+tile.potatologistics.iron_gear.desc=TODO
 
 tile.potatologistics.pipe.name=Pipe
 tile.potatologistics.pipe.desc=It does not fit a Italian
 
-tile.potatologistics.block.filter.name=Filter
-tile.potatologistics.block.filter.desc=It works like magic
+tile.potatologistics.filter.name=Filter
+tile.potatologistics.filter.desc=It works like magic
 
 tile.potatologistics.directional_pipe.name=Directional Pipe
 tile.potatologistics.directional_pipe.desc=Shiny
 
-tile.potatologistics.block.block_crusher.name=Block Crusher
-tile.potatologistics.block.block_crusher.desc=It crushes blocks
+tile.potatologistics.block_crusher.name=Block Crusher
+tile.potatologistics.block_crusher.desc=It crushes blocks
 
-tile.potatologistics.block.block_placer.name=Block Placer
-tile.potatologistics.block.block_placer.desc=It will rePlace your job
+tile.potatologistics.block_placer.name=Block Placer
+tile.potatologistics.block_placer.desc=It will rePlace your job
 
-tile.potatologistics.block.tree_chopper.name=Tree Chopper
-tile.potatologistics.block.tree_chopper.desc=
+tile.potatologistics.tree_chopper.name=Tree Chopper
+tile.potatologistics.tree_chopper.desc=TODO
+
+tile.potatologistics.iron_machine_block.name=Iron Machine Block
+tile.potatologistics.iron_machine_block.desc=TODO
+
+tile.potatologistics.steel_machine_block.name=Steel Machine Block
+tile.potatologistics.steel_machine_block.desc=TODO

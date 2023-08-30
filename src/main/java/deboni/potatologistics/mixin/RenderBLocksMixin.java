@@ -7,6 +7,7 @@ import net.minecraft.client.render.RenderBlocks;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockRotatable;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.block.material.Material;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
@@ -17,6 +18,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import turniplabs.halplibe.helper.TextureHelper;
+import turniplabs.halplibe.util.TextureHandler;
 
 
 @Mixin(
@@ -43,6 +46,8 @@ public abstract class RenderBLocksMixin {
             cir.setReturnValue(render((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
         } else if (PotatoLogisticsMod.blockAutoBasket != null && PotatoLogisticsMod.blockAutoBasket.id == block.id) {
             cir.setReturnValue(renderBlockAutoBasket(((RenderBlocks)(Object)this), block, x, y, z));
+        } else if (PotatoLogisticsMod.blockTreeChoper != null && PotatoLogisticsMod.blockTreeChoper.id == block.id) {
+            cir.setReturnValue(renderTreeChopper((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
         }
     }
 
@@ -66,6 +71,19 @@ public abstract class RenderBLocksMixin {
             renderblocks.renderTopFace(block, x, (float)(y - 1) + 0.0625f + 0.0625f * (float)height, z, Block.texCoordToIndex(5, 8));
         }
         block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+        return true;
+    }
+    @Unique
+    private static boolean renderTreeChopper(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {
+        int meta = blockAccess.getBlockMetadata(x, y, z);
+        Direction pipeDirection = Direction.getDirectionById(meta & 7);
+
+        PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(0.1f, 0.8f, 0.45f, 0.9f, 1.0f, 0.55f);
+        renderblocks.renderStandardBlock(PotatoLogisticsMod.blockTreeChopperSaw, x, y, z);
+
+        block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 0.8f, 1.0f);
+        renderblocks.renderStandardBlock(block, x, y, z);
+
         return true;
     }
 

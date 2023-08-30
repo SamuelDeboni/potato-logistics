@@ -87,6 +87,11 @@ public class BlockTreeChopper extends BlockRotatable {
     }
 
     @Override
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+
+    @Override
     public void updateTick(World world, int x, int y, int z, Random rand) {
         if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z)) {
             int meta = world.getBlockMetadata(x, y, z);

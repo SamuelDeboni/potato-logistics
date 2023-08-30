@@ -6,6 +6,7 @@ import deboni.potatologistics.blocks.entities.TileEntityFilter;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import deboni.potatologistics.items.Potato;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.client.render.Texture;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.item.Item;
@@ -21,6 +22,9 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Item itemWrench;
 
     public static Item itemAutoBasket;
+    public static Item itemIronGear;
+    public static Item itemSteelGear;
+
     public static Block blockPotato;
     public static Block blockPipe;
     public static Block blockDirectionalPipe;
@@ -29,6 +33,10 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Block blockBlockCrusher;
     public static Block blockBlockPlacer;
     public static Block blockTreeChoper;
+    public static Block blockTreeChopperSaw;
+
+    public static Block blockIronMachineBlock;
+    public static Block blockSteelMachineBlock;
 
     @Override
     public void onInitialize() {
@@ -38,7 +46,7 @@ public class PotatoLogisticsMod implements ModInitializer {
         //potatoBlock = BlockHelper.createBlock(MOD_ID, new Block("crop.potato", blockNum++, Material.plant), "potato.png", "potato.png", null, 0.0f, 0.0f, 0.0f);
         blockPotato = new BlockBuilder(MOD_ID)
                 .setTextures("potato.png")
-                .build(new BlockPotato("block.potato", blockNum++, Material.wood));
+                .build(new BlockPotato("potato", blockNum++, Material.wood));
         blockPipe = new BlockBuilder(MOD_ID)
                 .setTextures("pipe.png")
                 .setLightOpacity(0)
@@ -51,38 +59,54 @@ public class PotatoLogisticsMod implements ModInitializer {
         blockFilter = new BlockBuilder(MOD_ID)
                 .setTextures("block_filter.png")
                 .setLightOpacity(0)
-                .build(new BlockFilter("block.filter", blockNum++, Material.wood));
+                .build(new BlockFilter("filter", blockNum++, Material.wood));
 
         blockAutoBasket = new BlockBuilder(MOD_ID)
                 .setTopTexture(4, 9)
                 .setBottomTexture("auto_basket_bottom.png")
                 .setSideTextures("auto_basket_sides.png")
                 .setLightOpacity(0)
-                .build(new BlockAutoBasket("block.auto_basket", blockNum++, Material.cloth));
+                .build(new BlockAutoBasket("auto_basket", blockNum++, Material.cloth));
 
         blockBlockCrusher = new BlockBuilder(MOD_ID)
                 .setSideTextures(14, 3)
                 .setTopTexture("block_crusher_front.png")
                 .setBottomTexture("block_crusher_back.png")
-                .build(new BlockBlockCrusher("block.block_crusher", blockNum++, Material.stone));
+                .build(new BlockBlockCrusher("block_crusher", blockNum++, Material.stone));
 
         blockBlockPlacer = new BlockBuilder(MOD_ID)
                 .setSideTextures(14, 3)
                 .setTopTexture("block_placer_front.png")
                 .setBottomTexture("block_crusher_back.png")
-                .build(new BlockBlockPlacer("block.block_placer", blockNum++, Material.stone));
+                .build(new BlockBlockPlacer("block_placer", blockNum++, Material.stone));
 
         blockTreeChoper = new BlockBuilder(MOD_ID)
                 .setSideTextures("iron_machine_block.png")
                 .setTopTexture("tree_choper_front.png")
                 .setBottomTexture("iron_machine_out.png")
-                .build(new BlockTreeChopper("block.tree_chopper", blockNum++, Material.stone));
+                .build(new BlockTreeChopper("tree_chopper", blockNum++, Material.metal));
+
+        blockTreeChopperSaw = new BlockBuilder(MOD_ID)
+                .setTextures("tree_chopper_saw.png")
+                .build(new BlockTreeChopper("tree_chopper_saw", blockNum++, Material.metal));
+
+        blockIronMachineBlock = new BlockBuilder(MOD_ID)
+                .setTextures("iron_machine_block.png")
+                .build(new Block("iron_machine_block", blockNum++, Material.metal));
+
+        blockSteelMachineBlock = new BlockBuilder(MOD_ID)
+                .setTextures("steel_machine_block.png")
+                .build(new Block("steel_machine_block", blockNum++, Material.metal));
 
         int itemNum = 16999 + 1000;
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
         itemWrench = ItemHelper.createItem(MOD_ID, new Item("Wrench", itemNum++), "wrench", "wrench.png");
         itemWrench.setMaxStackSize(1);
         itemAutoBasket = ItemHelper.createItem(MOD_ID, new ItemPlaceable("Auto Basket", itemNum++, blockAutoBasket), "auto_basket", "auto_basket.png");
+
+        itemIronGear = ItemHelper.createItem(MOD_ID, new Item("Iron Gear", itemNum++), "iron_gear", "iron_gear.png");
+        itemSteelGear = ItemHelper.createItem(MOD_ID, new Item("Steel Gear", itemNum++), "steel_gear", "steel_gear.png");
+
 
         EntityHelper.createSpecialTileEntity(TileEntityPipe.class, new TileEntityRendererPipe(), "pipe.tile");
         EntityHelper.createTileEntity(TileEntityFilter.class, "filter.tile");
