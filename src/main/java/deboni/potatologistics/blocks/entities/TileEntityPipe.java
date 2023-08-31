@@ -16,11 +16,14 @@ import java.util.*;
 
 public class TileEntityPipe extends TileEntity {
     public List<PipeStack> stacks;
-    public int timer = 5;
-    public int stackLimit = 1;
+    public int stackTimer = 6;
     public TileEntityPipe() {
         stacks = new ArrayList<>(16);
     }
+
+    private int timer = 0;
+    public int timerLen = 2;
+    public int stackLimit = 16;
 
     private static final int[][] offsets = {
             { 0, -1,  0},
@@ -47,22 +50,24 @@ public class TileEntityPipe extends TileEntity {
 
     public boolean addToStack(ItemStack stack, Direction dir) {
         if (!this.stacks.isEmpty()) return false;
-        this.stacks.add(new PipeStack(stack, dir));
+        this.stacks.add(new PipeStack(stack, dir, stackTimer));
         return true;
     }
 
     public List<float[]> getStacksInPipePosition() {
         List<float[]> l = new ArrayList<>(this.stacks.size());
+        int i = 0;
         for (PipeStack stack : stacks) {
             float[] pos = new float[3];
             float xof = stack.direction.getOffsetX();
             float yof = stack.direction.getOffsetY();
             float zof = stack.direction.getOffsetZ();
 
-            pos[0] = 0.5f + xof * (stack.timer / 5.0f);
-            pos[1] = 0.5f + yof * (stack.timer / 5.0f);
-            pos[2] = 0.5f + zof * (stack.timer / 5.0f);
+            pos[0] = 0.5f + xof * (stack.timer / (float)stackTimer);
+            pos[1] = 0.5f + yof * (stack.timer / (float)stackTimer);
+            pos[2] = 0.5f + zof * (stack.timer / (float)stackTimer);
             l.add(pos);
+            i++;
         }
         return l;
     }
@@ -112,12 +117,9 @@ public class TileEntityPipe extends TileEntity {
     @Override
     public void updateEntity() {
         super.updateEntity();
-        timer--;
 
         if (!stacks.isEmpty()) worldObj.markBlockNeedsUpdate(this.xCoord, this.yCoord, this.zCoord);
-          //if (timer > 0) return;
 
-        timer = 5;
 
         int meta = getBlockMetadata();
 
@@ -125,22 +127,32 @@ public class TileEntityPipe extends TileEntity {
         boolean isDirectional = (meta & (1 << 2)) != 0;
         Direction pipeDirection = Direction.getDirectionById(meta >> 3).getOpposite();
 
-        if (type == 1 && stacks.size() < this.stackLimit) {
+        if (type == 1 && stacks.size() < this.stackLimit && timer <= 0) {
             for (int i = 0; i < offsets.length; i++) {
                 int x = xCoord + offsets[i][0];
                 int y = yCoord + offsets[i][1];
                 int z = zCoord + offsets[i][2];
 
-                PipeStack inventoryStack = Util.getItemFromInventory(worldObj, x, y, z, Direction.getDirectionById(i));
+                PipeStack inventoryStack = Util.getItemFromInventory(worldObj, x, y, z, Direction.getDirectionById(i), this.stackTimer);
                 if (inventoryStack != null) {
                     stacks.add(inventoryStack);
                     break;
                 }
             }
+
+            timer = timerLen;
         }
+
+        timer--;
 
         for (int stackindex = 0; stackindex < stacks.size(); stackindex++) {
             PipeStack stack = stacks.get(stackindex);
+            if (stack == null || stack.stack == null) {
+                stacks.remove(stackindex);
+                stackindex--;
+                continue;
+            }
+
             if (stack.timer <= 0) {
                 List<TileEntityPipe> pipes = new ArrayList<>(6);
                 List<IInventory> inventories = new ArrayList<>(6);
@@ -185,12 +197,11 @@ public class TileEntityPipe extends TileEntity {
                     hasInsertedInChest = Util.insertOnInventory(inventory, stack.stack, inventoriesDirection.get(idx), pipesArray);
                 }
 
-
                 if (!hasInsertedInChest) {
                     if (!pipes.isEmpty()) {
                         int idx = (int) (Math.random() * (double) pipes.size());
                         TileEntityPipe pipe = pipes.get(idx);
-                        stack.timer = 5;
+                        stack.timer = stackTimer;
                         stack.direction = directions.get(idx).getOpposite();
                         pipe.stacks.add(stack);
                     } else {

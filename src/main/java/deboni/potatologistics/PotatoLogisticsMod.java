@@ -4,6 +4,7 @@ import deboni.potatologistics.blocks.*;
 import deboni.potatologistics.blocks.entities.TileEntityAutoBascket;
 import deboni.potatologistics.blocks.entities.TileEntityFilter;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
+import deboni.potatologistics.blocks.entities.TileEntiyTreeChopper;
 import deboni.potatologistics.items.Potato;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.render.Texture;
@@ -118,6 +119,7 @@ public class PotatoLogisticsMod implements ModInitializer {
         EntityHelper.createSpecialTileEntity(TileEntityPipe.class, new TileEntityRendererPipe(), "pipe.tile");
         EntityHelper.createTileEntity(TileEntityFilter.class, "filter.tile");
         EntityHelper.createTileEntity(TileEntityAutoBascket.class, "auto_basket.tile");
+        EntityHelper.createTileEntity(TileEntiyTreeChopper.class, "tree_chopper.tile");
 
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 1, new Object[]{Item.clay, Item.dustSugar, Item.dustGlowstone});
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 9, new Object[]{blockPotato});

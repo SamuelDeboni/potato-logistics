@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.Util;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import deboni.potatologistics.blocks.entities.TileEntiyTreeChopper;
@@ -62,7 +63,7 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
         if (blockId > 0 && Block.blocksList[blockId].canProvidePower()) {
-            boolean flag = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
+            boolean flag = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockGettingPowered(x, y, z);
             if (flag) {
                 world.scheduleBlockUpdate(x, y, z, this.id, 0);
             }
@@ -85,44 +86,15 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
         return new TileEntiyTreeChopper();
     }
 
-    private List<ItemStack> breakBlock(World world, int x, int y, int z, int depth) {
-        ItemStack[] breakResult = null;
-
-        if (depth > 128) return null;
-
-        Block block = world.getBlock(x, y, z);
-        if (block == null) return null;
-
-        if (block instanceof BlockLog) {
-            breakResult = new ItemStack[1];
-            breakResult[0] = new ItemStack(block.asItem());
-        } else if (block instanceof BlockLeavesBase) {
-            //breakResult = block.getBreakResult(world, EnumDropCause.WORLD, x, y, z, world.getBlockMetadata(x, y, z), null);
-            block.dropBlockWithCause(world, EnumDropCause.WORLD, x, y, z, world.getBlockMetadata(x, y, z), null);
-        } else {
-            return null;
+    @Override
+    public void onBlockRemoval(World world, int x, int y, int z) {
+        TileEntity te = world.getBlockTileEntity(x, y, z);
+        if (te instanceof TileEntiyTreeChopper) {
+            ((TileEntiyTreeChopper) te).dropItems();
         }
-
-        world.playSoundEffect(2001, x, y, z, block.id);
-        boolean removed = world.setBlockWithNotify(x, y, z, 0);
-
-        List<ItemStack> list = new ArrayList<>();
-
-        for (int i = 0; i < 6; i++) {
-            Direction dir = Direction.getDirectionById(i);
-            List<ItemStack> res = breakBlock(world, x + dir.getOffsetX(), y + dir.getOffsetY(), z + dir.getOffsetZ(), depth + 1);
-            if (res != null && !res.isEmpty()) {
-                list.addAll(res);
-            }
-        }
-
-        if (removed && breakResult != null) {
-            for (ItemStack r: breakResult) list.add(r.copy());
-            return list;
-        }
-
-        return null;
+        super.onBlockRemoval(world, x, y, z);
     }
+
 
     @Override
     public boolean renderAsNormalBlock() {
@@ -131,44 +103,10 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
 
     @Override
     public void updateTick(World world, int x, int y, int z, Random rand) {
-        if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z)) {
-            int meta = world.getBlockMetadata(x, y, z);
-            Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta)).getOpposite();
-            if (dir != Direction.UP && dir != Direction.DOWN) dir = dir.getOpposite();
-
-            int ix = x - dir.getOffsetX();
-            int iy = y - dir.getOffsetY();
-            int iz = z - dir.getOffsetZ();
-
-            int tx = x + dir.getOffsetX();
-            int ty = y + dir.getOffsetY();
-            int tz = z + dir.getOffsetZ();
-
-            List<ItemStack> breakResult = this.breakBlock(world, tx, ty, tz, 0);
-            if (breakResult == null) return;
-
-            TileEntity outTe = world.getBlockTileEntity(ix, iy, iz) ;
-
-            if (!breakResult.isEmpty()) {
-                if (outTe instanceof IInventory) {
-                    IInventory inventory;
-                    if (outTe instanceof TileEntityChest) {
-                        inventory = BlockChest.getInventory(world, ix, iy, iz);
-                    } else {
-                        inventory = (IInventory) outTe;
-                    }
-                    if (inventory != null) {
-                        for (ItemStack stack : breakResult) {
-                            boolean hasInserted = Util.insertOnInventory(inventory, stack, dir, new TileEntityPipe[0]);
-                            if (!hasInserted) return;
-                        }
-                    }
-                } else {
-                    for (ItemStack stack : breakResult) {
-                        world.dropItem(ix, iy, iz, stack);
-                    }
-                }
-            }
+        if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockGettingPowered(x, y, z)) {
+            TileEntiyTreeChopper te = (TileEntiyTreeChopper) world.getBlockTileEntity(x, y, z);
+            //te.breakTree();
+            te.blocksToBreak.clear();
         }
     }
 }

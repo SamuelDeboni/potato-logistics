@@ -9,10 +9,10 @@ public class PipeStack {
     public Direction direction;
     public int timer = 0;
 
-    public PipeStack(ItemStack stack, Direction direction) {
+    public PipeStack(ItemStack stack, Direction direction, int timer) {
         this.stack = stack;
         this.direction = direction;
-        this.timer = 5;
+        this.timer = timer;
     }
 
     public PipeStack() {

@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class Util {
 
-    public static PipeStack getItemFromInventory(World world, int x, int y, int z, Direction dir) {
+    public static PipeStack getItemFromInventory(World world, int x, int y, int z, Direction dir, int stackTimer) {
         PipeStack returnStack = null;
 
         TileEntity te = world.getBlockTileEntity(x, y, z);
@@ -48,7 +48,7 @@ public class Util {
                 if (stack != null && j > 0) {
                     stack.stackSize--;
 
-                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir);
+                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
                     if (stack.stackSize <= 0) stack = null;
                     inventory.setInventorySlotContents(j - 1, stack);
                     return returnStack;
@@ -61,7 +61,7 @@ public class Util {
 
                 if (stack != null && j > 0) {
                     stack.stackSize--;
-                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir);
+                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
                     if (stack.stackSize <= 0) stack = null;
                     inventory.setInventorySlotContents(j - 1, stack);
                     return returnStack;
@@ -70,7 +70,7 @@ public class Util {
                 ItemStack stack = inventory.getStackInSlot(2);
                 if (stack != null) {
                     stack.stackSize--;
-                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir);
+                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
                     if (stack.stackSize <= 0) stack = null;
                     inventory.setInventorySlotContents(2, stack);
                 }
@@ -78,7 +78,7 @@ public class Util {
         } else if (te instanceof TileEntityAutoBascket && dir == Direction.UP) {
             ItemStack stack = ((TileEntityAutoBascket)te).removeOneItem();
             if (stack != null) {
-                returnStack = new PipeStack(stack, dir);
+                returnStack = new PipeStack(stack, dir, stackTimer);
             }
         }
 

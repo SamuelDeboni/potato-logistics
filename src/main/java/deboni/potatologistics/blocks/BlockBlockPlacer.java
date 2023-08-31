@@ -71,7 +71,7 @@ public class BlockBlockPlacer extends BlockRotatable {
             ItemStack blockToPlace = null;
 
             if (inTe instanceof IInventory) {
-                PipeStack pipeStack = Util.getItemFromInventory(world, ix, iy, iz, dir);
+                PipeStack pipeStack = Util.getItemFromInventory(world, ix, iy, iz, dir, 2);
                 if (pipeStack != null) blockToPlace = pipeStack.stack;
             } else if (inTe instanceof TileEntityPipe) {
                 // TODO
