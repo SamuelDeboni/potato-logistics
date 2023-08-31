@@ -56,7 +56,6 @@ public class TileEntityPipe extends TileEntity {
 
     public List<float[]> getStacksInPipePosition() {
         List<float[]> l = new ArrayList<>(this.stacks.size());
-        int i = 0;
         for (PipeStack stack : stacks) {
             float[] pos = new float[3];
             float xof = stack.direction.getOffsetX();
@@ -67,7 +66,6 @@ public class TileEntityPipe extends TileEntity {
             pos[1] = 0.5f + yof * (stack.timer / (float)stackTimer);
             pos[2] = 0.5f + zof * (stack.timer / (float)stackTimer);
             l.add(pos);
-            i++;
         }
         return l;
     }

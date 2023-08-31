@@ -23,6 +23,7 @@ import java.util.List;
 public class TileEntiyTreeChopper extends TileEntityEnergyConductor {
     public List<ItemStack> stacks = new ArrayList<>();
     public List<int[]> blocksToBreak = new ArrayList<>();
+    public boolean isActive = false;
 
     public TileEntiyTreeChopper() {
         this.setCapacity(3000);
@@ -141,11 +142,13 @@ public class TileEntiyTreeChopper extends TileEntityEnergyConductor {
     public void updateEntity() {
         super.updateEntity();
 
-        PotatoLogisticsMod.LOGGER.info("Energy is: " + this.energy + " blocks to break count: " + blocksToBreak.size());
+        //PotatoLogisticsMod.LOGGER.info("Energy is: " + this.energy + " blocks to break count: " + blocksToBreak.size());
 
         if (!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && !worldObj.isBlockGettingPowered(xCoord, yCoord, zCoord)) {
+            isActive = false;
             return;
         }
+        isActive = true;
         breakTree();
 
         if (stacks.isEmpty()) return;

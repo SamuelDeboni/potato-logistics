@@ -3,6 +3,7 @@ package deboni.potatologistics.mixin;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.BlockAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
+import deboni.potatologistics.blocks.entities.TileEntiyTreeChopper;
 import net.minecraft.client.render.RenderBlocks;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockRotatable;
@@ -81,7 +82,12 @@ public abstract class RenderBLocksMixin {
         float pixelSize = 1.0f / 16.0f;
         float halfPixelSize = pixelSize * 0.5f;
 
-        float offset = pixelSize * 6;
+        float offset = pixelSize * 2;
+        TileEntity te = world.getBlockTileEntity(x, y, z);
+        if (te instanceof TileEntiyTreeChopper && ((TileEntiyTreeChopper)te).isActive) {
+            offset = pixelSize * 6;
+        }
+
         float size = 1.0f;
         float min = 0.5f - size * 0.5f;
         float max = 0.5f + size * 0.5f;
