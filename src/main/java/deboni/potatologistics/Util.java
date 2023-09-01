@@ -8,6 +8,7 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import sunsetsatellite.sunsetutils.util.Connection;
 import sunsetsatellite.sunsetutils.util.IItemIO;
 
 import java.util.Objects;
@@ -18,8 +19,23 @@ public class Util {
         PipeStack returnStack = null;
 
         TileEntity te = world.getBlockTileEntity(x, y, z);
-        if (te instanceof IItemIO) {
+        if (te instanceof IItemIO && te instanceof IInventory) {
+            sunsetsatellite.sunsetutils.util.Direction sdir = sunsetsatellite.sunsetutils.util.Direction.getDirectionFromSide(dir.getId()).getOpposite();
+            IItemIO itemIo = (IItemIO) te;
+            IInventory inventory = (IInventory) itemIo;
 
+            Connection con = itemIo.getItemIOForSide(sdir);
+            if (con == Connection.OUTPUT || con == Connection.BOTH) {
+                int index = itemIo.getActiveItemSlotForSide(sdir);
+
+                ItemStack stack = inventory.getStackInSlot(index);
+                if (stack != null) {
+                    stack.stackSize--;
+                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
+                    if (stack.stackSize <= 0) stack = null;
+                    inventory.setInventorySlotContents(index, stack);
+                }
+            }
         } else if (te instanceof IInventory) {
             IInventory inventory = (IInventory) te;
             String inventoryName = inventory.getInvName();
@@ -89,6 +105,7 @@ public class Util {
         boolean hasInserted = false;
         int inventorySize = inventory.getSizeInventory();
         String inventoryName = inventory.getInvName();
+
 
         if (inventoryName == "Chest" || inventoryName == "Large Chest" || inventoryName == "Trap" || inventoryName == "Filter") {
             int j = 0;
