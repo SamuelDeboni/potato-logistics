@@ -15,6 +15,7 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemPlaceable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sunsetsatellite.energyapi.EnergyAPI;
 import turniplabs.halplibe.helper.*;
 
 public class PotatoLogisticsMod implements ModInitializer {
@@ -151,7 +152,20 @@ public class PotatoLogisticsMod implements ModInitializer {
         RecipeHelper.Crafting.createRecipe(itemAutoBasket, 1, new Object[]{"AAA", "CBC", "CCC", 'A', Item.leather, 'B', Item.dustRedstone, 'C', Item.wheat});
         RecipeHelper.Crafting.createRecipe(blockBlockCrusher, 1, new Object[]{"ABA", "ECF", "ADA", 'A', Block.cobbleStone, 'B', Block.obsidian, 'C', Item.toolPickaxeDiamond, 'D', Block.pistonBaseSticky, 'E', blockPipe, 'F', Item.dustRedstone});
         RecipeHelper.Crafting.createRecipe(blockBlockPlacer, 1, new Object[]{"ADA", "ACA", "ABA", 'A', Block.cobbleStone, 'B', blockPipe, 'C', Item.dustRedstone, 'D', Block.pistonBase});
-        RecipeHelper.Crafting.createRecipe(blockTreeChoper, 1, new Object[]{"ABA", "ECF", "ADA", 'A', Block.cobbleStone, 'B', Block.obsidian, 'C', Item.toolAxeDiamond, 'D', Block.pistonBaseSticky, 'E', blockPipe, 'F', Item.dustRedstone});
 
+        RecipeHelper.Crafting.createRecipe(blockTreeChoper, 1, new Object[]{"AAA", "BCD", "AEA", 'A', Item.ingotIron, 'B', Item.toolAxeDiamond, 'C', blockIronMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
+
+        RecipeHelper.Crafting.createRecipe(itemIronGear, 1, new Object[]{" A ", "A A", " A ", 'A', Item.ingotIron});
+        RecipeHelper.Crafting.createRecipe(itemSteelGear, 1, new Object[]{" A ", "A A", " A ", 'A', Item.ingotSteel});
+
+        RecipeHelper.Crafting.createRecipe(blockIronMachineBlock, 1, new Object[]{"AAA", "B B", "AAA", 'A', Item.ingotIron, 'B', itemIronGear});
+        RecipeHelper.Crafting.createRecipe(blockSteelMachineBlock, 1, new Object[]{"AAA", "B B", "AAA", 'A', Item.ingotSteel, 'B', itemSteelGear});
+
+        if (EnergyAPI.generator != null) {
+            RecipeHelper.Crafting.createRecipe(EnergyAPI.generator, 1, new Object[]{"AAA", "ABA", "ACA", 'A', Item.ingotIron, 'B', blockIronMachineBlock, 'C', Block.furnaceStoneIdle});
+        }
+        if (EnergyAPI.wire != null) {
+            RecipeHelper.Crafting.createRecipe(EnergyAPI.wire, 1, new Object[]{"   ", "ABA", "   ", 'A', Item.ingotIron, 'B', Item.dustRedstone});
+        }
     }
 }
