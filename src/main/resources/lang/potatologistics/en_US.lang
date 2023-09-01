@@ -39,3 +39,5 @@ tile.potatologistics.iron_machine_block.desc=TODO
 
 tile.potatologistics.steel_machine_block.name=Steel Machine Block
 tile.potatologistics.steel_machine_block.desc=TODO
+
+tile.potatologistics.mining_drill.name=Mining Drill

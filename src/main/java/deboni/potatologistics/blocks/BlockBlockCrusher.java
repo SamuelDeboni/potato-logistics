@@ -87,8 +87,6 @@ public class BlockBlockCrusher extends BlockRotatable {
             } else {
                 breakResult = block.getBreakResult(world, EnumDropCause.PROPER_TOOL, tx, ty, tz, tmeta, te);
             }
-            //} else {
-            //}
 
             if (breakResult != null && breakResult.length > 0) {
                 if (outTe instanceof IInventory) {
@@ -117,10 +115,7 @@ public class BlockBlockCrusher extends BlockRotatable {
             }
 
             world.playSoundEffect(2001, tx, ty, tz, block.id);
-            boolean removed = world.setBlockWithNotify(tx, ty, tz, 0);
-            if (removed) {
-                //block.onBlockRemoval(world, tx, ty, tz);
-            }
+            world.setBlockWithNotify(tx, ty, tz, 0);
         }
     }
 }
