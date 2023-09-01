@@ -95,7 +95,6 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
         super.onBlockRemoval(world, x, y, z);
     }
 
-
     @Override
     public boolean renderAsNormalBlock() {
         return false;
@@ -105,7 +104,6 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
     public void updateTick(World world, int x, int y, int z, Random rand) {
         if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockGettingPowered(x, y, z)) {
             TileEntiyTreeChopper te = (TileEntiyTreeChopper) world.getBlockTileEntity(x, y, z);
-            //te.breakTree();
             te.blocksToBreak.clear();
         }
     }

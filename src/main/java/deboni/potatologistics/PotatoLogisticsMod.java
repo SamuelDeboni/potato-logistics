@@ -10,6 +10,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.render.Texture;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
+import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemPlaceable;
 import org.slf4j.Logger;
@@ -53,15 +54,19 @@ public class PotatoLogisticsMod implements ModInitializer {
         blockPipe = new BlockBuilder(MOD_ID)
                 .setTextures("pipe.png")
                 .setLightOpacity(0)
+                .setHardness(0.1f)
                 .build(new BlockPipe("pipe", blockNum++, Material.glass, false));
         blockDirectionalPipe = new BlockBuilder(MOD_ID)
                 .setTextures("directional_pipe.png")
                 .setLightOpacity(0)
+                .setHardness(0.1f)
                 .build(new BlockPipe("directional_pipe", blockNum++, Material.glass, true));
 
         blockFilter = new BlockBuilder(MOD_ID)
                 .setTextures("block_filter.png")
                 .setLightOpacity(0)
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_AXE)
                 .build(new BlockFilter("filter", blockNum++, Material.wood));
 
         blockAutoBasket = new BlockBuilder(MOD_ID)
@@ -69,18 +74,23 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setBottomTexture("auto_basket_bottom.png")
                 .setSideTextures("auto_basket_sides.png")
                 .setLightOpacity(0)
+                .setHardness(0.1f)
                 .build(new BlockAutoBasket("auto_basket", blockNum++, Material.cloth));
 
         blockBlockCrusher = new BlockBuilder(MOD_ID)
                 .setSideTextures(14, 3)
                 .setTopTexture("block_crusher_front.png")
                 .setBottomTexture("block_crusher_back.png")
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockBlockCrusher("block_crusher", blockNum++, Material.stone));
 
         blockBlockPlacer = new BlockBuilder(MOD_ID)
                 .setSideTextures(14, 3)
                 .setTopTexture("block_placer_front.png")
                 .setBottomTexture("block_crusher_back.png")
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockBlockPlacer("block_placer", blockNum++, Material.stone));
 
         blockTreeChoper = new BlockBuilder(MOD_ID)
@@ -88,18 +98,25 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setTopTexture("tree_choper_front.png")
                 .setBottomTexture("iron_machine_out.png")
                 .setLightOpacity(0)
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockTreeChopper("tree_chopper", blockNum++, Material.metal));
 
         blockTreeChopperSaw = new BlockBuilder(MOD_ID)
                 .setTextures("tree_chopper_saw.png")
+                .setTags(BlockTags.NOT_IN_CREATIVE_MENU)
                 .build(new BlockTreeChopper("tree_chopper_saw", blockNum++, Material.metal));
 
         blockIronMachineBlock = new BlockBuilder(MOD_ID)
                 .setTextures("iron_machine_block.png")
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new Block("iron_machine_block", blockNum++, Material.metal));
 
         blockSteelMachineBlock = new BlockBuilder(MOD_ID)
                 .setTextures("steel_machine_block.png")
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new Block("steel_machine_block", blockNum++, Material.metal));
 
         blockTestAreaMaker = new BlockBuilder(MOD_ID)

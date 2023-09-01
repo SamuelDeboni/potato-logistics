@@ -48,6 +48,11 @@ public class BlockBlockCrusher extends BlockRotatable {
     }
 
     @Override
+    public void onBlockRemoval(World world, int x, int y, int z) {
+        super.onBlockRemoval(world, x, y, z);
+    }
+
+    @Override
     public void updateTick(World world, int x, int y, int z, Random rand) {
         if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z)) {
             int meta = world.getBlockMetadata(x, y, z);

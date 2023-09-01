@@ -16,13 +16,13 @@ import java.util.*;
 
 public class TileEntityPipe extends TileEntity {
     public List<PipeStack> stacks;
-    public int stackTimer = 6;
+    public int stackTimer = 10;
     public TileEntityPipe() {
         stacks = new ArrayList<>(16);
     }
 
     private int timer = 0;
-    public int timerLen = 2;
+    public int timerLen = 4;
     public int stackLimit = 16;
 
     private static final int[][] offsets = {

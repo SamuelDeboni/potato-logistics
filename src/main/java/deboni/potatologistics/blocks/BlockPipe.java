@@ -72,7 +72,8 @@ public class BlockPipe extends BlockTileEntity {
         if (heldItem != null && heldItem.itemID == PotatoLogisticsMod.itemWrench.id) {
             int meta = world.getBlockMetadata(x, y, z);
             int type = meta & 3;
-            type = (type + 1) % 3;
+            type--;
+            if (type < 0) type = 2;
             meta = (meta & (~0x03)) | type;
             world.setBlockMetadata(x, y, z, meta);
             world.notifyBlocksOfNeighborChange(x, y, z, this.id);
