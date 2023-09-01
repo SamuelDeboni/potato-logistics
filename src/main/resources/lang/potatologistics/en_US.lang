@@ -2,7 +2,7 @@ item.potatologistics.potato.name=Potato
 item.potatologistics.potato.desc=Not an evil AI
 
 item.potatologistics.wrench.name=Wrench
-item.potatologistics.wrench.name=You can change pipes
+item.potatologistics.wrench.desc=You can change pipes
 
 item.potatologistics.auto_basket.name=Auto Basket
 item.potatologistics.auto_basket.desc=Automate item collection
