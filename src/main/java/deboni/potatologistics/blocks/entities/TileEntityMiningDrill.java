@@ -6,6 +6,7 @@ import deboni.potatologistics.Util;
 import net.minecraft.core.block.*;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityChest;
+import net.minecraft.core.block.entity.TileEntityDispenser;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.item.ItemStack;
@@ -66,13 +67,13 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
     }
 
     private void fillBlocksToBreak() {
-        int radius = 5;
+        int radius = 10;
 
         for (int y = 2; y < yCoord; y++) {
             for (int z = zCoord - radius; z <= zCoord + radius; z++) {
                 for (int x = xCoord - radius; x <= xCoord + radius; x++) {
                     Block block = worldObj.getBlock(x, y, z);
-                    if (block == null || block.hasTag(BlockTags.IS_WATER) || block.immovable && block.id != Block.obsidian.id || block.id == Block.bedrock.id) {
+                    if (block == null || block.hasTag(BlockTags.IS_WATER) || block.hasTag(BlockTags.IS_LAVA) || block.immovable && block.id != Block.obsidian.id || block.id == Block.bedrock.id) {
                         continue;
                     }
                     blocksToBreak.add(new int[]{x, y, z});
@@ -90,7 +91,10 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
         int[] b = blocksToBreak.get(blocksToBreak.size() - 1);
 
         Block block = worldObj.getBlock(b[0], b[1], b[2]);
-        if (block == null) return;
+        if (block == null) {
+            blocksToBreak.remove(blocksToBreak.size() - 1);
+            return;
+        }
 
         ItemStack[] breakResult;
         int energyRequired = 100;

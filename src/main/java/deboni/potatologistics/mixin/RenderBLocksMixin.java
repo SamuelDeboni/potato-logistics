@@ -11,6 +11,7 @@ import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,6 +50,8 @@ public abstract class RenderBLocksMixin {
             cir.setReturnValue(renderBlockAutoBasket(((RenderBlocks)(Object)this), block, x, y, z));
         } else if (PotatoLogisticsMod.blockTreeChoper != null && PotatoLogisticsMod.blockTreeChoper.id == block.id) {
             cir.setReturnValue(renderTreeChopper((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
+        } else if (PotatoLogisticsMod.blockEnergyConnector != null && PotatoLogisticsMod.blockEnergyConnector.id == block.id) {
+            cir.setReturnValue(renderEnergyConnector((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
         }
     }
 
@@ -74,6 +77,85 @@ public abstract class RenderBLocksMixin {
         block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
         return true;
     }
+
+    private static float[] getConnectorColor(int i ) {
+        float r = 0.41f;
+        float g = 0.23f;
+        float b = 0.18f;
+        if (i % 2 == 1) {
+            r *= 1.1f;
+            g *= 1.1f;
+            b *= 1.1f;
+        }
+        if (i == 0 || i == 8) {
+            r = 0.9f;
+            g = 0.9f;
+            b = 0.9f;
+        }
+
+        return new float[]{r, g, b};
+    }
+
+    @Unique
+    private static boolean renderEnergyConnector(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {
+        int meta = blockAccess.getBlockMetadata(x, y, z);
+        Side side = Side.getSideById(meta & 7);
+        float pixelSize = 1.0f / 16.0f;
+
+        if (side == Side.TOP) {
+            for (int i = 0; i < 9; i++) {
+                float m = (i % 2 == 0) ? pixelSize * 6 : pixelSize * 5;
+                block.setBlockBounds(m, pixelSize * i, m, 1 - m, pixelSize * (i + 1), 1 - m);
+
+                float[] color = getConnectorColor(i);
+                renderblocks.renderStandardBlockWithColorMultiplier(block, x, y, z, color[0], color[1], color[2]);
+            }
+        } else if (side == Side.BOTTOM) {
+            for (int i = 0; i < 9; i++) {
+                float m = (i % 2 == 0) ? pixelSize * 6 : pixelSize * 5;
+                block.setBlockBounds(m, 1 - pixelSize * (i + 1), m, 1 - m, 1 - pixelSize * i, 1 - m);
+
+                float[] color = getConnectorColor(i);
+                renderblocks.renderStandardBlockWithColorMultiplier(block, x, y, z, color[0], color[1], color[2]);
+            }
+        } else if (side == Side.NORTH) {
+            for (int i = 0; i < 9; i++) {
+                float m = (i % 2 == 0) ? pixelSize * 6 : pixelSize * 5;
+                block.setBlockBounds(m, m, 1 - pixelSize * (i + 1), 1 - m, 1 - m, 1 - pixelSize * i);
+
+                float[] color = getConnectorColor(i);
+                renderblocks.renderStandardBlockWithColorMultiplier(block, x, y, z, color[0], color[1], color[2]);
+            }
+        } else if (side == Side.SOUTH) {
+            for (int i = 0; i < 9; i++) {
+                float m = (i % 2 == 0) ? pixelSize * 6 : pixelSize * 5;
+                block.setBlockBounds(m, m, pixelSize * i, 1 - m, 1 - m, pixelSize * (i + 1));
+
+                float[] color = getConnectorColor(i);
+                renderblocks.renderStandardBlockWithColorMultiplier(block, x, y, z, color[0], color[1], color[2]);
+            }
+        } else if (side == Side.EAST) {
+            for (int i = 0; i < 9; i++) {
+                float m = (i % 2 == 0) ? pixelSize * 6 : pixelSize * 5;
+                block.setBlockBounds(pixelSize * i, m, m,  pixelSize * (i + 1), 1 - m, 1 - m);
+
+                float[] color = getConnectorColor(i);
+                renderblocks.renderStandardBlockWithColorMultiplier(block, x, y, z, color[0], color[1], color[2]);
+            }
+        } else {
+            for (int i = 0; i < 9; i++) {
+                float m = (i % 2 == 0) ? pixelSize * 6 : pixelSize * 5;
+                block.setBlockBounds(1 - pixelSize * (i + 1), m, m, 1 - pixelSize * i, 1 - m, 1 - m);
+
+                float[] color = getConnectorColor(i);
+                renderblocks.renderStandardBlockWithColorMultiplier(block, x, y, z, color[0], color[1], color[2]);
+            }
+        }
+
+        //block.setBlockBounds(pixelSize * 5, 0, pixelSize * 5, 1 - pixelSize * 5, pixelSize * 9, 1 - pixelSize * 5);
+        return true;
+    }
+
     @Unique
     private static boolean renderTreeChopper(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {
         int meta = blockAccess.getBlockMetadata(x, y, z);

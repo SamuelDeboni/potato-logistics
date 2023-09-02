@@ -1,19 +1,103 @@
 package deboni.potatologistics;
 
 import deboni.potatologistics.blocks.entities.TileEntityAutoBascket;
+import deboni.potatologistics.blocks.entities.TileEntityEnergyConnector;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 import sunsetsatellite.sunsetutils.util.Connection;
 import sunsetsatellite.sunsetutils.util.IItemIO;
 
 import java.util.Objects;
 
 public class Util {
+    public static double[] crossProduct(double[] v0, double[] v1) {
+        double[] crossProduct = new double[3];
+        crossProduct[0] = v0[1] * v1[2] - v0[2] * v1[1];
+        crossProduct[1] = v0[2] * v1[0] - v0[0] * v1[2];
+        crossProduct[2] = v0[0] * v1[1] - v0[1] * v1[0];
+        return crossProduct;
+    }
+
+    public static void normalize(double[] v) {
+        double len = Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2] * v[2]);
+        v[0] /= len;
+        v[1] /= len;
+        v[2] /= len;
+    }
+
+    public static void draw3dLine(double width, double x1, double y1, double z1, double x2, double y2, double z2, float r, float g, float b) {
+
+        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glColor4f(r, g, b, 1);
+
+        Tessellator tessellator = Tessellator.instance;
+        double l = Math.sqrt(x2*x2 + y2*y2 + z2*x2);
+
+        Vector3f norm = new Vector3f((float)(x2 - x1), (float) (y2 - y1), (float)(z2 - z1));
+        norm.normalise(norm);
+
+        Vector3f perp = new Vector3f(1, 0, 0);
+        if (Math.abs(norm.x) > 0.9f) {
+            perp.x = 0.0f;
+            perp.y = 0.0f;
+            perp.z = 1.0f;
+        } else if (Math.abs(norm.z) > 0.9f) {
+            perp.x = 0.0f;
+            perp.y = 1.0f;
+            perp.z = 0.0f;
+        }
+
+        Vector3f up = new Vector3f(0, 0, 0) ;
+        Vector3f.cross(norm, perp, up);
+        up.normalise(up);
+
+        Vector3f right = new Vector3f();
+        Vector3f.cross(norm, up, right);
+
+        up.x *= (float) (width * 0.5);
+        up.y *= (float) (width * 0.5);
+        up.z *= (float) (width * 0.5);
+
+        right.x *= (float) (width * 0.5);
+        right.y *= (float) (width * 0.5);
+        right.z *= (float) (width * 0.5);
+
+        tessellator.startDrawing(GL11.GL_QUADS);
+
+        tessellator.addVertex(x1 - up.x, y1 - up.y, z1 - up.z);
+        tessellator.addVertex(x1 + up.x, y1 + up.y, z1 + up.z);
+        tessellator.addVertex(x2 + up.x, y2 + up.y, z2 + up.z);
+        tessellator.addVertex(x2 - up.x, y2 - up.y, z2 - up.z);
+
+        tessellator.addVertex(x1 - up.x, y1 - up.y, z1 - up.z);
+        tessellator.addVertex(x2 - up.x, y2 - up.y, z2 - up.z);
+        tessellator.addVertex(x2 + up.x, y2 + up.y, z2 + up.z);
+        tessellator.addVertex(x1 + up.x, y1 + up.y, z1 + up.z);
+
+        tessellator.addVertex(x1 - right.x, y1 - right.y, z1 - right.z);
+        tessellator.addVertex(x1 + right.x, y1 + right.y, z1 + right.z);
+        tessellator.addVertex(x2 + right.x, y2 + right.y, z2 + right.z);
+        tessellator.addVertex(x2 - right.x, y2 - right.y, z2 - right.z);
+
+        tessellator.addVertex(x1 - right.x, y1 - right.y, z1 - right.z);
+        tessellator.addVertex(x2 - right.x, y2 - right.y, z2 - right.z);
+        tessellator.addVertex(x2 + right.x, y2 + right.y, z2 + right.z);
+        tessellator.addVertex(x1 + right.x, y1 + right.y, z1 + right.z);
+
+        tessellator.draw();
+
+        GL11.glPopAttrib();
+    }
 
     public static PipeStack getItemFromInventory(World world, int x, int y, int z, Direction dir, int stackTimer) {
         PipeStack returnStack = null;
@@ -82,7 +166,7 @@ public class Util {
                     inventory.setInventorySlotContents(j - 1, stack);
                     return returnStack;
                 }
-            } else {
+            } else if (inventory.getSizeInventory() > 2){
                 ItemStack stack = inventory.getStackInSlot(2);
                 if (stack != null) {
                     stack.stackSize--;

@@ -7,6 +7,9 @@ item.potatologistics.wrench.desc=You can change pipes
 item.potatologistics.auto_basket.name=Auto Basket
 item.potatologistics.auto_basket.desc=Automate item collection
 
+item.potatologistics.energy_connector.name=Energy Connector
+item.potatologistics.wire_spool.name=Wire Spool
+
 tile.potatologistics.potato.name=Potato Block
 tile.potatologistics.potato.desc=Don't thrust him
 
@@ -41,3 +44,6 @@ tile.potatologistics.steel_machine_block.name=Steel Machine Block
 tile.potatologistics.steel_machine_block.desc=TODO
 
 tile.potatologistics.mining_drill.name=Mining Drill
+tile.potatologistics.energy_connector.name=Energy Connector
+
+tile.potatologistics.advanced_dispenser.name=Advanced Dispenser

@@ -2,6 +2,7 @@ package deboni.potatologistics;
 
 import deboni.potatologistics.blocks.*;
 import deboni.potatologistics.blocks.entities.*;
+import deboni.potatologistics.items.ItemWireSpool;
 import deboni.potatologistics.items.Potato;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.block.Block;
@@ -24,6 +25,8 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Item itemAutoBasket;
     public static Item itemIronGear;
     public static Item itemSteelGear;
+    public static Item itemEnergyConnector;
+    public static Item itemWireSpool;
 
     public static Block blockPotato;
     public static Block blockPipe;
@@ -40,6 +43,8 @@ public class PotatoLogisticsMod implements ModInitializer {
 
     public static Block blockTestAreaMaker;
     public  static Block blockMiningDrill;
+    public  static Block blockEnergyConnector;
+    public  static Block blockAdvancedDispenser;
 
     @Override
     public void onInitialize() {
@@ -93,7 +98,8 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .build(new BlockBlockPlacer("block_placer", blockNum++, Material.stone));
 
         blockTreeChoper = new BlockBuilder(MOD_ID)
-                .setSideTextures("iron_machine_block.png")
+                .setSideTextures("iron_machine_side.png")
+                .setNorthTexture("iron_machine_block.png")
                 .setTopTexture("tree_choper_front.png")
                 .setBottomTexture("iron_machine_out.png")
                 .setLightOpacity(0)
@@ -122,15 +128,31 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setTextures("potato.png")
                 .build(new BlockTestAreaMaker("test_area_maker", blockNum++, Material.metal));
 
-
         blockMiningDrill = new BlockBuilder(MOD_ID)
                 .setSideTextures("mining_drill_sides.png")
                 .setTopTexture("mining_drill_top.png")
-                .setBottomTexture("steel_machine_block.png")
+                .setBottomTexture("mining_drill_bottom.png")
                 .setLightOpacity(0)
                 .setHardness(1.5f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockMiningDrill("mining_drill", blockNum++, Material.metal));
+
+        blockEnergyConnector = new BlockBuilder(MOD_ID)
+                .setTextures("energy_connector.png")
+                .setLightOpacity(0)
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE, BlockTags.NOT_IN_CREATIVE_MENU)
+                .build(new BlockEnergyConnector("energy_connector", blockNum++, Material.metal));
+
+        blockAdvancedDispenser = new BlockBuilder(MOD_ID)
+                .setTextures("iron_machine_side.png")
+                .setTopTexture("iron_machine_block.png")
+                .setBottomTexture("iron_machine_block.png")
+                .setNorthTexture("advanced_dispenser_front.png")
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+                .build(new BlockAdvancedDispenser("advanced_dispenser", blockNum++));
+
 
         int itemNum = 16999 + 1000;
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
@@ -140,12 +162,15 @@ public class PotatoLogisticsMod implements ModInitializer {
 
         itemIronGear = ItemHelper.createItem(MOD_ID, new Item("Iron Gear", itemNum++), "iron_gear", "iron_gear.png");
         itemSteelGear = ItemHelper.createItem(MOD_ID, new Item("Steel Gear", itemNum++), "steel_gear", "steel_gear.png");
+        itemEnergyConnector = ItemHelper.createItem(MOD_ID, new ItemPlaceable("Energy Connector", itemNum++, blockEnergyConnector), "energy_connector", "energy_connector.png");
+        itemWireSpool = ItemHelper.createItem(MOD_ID, new ItemWireSpool("Wire Spool", itemNum++), "wire_spool", "wire_spool.png");
 
         EntityHelper.createSpecialTileEntity(TileEntityPipe.class, new TileEntityRendererPipe(), "pipe.tile");
         EntityHelper.createTileEntity(TileEntityFilter.class, "filter.tile");
         EntityHelper.createTileEntity(TileEntityAutoBascket.class, "auto_basket.tile");
         EntityHelper.createTileEntity(TileEntiyTreeChopper.class, "tree_chopper.tile");
         EntityHelper.createSpecialTileEntity(TileEntityMiningDrill.class, new TileEntityRendererMiningDrill(), "mining_drill.tile");
+        EntityHelper.createSpecialTileEntity(TileEntityEnergyConnector.class, new TileEntityRendererEnergyConnector(), "energy_connector.tile");
 
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 1, new Object[]{Item.clay, Item.dustSugar, Item.dustGlowstone});
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 9, new Object[]{blockPotato});
@@ -168,6 +193,8 @@ public class PotatoLogisticsMod implements ModInitializer {
 
         RecipeHelper.Crafting.createRecipe(blockIronMachineBlock, 1, new Object[]{"AAA", "B B", "AAA", 'A', Item.ingotIron, 'B', itemIronGear});
         RecipeHelper.Crafting.createRecipe(blockSteelMachineBlock, 1, new Object[]{"AAA", "B B", "AAA", 'A', Item.ingotSteel, 'B', itemSteelGear});
+
+        RecipeHelper.Crafting.createShapelessRecipe(itemWireSpool, 1, new Object[]{itemWireSpool});
 
         if (EnergyAPI.generator != null) {
             RecipeHelper.Crafting.createRecipe(EnergyAPI.generator, 1, new Object[]{"AAA", "ABA", "ACA", 'A', Item.ingotIron, 'B', blockIronMachineBlock, 'C', Block.furnaceStoneIdle});
