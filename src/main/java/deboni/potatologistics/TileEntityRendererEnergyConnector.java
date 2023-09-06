@@ -33,20 +33,30 @@ public class TileEntityRendererEnergyConnector extends TileEntityRenderer<TileEn
             double yoff = Math.log(dist + 0.15);
 
             boolean b = false;
-            for (double t = 0.0; t < 0.95; t += 0.1) {
+
+            double t_increment = 0.25 / dist;
+            for (double t = 0.0; t < 1.0 - t_increment * 0.5; t += t_increment) {
                 double tx = t * x2;
                 double ty = t * y2;
                 double tz = t * z2;
 
                 double yoff0 = -0.8*((t-0.5)*(t-0.5)) + 0.2f;
-                double yoff1 = -0.8*((t-0.4)*(t-0.4)) + 0.2f;
+                double yoff1 = -0.8*((t-0.5 + t_increment)*(t-0.5 + t_increment)) + 0.2f;
                 yoff0 *= yoff;
                 yoff1 *= yoff;
 
-                float col = b ? 1.0f : 1.5f;
                 b = !b;
+                float r_col = 1.7f;
+                float g_col = 1;
+                float b_col = 1;
+                if (b) {
+                    g_col = 1.2f;
+                    b_col = 1.2f;
+                }
 
-                Util.draw3dLine(0.05, tx, ty - yoff0 , tz, tx + x2 * 0.1, ty + y2 * 0.1 - yoff1, tz + z2 * 0.1, col, col * 0.5f, col * 0.5f);
+                Util.draw3dLine(0.05,
+                        tx, ty - yoff0 , tz,
+                        tx + x2 * t_increment, ty + y2 * t_increment - yoff1, tz + z2 * t_increment, r_col, g_col, b_col);
             }
         }
 

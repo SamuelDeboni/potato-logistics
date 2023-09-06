@@ -6,6 +6,7 @@ import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
@@ -205,7 +206,7 @@ public class Util {
                     break;
                 }
 
-                if (chestStack.itemID == stack.itemID && chestStack.stackSize < chestStack.getMaxStackSize()) {
+                if (chestStack.itemID == stack.itemID && chestStack.getMetadata() == stack.getMetadata() && chestStack.stackSize < chestStack.getMaxStackSize()) {
                     chestStack.stackSize++;
                     inventory.setInventorySlotContents(j, chestStack);
 

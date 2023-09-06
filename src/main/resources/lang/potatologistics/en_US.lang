@@ -8,7 +8,14 @@ item.potatologistics.auto_basket.name=Auto Basket
 item.potatologistics.auto_basket.desc=Automate item collection
 
 item.potatologistics.energy_connector.name=Energy Connector
+
 item.potatologistics.wire_spool.name=Wire Spool
+
+item.potatologistics.redstone_alloy.name=Redstone Alloy
+item.potatologistics.redstone_alloy.desc=Who needs copper anyway?
+
+item.potatologistics.redstone_iron_mix.name=Redstone Iron Mix
+item.potatologistics.redstone_iron_mix.desc=Try baking it
 
 tile.potatologistics.potato.name=Potato Block
 tile.potatologistics.potato.desc=Don't thrust him

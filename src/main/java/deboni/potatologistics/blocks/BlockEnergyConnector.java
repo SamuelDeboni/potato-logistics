@@ -31,6 +31,7 @@ public class BlockEnergyConnector extends BlockTileEntity {
     @Override
     public void onBlockPlaced(World world, int x, int y, int z, Side side, EntityLiving entity, double sideHeight) {
         world.setBlockMetadataWithNotify(x, y, z, side.getId());
+        ((TileEntityEnergyConnector)world.getBlockTileEntity(x, y, z)).updateMachineConnections(side.getOpposite().getDirection());
         super.onBlockPlaced(world, x, y, z, side, entity, sideHeight);
     }
 
@@ -63,6 +64,8 @@ public class BlockEnergyConnector extends BlockTileEntity {
         if (b == null) {
             world.setBlockWithNotify(x, y, z, 0);
             world.dropItem(x, y, z, new ItemStack(PotatoLogisticsMod.itemEnergyConnector));
+        } else {
+            ((TileEntityEnergyConnector) world.getBlockTileEntity(x, y, z)).updateMachineConnections(side.getOpposite().getDirection());
         }
     }
 

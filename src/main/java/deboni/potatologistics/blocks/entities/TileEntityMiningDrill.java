@@ -97,7 +97,7 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
         }
 
         ItemStack[] breakResult;
-        int energyRequired = 100;
+        int energyRequired = 128;
         TileEntity blockTe = worldObj.getBlockTileEntity(b[0], b[1], b[2]);
         breakResult = block.getBreakResult(worldObj, EnumDropCause.PROPER_TOOL, b[0], b[1], b[2], worldObj.getBlockMetadata(b[0], b[1], b[2]), blockTe);
 

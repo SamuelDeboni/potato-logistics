@@ -8,7 +8,11 @@ import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import sunsetsatellite.energyapi.api.IEnergySink;
+import sunsetsatellite.energyapi.impl.TileEntityEnergy;
 import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
+import sunsetsatellite.sunsetutils.util.Connection;
+
 
 import java.util.ArrayList;
 
@@ -44,6 +48,12 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
             con.readFromNBT(nbt);
             return con;
         }
+    }
+
+    public TileEntityEnergyConnector() {
+        setCapacity(512);
+        setEnergy(0);
+        setTransfer(32);
     }
 
     public ArrayList<Connection> connections = new ArrayList<>();
@@ -123,5 +133,47 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
         }
 
         return result;
+    }
+
+    public void updateMachineConnections(Direction dir) {
+        setConnection(sunsetsatellite.sunsetutils.util.Direction.getDirectionFromSide(dir.getId()), sunsetsatellite.sunsetutils.util.Connection.BOTH);
+    }
+
+    public void updateEntity() {
+        sunsetsatellite.sunsetutils.util.Direction[] directions = sunsetsatellite.sunsetutils.util.Direction.values();
+
+        int side = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        updateMachineConnections(Direction.getDirectionById(side).getOpposite());
+
+        {
+            sunsetsatellite.sunsetutils.util.Direction dir = sunsetsatellite.sunsetutils.util.Direction.getDirectionFromSide(side).getOpposite();
+            TileEntity facingTile = dir.getTileEntity(this.worldObj, this);
+            if (facingTile instanceof IEnergySink && !facingTile.equals(this.lastReceived)) {
+                int provided = this.provide(dir, this.getMaxProvide(), true);
+                if (provided > 0) {
+                    int received = ((IEnergySink) facingTile).receive(dir.getOpposite(), provided, true);
+                    if (received > 0) {
+                        ((IEnergySink) facingTile).receive(dir.getOpposite(), provided, false);
+                        this.provide(dir, received, false);
+                        this.lastProvided = (TileEntityEnergy) facingTile;
+                        ((TileEntityEnergy) facingTile).lastReceived = this;
+                    }
+                }
+            }
+        }
+
+        for (Connection connection: connections) {
+            TileEntity te = worldObj.getBlockTileEntity(connection.x, connection.y, connection.z);
+            if (te instanceof TileEntityEnergyConductor) {
+                TileEntityEnergyConnector connector = (TileEntityEnergyConnector) te;
+                if (this.energy > this.capacity / 2 && connector.energy < connector.capacity && this.energy > connector.energy) {
+                    int valueToTransfer = (this.energy - connector.energy) / 2;
+                    valueToTransfer = Math.min(valueToTransfer, this.maxProvide);
+                    this.energy -= valueToTransfer;
+                    connector.energy += valueToTransfer;
+                }
+            }
+        }
+
     }
 }
