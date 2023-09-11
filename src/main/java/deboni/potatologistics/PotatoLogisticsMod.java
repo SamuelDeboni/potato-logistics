@@ -178,7 +178,7 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setSideTextures("coil_block_sides.png")
                 .setHardness(2.0f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
-                .build(new Block("coil", blockNum++, Material.metal));
+                .build(new BlockCoil("coil", blockNum++, Material.metal));
 
         int itemNum = 16999 + 1000;
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
@@ -199,6 +199,7 @@ public class PotatoLogisticsMod implements ModInitializer {
         EntityHelper.createTileEntity(TileEntiyTreeChopper.class, "tree_chopper.tile");
         EntityHelper.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
         EntityHelper.createTileEntity(TileEntityFurnaceBurner.class, "furnace_burner.tile");
+        EntityHelper.createTileEntity(TileEntityCoil.class, "coil.tile");
         EntityHelper.createSpecialTileEntity(TileEntityMiningDrill.class, new TileEntityRendererMiningDrill(), "mining_drill.tile");
         EntityHelper.createSpecialTileEntity(TileEntityEnergyConnector.class, new TileEntityRendererEnergyConnector(), "energy_connector.tile");
 

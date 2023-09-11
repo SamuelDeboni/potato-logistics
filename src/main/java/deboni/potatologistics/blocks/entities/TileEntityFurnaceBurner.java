@@ -17,9 +17,7 @@ public class TileEntityFurnaceBurner extends TileEntity implements IInventory, I
         contents = new ItemStack[1];
     }
 
-    @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public int consumeFuel() {
         if (this.currentBurnTime > 0) {
             --this.currentBurnTime;
             //modifyEnergy(getEnergyYieldForItem(currentFuel));
@@ -40,6 +38,8 @@ public class TileEntityFurnaceBurner extends TileEntity implements IInventory, I
                 currentFuel = null;
             }
         }
+
+        return this.currentBurnTime > 0 ? 20 : 0;
     }
 
     public int getSizeInventory()
