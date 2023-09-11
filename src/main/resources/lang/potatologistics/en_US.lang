@@ -54,3 +54,7 @@ tile.potatologistics.mining_drill.name=Mining Drill
 tile.potatologistics.energy_connector.name=Energy Connector
 
 tile.potatologistics.advanced_dispenser.name=Advanced Dispenser
+
+tile.potatologistics.furnace_burner.name=Furnace Burner
+tile.potatologistics.stirling_engine.name=Stirling Engine
+tile.potatologistics.coil.name=Coil

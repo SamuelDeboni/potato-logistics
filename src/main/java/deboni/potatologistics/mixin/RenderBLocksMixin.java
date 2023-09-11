@@ -52,7 +52,31 @@ public abstract class RenderBLocksMixin {
             cir.setReturnValue(renderTreeChopper((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
         } else if (PotatoLogisticsMod.blockEnergyConnector != null && PotatoLogisticsMod.blockEnergyConnector.id == block.id) {
             cir.setReturnValue(renderEnergyConnector((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
+        } else if (PotatoLogisticsMod.blockStirlingEngine != null && PotatoLogisticsMod.blockStirlingEngine.id == block.id) {
+            cir.setReturnValue(renderBlockStirlingEngine((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
         }
+    }
+
+    private static boolean renderBlockStirlingEngine(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {
+        block.setBlockBounds(0, 0.0f, 0, 1, 0.5f, 1);
+        renderblocks.renderStandardBlock(block, x, y, z);
+
+        float onepix = 0.0625f;
+
+        boolean b = true;
+        for (float yf = 0.5f - onepix * 2; yf <= 1.0f; yf += onepix) {
+            if (b) {
+                block.setBlockBounds(onepix * 2, yf, onepix * 2, 1 - onepix * 2, yf + onepix, 1 - onepix * 2);
+            } else {
+                block.setBlockBounds(0, yf, 0, 1, yf + onepix, 1);
+            }
+            renderblocks.renderStandardBlock(block, x, y, z);
+
+            b = !b;
+        }
+
+        block.setBlockBounds(0, 0.0f, 0, 1, 1, 1);
+        return true;
     }
 
     @Unique
