@@ -1,33 +1,17 @@
-# Example Mod
+# Potato Logistics
 
-Template for making Babric mods for BTA!
+Pipes, item transportation, and much more...
 
-## Prerequisites
-- JDK for Java 17 ([Eclipse Temurin](https://adoptium.net/temurin/releases/) recommended)
-- IntelliJ IDEA
-- Minecraft Development plugin (Optional, but highly recommended)
+The mod is very much **WIP** and probably there will be break changes in the future, so use at your own risk.
 
-## Setup instructions
+For bug report send on #general or DM me, or send a issue on github: https://github.com/SamuelDeboni/potato-logistics/issues
 
-1. Download or clone this repository and put it somewhere.
-```
-git clone https://github.com/Turnip-Labs/bta-example-mod.git
-```
+**Dependencies**
+https://github.com/Turnip-Labs/bta-halplibe
+https://github.com/MartinSVK12/sunsetutils
+https://github.com/MartinSVK12/energyapi
 
-2. Import the project in IntelliJ IDEA, close it and open it again.
+**Credits**
+Doorknob for helping with some great textures
 
-
-3. Create a new run configuration by going in `Run > Edit Configurations`  
-   Then click on the plus icon and select Gradle. In the `Tasks and Arguments` field enter `build`  
-   Running it will build your finished jar files and put them in `build/libs/`
-
-
-4. Open `File > Settings` and head to `Build, Execution, Development > Build Tools > Gradle`  
-   Make sure `Build and run using` and `Run tests using` is set to `Gradle`
-
-
-5. Open `File > Project Structure`, select `Project` and set `Compiler output` to your project's path/out.
-
-6. **Make sure your Client and Server run configurations have `-Dfabric.gameVersion=1.7.7.0` in `VM options`!**
-
-7. Done! Now all that's left is to change every mention of `examplemod` to your own mod id. Happy modding!
+![image](https://github.com/SamuelDeboni/potato-logistics/assets/23066049/10b80702-d281-4141-aff5-3c7e440e81a1)
