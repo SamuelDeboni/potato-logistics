@@ -1,21 +1,15 @@
 package deboni.potatologistics.gui;
 
-import deboni.potatologistics.blocks.entities.TileEntityFurnaceBurner;
+import deboni.potatologistics.blocks.entities.TileEntityBurner;
 import net.minecraft.client.gui.GuiContainer;
-import net.minecraft.client.gui.GuiTooltip;
-import net.minecraft.core.lang.I18n;
 import net.minecraft.core.player.inventory.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.Color;
-import sunsetsatellite.energyapi.EnergyAPI;
-import sunsetsatellite.energyapi.template.containers.ContainerGenerator;
-import sunsetsatellite.energyapi.template.tiles.TileEntityGenerator;
 
 public class GuiBurner extends GuiContainer {
 
     public String name = "Burner";
-    public TileEntityFurnaceBurner tile;
-    public GuiBurner(InventoryPlayer inventoryPlayer, TileEntityFurnaceBurner tile) {
+    public TileEntityBurner tile;
+    public GuiBurner(InventoryPlayer inventoryPlayer, TileEntityBurner tile) {
         super(new ContainerBurner(inventoryPlayer, tile));
         this.tile = tile;
     }

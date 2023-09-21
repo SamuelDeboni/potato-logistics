@@ -13,7 +13,6 @@ import net.minecraft.core.item.ItemPlaceable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sunsetsatellite.energyapi.EnergyAPI;
-import sunsetsatellite.sunsetutils.util.Config;
 import turniplabs.halplibe.helper.*;
 
 public class PotatoLogisticsMod implements ModInitializer {
@@ -49,6 +48,7 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Block blockAdvancedDispenser;
 
     public static Block blockFurnaceBurner;
+    public static Block blockFurnaceBurnerOn;
     public static Block blockStirlingEngine;
     public static Block blockCoil;
 
@@ -166,6 +166,13 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockFurnaceBurner("furnace_burner", blockNum++, Material.metal));
 
+        blockFurnaceBurnerOn = new BlockBuilder(MOD_ID)
+                .setTopBottomTexture("iron_machine_block.png")
+                .setSideTextures("furnace_burner_on.png")
+                .setHardness(2.0f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE, BlockTags.NOT_IN_CREATIVE_MENU)
+                .build(new BlockFurnaceBurner("furnace_burner_on", blockNum++, Material.metal));
+
         blockStirlingEngine = new BlockBuilder(MOD_ID)
                 .setTextures("iron_machine_block.png")
                 .setHardness(2.0f)
@@ -198,7 +205,7 @@ public class PotatoLogisticsMod implements ModInitializer {
         EntityHelper.createTileEntity(TileEntityAutoBascket.class, "auto_basket.tile");
         EntityHelper.createTileEntity(TileEntiyTreeChopper.class, "tree_chopper.tile");
         EntityHelper.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
-        EntityHelper.createTileEntity(TileEntityFurnaceBurner.class, "furnace_burner.tile");
+        EntityHelper.createTileEntity(TileEntityBurner.class, "furnace_burner.tile");
         EntityHelper.createTileEntity(TileEntityCoil.class, "coil.tile");
         EntityHelper.createSpecialTileEntity(TileEntityMiningDrill.class, new TileEntityRendererMiningDrill(), "mining_drill.tile");
         EntityHelper.createSpecialTileEntity(TileEntityEnergyConnector.class, new TileEntityRendererEnergyConnector(), "energy_connector.tile");

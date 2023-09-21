@@ -1,13 +1,12 @@
 package deboni.potatologistics.gui;
 
-import deboni.potatologistics.blocks.entities.TileEntityFurnaceBurner;
+import deboni.potatologistics.blocks.entities.TileEntityBurner;
 import net.minecraft.core.crafting.ICrafting;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.player.inventory.slot.Slot;
 import sunsetsatellite.energyapi.template.containers.ContainerEnergy;
-import sunsetsatellite.energyapi.template.tiles.TileEntityGenerator;
 
 import java.util.Iterator;
 
@@ -17,7 +16,7 @@ public class ContainerBurner extends ContainerEnergy {
     private int currentBurnTime = 0;
     public ItemStack currentFuel;
 
-    public ContainerBurner(IInventory iInventory, TileEntityFurnaceBurner tileEntity){
+    public ContainerBurner(IInventory iInventory, TileEntityBurner tileEntity){
         tile = tileEntity;
 
         addSlot(new Slot(tileEntity,0, 80,17 + 2 * 18));
@@ -57,8 +56,8 @@ public class ContainerBurner extends ContainerEnergy {
              */
         }
 
-        this.currentBurnTime = ((TileEntityFurnaceBurner)tile).currentBurnTime;
-        this.maxBurnTime = ((TileEntityFurnaceBurner)tile).maxBurnTime;
+        this.currentBurnTime = ((TileEntityBurner)tile).currentBurnTime;
+        this.maxBurnTime = ((TileEntityBurner)tile).maxBurnTime;
     }
 
     public void updateClientProgressBar(int id, int value) {

@@ -2,6 +2,8 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
+import deboni.potatologistics.blocks.BlockFurnaceBurner;
+import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.crafting.LookupFuelFurnace;
 import net.minecraft.core.entity.player.EntityPlayer;
@@ -12,9 +14,16 @@ import sunsetsatellite.sunsetutils.util.Connection;
 import sunsetsatellite.sunsetutils.util.Direction;
 import sunsetsatellite.sunsetutils.util.IItemIO;
 
-public class TileEntityFurnaceBurner extends TileEntity implements IInventory, IItemIO {
-    public TileEntityFurnaceBurner(){
+public class TileEntityBurner extends TileEntity implements IInventory, IItemIO {
+    public int maxBurnTemperature;
+    public TileEntityBurner(){
         contents = new ItemStack[1];
+        maxBurnTemperature = 10000;
+    }
+
+    public TileEntityBurner(int maxBurnTemperature){
+        contents = new ItemStack[1];
+        this.maxBurnTemperature = maxBurnTemperature;
     }
 
     public int consumeFuel() {
@@ -39,7 +48,12 @@ public class TileEntityFurnaceBurner extends TileEntity implements IInventory, I
             }
         }
 
-        return this.currentBurnTime > 0 ? 20 : 0;
+        Block b = worldObj.getBlock(xCoord, yCoord, zCoord);
+        if (b instanceof BlockFurnaceBurner) {
+            ((BlockFurnaceBurner)b).setOn(worldObj, xCoord, yCoord, zCoord, this.currentBurnTime > 0);
+        }
+
+        return this.currentBurnTime > 0 ? this.maxBurnTemperature : 0;
     }
 
     public int getSizeInventory()

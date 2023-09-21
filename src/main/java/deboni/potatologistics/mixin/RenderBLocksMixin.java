@@ -3,6 +3,7 @@ package deboni.potatologistics.mixin;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.BlockAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
+import deboni.potatologistics.blocks.entities.TileEntityStirlingEngine;
 import deboni.potatologistics.blocks.entities.TileEntiyTreeChopper;
 import net.minecraft.client.render.RenderBlocks;
 import net.minecraft.core.block.Block;
@@ -58,19 +59,34 @@ public abstract class RenderBLocksMixin {
     }
 
     private static boolean renderBlockStirlingEngine(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {
-        block.setBlockBounds(0, 0.0f, 0, 1, 0.5f, 1);
+        float onepix = 0.0625f;
+        block.setBlockBounds(0, 0.0f, 0, 1, 0.5f - onepix, 1);
         renderblocks.renderStandardBlock(block, x, y, z);
 
-        float onepix = 0.0625f;
 
-        boolean b = true;
-        for (float yf = 0.5f - onepix * 2; yf <= 1.0f; yf += onepix) {
+        float[] heatColor = new float[3];
+        heatColor[0] = 1;
+        heatColor[1] = 1;
+        heatColor[2] = 1;
+
+        TileEntity te = world.getBlockTileEntity(x, y, z);
+        if (te instanceof TileEntityStirlingEngine) {
+            TileEntityStirlingEngine engine = (TileEntityStirlingEngine) te;
+            if (engine.temperature != 0) {
+                float t = (float) (engine.temperature - engine.minTemperature) / (float) (engine.maxTemperature - engine.minTemperature);
+                heatColor[1] = (1 - t) + t * 0.4f;
+                heatColor[2] = (1 - t) + t * 0.2f;
+            }
+        }
+
+        boolean b = false;
+        for (float yf = 0.5f - onepix * 1; yf <= 1.0f; yf += onepix) {
             if (b) {
                 block.setBlockBounds(onepix * 2, yf, onepix * 2, 1 - onepix * 2, yf + onepix, 1 - onepix * 2);
             } else {
                 block.setBlockBounds(0, yf, 0, 1, yf + onepix, 1);
             }
-            renderblocks.renderStandardBlock(block, x, y, z);
+            renderblocks.renderStandardBlockWithColorMultiplier(block, x, y, z, heatColor[0], heatColor[1], heatColor[2]);
 
             b = !b;
         }

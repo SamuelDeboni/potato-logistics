@@ -36,11 +36,18 @@ public class TileEntityRendererMiningDrill extends TileEntityRenderer<TileEntity
 
         double radius = 10.5;
 
+        double wHeight = -tileEntity.yCoord;
+
         GL11.glTranslatef(0.5f, 0.5f, 0.5f);
         Util.draw3dLine(0.1, -radius, 0, -radius, radius, 0, -radius, 0.0f, 0.0f, 2.0f);
         Util.draw3dLine(0.1, -radius, 0, -radius, -radius, 0, radius, 0.0f, 0.0f, 2.0f);
         Util.draw3dLine(0.1, radius, 0, radius, -radius, 0, radius, 0.0f, 0.0f, 2.0f);
         Util.draw3dLine(0.1, radius, 0, radius, radius, 0, -radius, 0.0f, 0.0f, 2.0f);
+
+        Util.draw3dLine(0.1, -radius, 0, -radius, -radius, wHeight, -radius, 0.0f, 0.0f, 2.0f);
+        Util.draw3dLine(0.1, -radius, 0, radius, -radius, wHeight, radius, 0.0f, 0.0f, 2.0f);
+        Util.draw3dLine(0.1, radius, 0, -radius, radius, wHeight, -radius, 0.0f, 0.0f, 2.0f);
+        Util.draw3dLine(0.1, radius, 0, radius, radius, wHeight, radius, 0.0f, 0.0f, 2.0f);
         GL11.glPopMatrix();
     }
 }
