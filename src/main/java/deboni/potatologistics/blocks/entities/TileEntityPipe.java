@@ -119,7 +119,6 @@ public class TileEntityPipe extends TileEntity {
 
         if (!stacks.isEmpty()) worldObj.markBlockNeedsUpdate(this.xCoord, this.yCoord, this.zCoord);
 
-
         int meta = getBlockMetadata();
 
         int type = meta & 0x03;

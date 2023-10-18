@@ -27,7 +27,6 @@ public class ContainerBurner extends ContainerEnergy {
             {
                 addSlot(new Slot(iInventory, i1 + j * 9 + 9, 8 + i1 * 18, 84 + j * 18));
             }
-
         }
 
         for(int k = 0; k < 9; k++)
@@ -39,13 +38,13 @@ public class ContainerBurner extends ContainerEnergy {
     @Override
     public void updateInventory() {
         //super.updateInventory();
+        /*
         Iterator var1 = this.crafters.iterator();
 
-        while(var1.hasNext()) {
+        while (var1.hasNext()) {
             Object crafter = var1.next();
             ICrafting icrafting = (ICrafting)crafter;
 
-            /*
             if (this.currentBurnTime != ((TileEntityGenerator)tile).currentBurnTime) {
                 icrafting.updateCraftingInventoryInfo(this, 1, ((TileEntityGenerator)tile).currentBurnTime);
             }
@@ -53,8 +52,8 @@ public class ContainerBurner extends ContainerEnergy {
             if (this.maxBurnTime != ((TileEntityGenerator)tile).maxBurnTime) {
                 icrafting.updateCraftingInventoryInfo(this, 3, ((TileEntityGenerator)tile).maxBurnTime);
             }
-             */
         }
+        */
 
         this.currentBurnTime = ((TileEntityBurner)tile).currentBurnTime;
         this.maxBurnTime = ((TileEntityBurner)tile).maxBurnTime;

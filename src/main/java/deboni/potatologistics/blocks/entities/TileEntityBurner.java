@@ -2,6 +2,7 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
+import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.BlockFurnaceBurner;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
@@ -29,28 +30,42 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
     public int consumeFuel() {
         if (this.currentBurnTime > 0) {
             --this.currentBurnTime;
-            //modifyEnergy(getEnergyYieldForItem(currentFuel));
         }
 
-        if (this.currentBurnTime == 0) {
-            this.maxBurnTime = this.currentBurnTime = this.getBurnTimeFromItem(this.contents[0]) / 5;
-            if (this.currentBurnTime > 0) {
-                currentFuel = this.contents[0];
-                onInventoryChanged();
-                if (this.contents[0] != null) {
-                    --this.contents[0].stackSize;
-                    if (this.contents[0].stackSize == 0) {
-                        this.contents[0] = null;
-                    }
-                }
+        boolean updated = false;
+
+        if (!this.worldObj.isClientSide) {
+            if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockGettingPowered(xCoord, yCoord, zCoord)) {
+                isPowered = true;
+                return 0;
             } else {
-                currentFuel = null;
+                isPowered = false;
+            }
+
+            if (this.currentBurnTime == 0) {
+                this.maxBurnTime = this.currentBurnTime = this.getBurnTimeFromItem(this.contents[0]) / 5;
+                if (this.currentBurnTime > 0) {
+                    currentFuel = this.contents[0];
+                    updated = true;
+                    if (this.contents[0] != null) {
+                        --this.contents[0].stackSize;
+                        if (this.contents[0].stackSize == 0) {
+                            this.contents[0] = null;
+                        }
+                    }
+                } else {
+                    currentFuel = null;
+                }
+            }
+
+            Block b = worldObj.getBlock(xCoord, yCoord, zCoord);
+            if (b instanceof BlockFurnaceBurner) {
+                ((BlockFurnaceBurner) b).setOn(worldObj, xCoord, yCoord, zCoord, this.currentBurnTime > 0);
             }
         }
 
-        Block b = worldObj.getBlock(xCoord, yCoord, zCoord);
-        if (b instanceof BlockFurnaceBurner) {
-            ((BlockFurnaceBurner)b).setOn(worldObj, xCoord, yCoord, zCoord, this.currentBurnTime > 0);
+        if (updated) {
+            this.onInventoryChanged();
         }
 
         return this.currentBurnTime > 0 ? this.maxBurnTemperature : 0;
@@ -190,6 +205,7 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
     public int maxBurnTime = 0;
     public int currentBurnTime = 0;
     public ItemStack currentFuel;
+    public boolean isPowered;
 
     @Override
     public int getActiveItemSlotForSide(Direction direction) {

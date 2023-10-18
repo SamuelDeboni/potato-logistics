@@ -35,8 +35,6 @@ public class TileEntityStirlingEngine extends TileEntity {
 
             worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
         }
-
-        PotatoLogisticsMod.LOGGER.info("temp = " + temperature);
     }
 
     @Override

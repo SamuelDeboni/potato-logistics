@@ -25,7 +25,6 @@ public class TileEntityCoil extends TileEntityEnergyConductor {
         if (te instanceof TileEntityStirlingEngine) {
             TileEntityStirlingEngine engine = (TileEntityStirlingEngine) te;
             int energyProduced = engine.consumeEnergy();
-            PotatoLogisticsMod.LOGGER.info("Energy = " + energyProduced);
             modifyEnergy(energyProduced);
         }
     }

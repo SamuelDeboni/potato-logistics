@@ -1,6 +1,8 @@
 package deboni.potatologistics.gui;
 
 import net.minecraft.client.gui.GuiContainer;
+import net.minecraft.client.gui.GuiTooltip;
+import net.minecraft.core.block.BlockFurnace;
 import net.minecraft.core.player.inventory.Container;
 import net.minecraft.core.player.inventory.IInventory;
 import org.lwjgl.opengl.GL11;
