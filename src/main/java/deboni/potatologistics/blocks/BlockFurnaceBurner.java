@@ -18,6 +18,7 @@ import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.EnergyAPI;
 import sunsetsatellite.energyapi.interfaces.mixins.IEntityPlayer;
+import sunsetsatellite.energyapi.template.tiles.TileEntityMachine;
 
 import java.util.Random;
 
@@ -28,13 +29,12 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
-        if(!world.isClientSide)
-        {
-            return true;
+        if (!world.isClientSide) {
+            TileEntityBurner tile = (TileEntityBurner) world.getBlockTileEntity(z, y, x);
+            if (tile != null) {
+                ((IEntityPlayer)player).displayGuiScreen_energyapi(tile);
+            }
         }
-
-        IInventory tile = (IInventory)world.getBlockTileEntity(x, y, z);
-        ((IEntityPlayer)player).displayGuiScreen_energyapi(tile);
 
         return true;
     }

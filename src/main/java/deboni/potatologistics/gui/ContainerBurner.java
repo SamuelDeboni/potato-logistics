@@ -60,15 +60,13 @@ public class ContainerBurner extends ContainerEnergy {
     }
 
     public void updateClientProgressBar(int id, int value) {
-        /*
         if (id == 1) {
-            ((TileEntityGenerator)tile).currentBurnTime = value;
+            ((TileEntityBurner)tile).currentBurnTime = value;
         }
 
         if (id == 3) {
-            ((TileEntityGenerator)tile).maxBurnTime = value;
+            ((TileEntityBurner)tile).maxBurnTime = value;
         }
-         */
     }
 
     @Override

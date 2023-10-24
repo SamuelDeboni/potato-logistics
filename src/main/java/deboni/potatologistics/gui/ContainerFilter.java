@@ -12,7 +12,7 @@ public class ContainerFilter extends Container {
     private final IInventory inventory;
     private final int numberOfRows;
 
-    public ContainerFilter(IInventory inventory, IInventory playerInventory) {
+    public ContainerFilter(IInventory playerInventory, IInventory inventory) {
         this.inventory = inventory;
         numberOfRows = 1;
 
