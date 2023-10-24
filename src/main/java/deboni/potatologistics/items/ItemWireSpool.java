@@ -35,7 +35,7 @@ public class ItemWireSpool extends Item {
                     int z = itemstack.getData().getInteger("z");
                     boolean connectedSuccessfully = ((TileEntityEnergyConnector) te).addConnection(x, y, z);
                     if (connectedSuccessfully) {
-                        itemstack.stackSize--;
+                        itemstack.consumeItem(entityplayer);
                     }
                     itemstack.setCustomName(this.displayName);
                 }
