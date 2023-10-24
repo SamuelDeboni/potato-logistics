@@ -14,10 +14,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sunsetsatellite.energyapi.EnergyAPI;
 import turniplabs.halplibe.helper.*;
+import turniplabs.halplibe.util.ConfigHandler;
+
+import java.util.Properties;
 
 public class PotatoLogisticsMod implements ModInitializer {
     public static final String MOD_ID = "potatologistics";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final ConfigHandler config;
+    static {
+        Properties prop = new Properties();
+        prop.setProperty("starting_block_id","1999");
+        prop.setProperty("starting_item_id","17999");
+        config = new ConfigHandler(MOD_ID,prop);
+        config.updateConfig();
+    }
     public static Item itemPotato;
     public static Item itemWrench;
 
@@ -56,7 +67,7 @@ public class PotatoLogisticsMod implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("PotatoLogistics initialized.");
 
-        int blockNum = 999 + 1000;
+        int blockNum = config.getInt("starting_block_id");
         //potatoBlock = BlockHelper.createBlock(MOD_ID, new Block("crop.potato", blockNum++, Material.plant), "potato.png", "potato.png", null, 0.0f, 0.0f, 0.0f);
         blockPotato = new BlockBuilder(MOD_ID)
                 .setTextures("potato.png")
@@ -187,7 +198,7 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockCoil("coil", blockNum++, Material.metal));
 
-        int itemNum = 16999 + 1000;
+        int itemNum = config.getInt("starting_item_id");
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
         itemWrench = ItemHelper.createItem(MOD_ID, new Item("Wrench", itemNum++), "wrench", "wrench.png");
         itemWrench.setMaxStackSize(1);
