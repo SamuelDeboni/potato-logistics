@@ -12,6 +12,8 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.EnergyAPI;
+import sunsetsatellite.energyapi.interfaces.mixins.IEntityPlayer;
+import sunsetsatellite.energyapi.template.blocks.BlockGenerator;
 
 public class BlockFilter extends BlockTileEntity {
     public BlockFilter(String key, int id, Material material) {
@@ -51,8 +53,10 @@ public class BlockFilter extends BlockTileEntity {
         if (world.isClientSide) {
             return true;
         }
-        IInventory inventory = (IInventory) world.getBlockTileEntity(x, y, z);
-        EnergyAPI.displayGui(player, new GuiFilter(inventory, player.inventory), new ContainerFilter(inventory, player.inventory), player.inventory);
+
+        IInventory tile = (IInventory)world.getBlockTileEntity(x, y, z);
+        ((IEntityPlayer)player).displayGuiScreen_energyapi(tile);
+
         return true;
     }
 }

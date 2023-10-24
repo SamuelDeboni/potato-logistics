@@ -14,8 +14,10 @@ import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityFurnace;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.player.EntityPlayer;
+import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.EnergyAPI;
+import sunsetsatellite.energyapi.interfaces.mixins.IEntityPlayer;
 
 import java.util.Random;
 
@@ -31,10 +33,9 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
             return true;
         }
 
-        TileEntityBurner tile = (TileEntityBurner) world.getBlockTileEntity(x, y, z);
-        if(tile != null) {
-            EnergyAPI.displayGui(player, new GuiBurner(player.inventory, tile), new ContainerBurner(player.inventory, tile), tile);
-        }
+        IInventory tile = (IInventory)world.getBlockTileEntity(x, y, z);
+        ((IEntityPlayer)player).displayGuiScreen_energyapi(tile);
+
         return true;
     }
 
