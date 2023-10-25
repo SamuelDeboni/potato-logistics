@@ -4,7 +4,8 @@
   "package": "deboni.potatologistics.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "RenderBlocksMixin",
+    "BlockModelRenderBlocksMixin",
+    "RenderBlocksMixin"
   ],
   "client": [
   ],
