@@ -1,6 +1,7 @@
 package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
+import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.Packet140TileEntityData;
@@ -11,6 +12,8 @@ public class TileEntityStirlingEngine extends TileEntity {
     public int maxTemperature = 1000;
     public int minTemperature = 200;
     public int maxEnergy = 16;
+    private final int serverTickRate = 10;
+    private int ticksSinceLastPacket = 0;
 
     public int consumeEnergy() {
         if (temperature > minTemperature) {
@@ -21,6 +24,7 @@ public class TileEntityStirlingEngine extends TileEntity {
 
     @Override
     public void updateEntity() {
+        ticksSinceLastPacket++;
         TileEntity te = worldObj.getBlockTileEntity(xCoord, yCoord-1, zCoord);
         if (te instanceof TileEntityBurner) {
             TileEntityBurner burner = (TileEntityBurner) te;
@@ -28,14 +32,19 @@ public class TileEntityStirlingEngine extends TileEntity {
         } else {
             targetTemperature = 0;
         }
-
         if (temperature != targetTemperature) {
             int delta = (int)Math.signum(targetTemperature - temperature) * 4;
             temperature += delta;
             temperature = Math.max(Math.min(temperature, maxTemperature), 0);
 
             worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+            sendPacket();
+        }
+    }
+    public void sendPacket(){
+        if (ticksSinceLastPacket >= serverTickRate){
             onInventoryChanged();
+            ticksSinceLastPacket = 0;
         }
     }
 
