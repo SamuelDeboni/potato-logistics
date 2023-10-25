@@ -17,6 +17,9 @@ import net.minecraft.core.item.ItemPlaceable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sunsetsatellite.energyapi.EnergyAPI;
+import sunsetsatellite.energyapi.template.containers.ContainerMachine;
+import sunsetsatellite.energyapi.template.gui.GuiMachine;
+import sunsetsatellite.energyapi.template.tiles.TileEntityMachine;
 import turniplabs.halplibe.helper.*;
 import turniplabs.halplibe.util.ConfigHandler;
 
@@ -219,11 +222,17 @@ public class PotatoLogisticsMod implements ModInitializer {
         itemRedstoneIronMix = ItemHelper.createItem(MOD_ID, new Item("Redstone Iron Mix", itemNum++), "redstone_iron_mix", "redstone_iron_mix.png");
 
         EntityHelper.createSpecialTileEntity(TileEntityPipe.class, new TileEntityRendererPipe(), "pipe.tile");
+
         EntityHelper.createTileEntity(TileEntityFilter.class, "filter.tile");
-        EntityHelper.createTileEntity(TileEntityAutoBasket.class, "auto_basket.tile");
-        EntityHelper.createTileEntity(TileEntityTreeChopper.class, "tree_chopper.tile");
-        EntityHelper.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
+        EnergyAPI.addToNameGuiMap("Filter", GuiFilter.class, TileEntityFilter.class, ContainerFilter.class);
+
         EntityHelper.createTileEntity(TileEntityBurner.class, "furnace_burner.tile");
+        EnergyAPI.addToNameGuiMap("Coal Burner", GuiBurner.class, TileEntityBurner.class, ContainerBurner.class);
+
+        EntityHelper.createTileEntity(TileEntityAutoBascket.class, "auto_basket.tile");
+        EntityHelper.createTileEntity(TileEntiyTreeChopper.class, "tree_chopper.tile");
+        EntityHelper.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
+
         EntityHelper.createTileEntity(TileEntityCoil.class, "coil.tile");
         EntityHelper.createSpecialTileEntity(TileEntityMiningDrill.class, new TileEntityRendererMiningDrill(), "mining_drill.tile");
         EntityHelper.createSpecialTileEntity(TileEntityEnergyConnector.class, new TileEntityRendererEnergyConnector(), "energy_connector.tile");
