@@ -2,7 +2,6 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
-import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.Util;
 import net.minecraft.core.block.*;
 import net.minecraft.core.block.entity.TileEntity;
@@ -13,19 +12,18 @@ import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
-import sunsetsatellite.energyapi.impl.TileEntityEnergySink;
 import sunsetsatellite.sunsetutils.util.Connection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TileEntiyTreeChopper extends TileEntityEnergyConductor {
+public class TileEntityTreeChopper extends TileEntityEnergyConductor {
     public List<ItemStack> stacks = new ArrayList<>();
     public List<int[]> blocksToBreak = new ArrayList<>();
     public boolean isActive = false;
 
-    public TileEntiyTreeChopper() {
+    public TileEntityTreeChopper() {
         this.setCapacity(3000);
         this.setEnergy(0);
         this.setTransfer(250);

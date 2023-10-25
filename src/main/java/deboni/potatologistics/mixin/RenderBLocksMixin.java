@@ -4,12 +4,11 @@ import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.BlockAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import deboni.potatologistics.blocks.entities.TileEntityStirlingEngine;
-import deboni.potatologistics.blocks.entities.TileEntiyTreeChopper;
+import deboni.potatologistics.blocks.entities.TileEntityTreeChopper;
 import net.minecraft.client.render.RenderBlocks;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockRotatable;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.material.Material;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
@@ -21,8 +20,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import turniplabs.halplibe.helper.TextureHelper;
-import turniplabs.halplibe.util.TextureHandler;
 
 
 @Mixin(
@@ -206,7 +203,7 @@ public abstract class RenderBLocksMixin {
 
         float offset = pixelSize * 2;
         TileEntity te = world.getBlockTileEntity(x, y, z);
-        if (te instanceof TileEntiyTreeChopper && ((TileEntiyTreeChopper)te).isActive) {
+        if (te instanceof TileEntityTreeChopper && ((TileEntityTreeChopper)te).isActive) {
             offset = pixelSize * 6;
         }
 

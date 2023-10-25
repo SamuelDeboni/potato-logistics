@@ -2,17 +2,13 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
-import deboni.potatologistics.PipeStack;
 import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.api.IEnergySink;
 import sunsetsatellite.energyapi.impl.TileEntityEnergy;
 import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
-import sunsetsatellite.sunsetutils.util.Connection;
-
 
 import java.util.ArrayList;
 
@@ -28,11 +24,10 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
             this.y = y;
             this.z = z;
         }
-        public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
+        public void writeToNBT(CompoundTag nbttagcompound) {
             nbttagcompound.putInt("x", x);
             nbttagcompound.putInt("y", y);
             nbttagcompound.putInt("z", z);
-            return nbttagcompound;
         }
 
         public void readFromNBT(CompoundTag nbttagcompound) {
@@ -72,10 +67,10 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
     public void writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         ListTag nbttaglist = new ListTag();
-        for (int i = 0; i < this.connections.size(); i++) {
-            if (this.connections.get(i) == null) continue;
+        for (Connection connection : this.connections) {
+            if (connection == null) continue;
             CompoundTag nbttagcompound1 = new CompoundTag();
-            this.connections.get(i).writeToNBT(nbttagcompound1);
+            connection.writeToNBT(nbttagcompound1);
             nbttaglist.addTag(nbttagcompound1);
         }
         nbttagcompound.put("connections", nbttaglist);
