@@ -229,8 +229,8 @@ public class PotatoLogisticsMod implements ModInitializer {
         EntityHelper.createTileEntity(TileEntityBurner.class, "furnace_burner.tile");
         EnergyAPI.addToNameGuiMap("Coal Burner", GuiBurner.class, TileEntityBurner.class, ContainerBurner.class);
 
-        EntityHelper.createTileEntity(TileEntityAutoBascket.class, "auto_basket.tile");
-        EntityHelper.createTileEntity(TileEntiyTreeChopper.class, "tree_chopper.tile");
+        EntityHelper.createTileEntity(TileEntityAutoBasket.class, "auto_basket.tile");
+        EntityHelper.createTileEntity(TileEntityTreeChopper.class, "tree_chopper.tile");
         EntityHelper.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
 
         EntityHelper.createTileEntity(TileEntityCoil.class, "coil.tile");
