@@ -1,8 +1,6 @@
 package deboni.potatologistics.blocks;
 
 import deboni.potatologistics.blocks.entities.TileEntityFilter;
-import deboni.potatologistics.gui.ContainerFilter;
-import deboni.potatologistics.gui.GuiFilter;
 import net.minecraft.core.block.BlockTileEntity;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
@@ -51,12 +49,9 @@ public class BlockFilter extends BlockTileEntity {
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if (!world.isClientSide) {
-            IInventory tile = (IInventory) world.getBlockTileEntity(x, y, z);
-            if (tile != null) {
-                ((IEntityPlayer) player).displayGuiScreen_energyapi(tile);
-            }
+            IInventory inventory = (IInventory) world.getBlockTileEntity(x, y, z);
+            EnergyAPI.displayGui(player, inventory);
         }
-
         return true;
     }
 }

@@ -3,28 +3,24 @@ package deboni.potatologistics.blocks.entities;
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.entity.TileEntityChest;
-import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
-import net.minecraft.core.world.World;
 
 public class TileEntityFilter extends TileEntity implements IInventory {
-    private final int inventorySize;
-    private ItemStack[] filterContents = new ItemStack[9];
+    private ItemStack[] filterContents;
 
     public TileEntityFilter(int size) {
-        this.inventorySize = size;
+        filterContents = new ItemStack[size];
     }
 
     public TileEntityFilter() {
-        this.inventorySize = 9;
+        this(9);
     }
 
     @Override
     public int getSizeInventory() {
-        return this.inventorySize;
+        return filterContents.length;
     }
 
     @Override
@@ -74,7 +70,7 @@ public class TileEntityFilter extends TileEntity implements IInventory {
         for (int i = 0; i < nbttaglist.tagCount(); ++i) {
             CompoundTag nbttagcompound1 = (CompoundTag)nbttaglist.tagAt(i);
             int j = nbttagcompound1.getByte("Slot") & 0xFF;
-            if (j < 0 || j >= this.filterContents.length) continue;
+            if (j >= this.filterContents.length) continue;
             this.filterContents[j] = ItemStack.readItemStackFromNbt(nbttagcompound1);
         }
     }

@@ -22,7 +22,7 @@ import net.minecraft.core.world.type.WorldTypes;
 
 public class BlockAdvancedDispenser
         extends BlockTileEntityRotatable {
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public BlockAdvancedDispenser(String key, int id) {
         super(key, id, Material.metal);
@@ -48,9 +48,9 @@ public class BlockAdvancedDispenser
         int j1 = world.getBlockId(i - 1, j, k);
         int k1 = world.getBlockId(i + 1, j, k);
         int byte0 = 3;
-        if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1]) {
-            byte0 = 3;
-        }
+//        if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1]) {
+//            byte0 = 3;
+//        }
         if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l]) {
             byte0 = 2;
         }

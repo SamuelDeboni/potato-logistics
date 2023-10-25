@@ -1,12 +1,7 @@
 package deboni.potatologistics;
 
 import deboni.potatologistics.blocks.entities.TileEntityMiningDrill;
-import deboni.potatologistics.blocks.entities.TileEntityPipe;
-import net.minecraft.client.render.EntityRenderDispatcher;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.entity.ItemEntityRenderer;
 import net.minecraft.client.render.tileentity.TileEntityRenderer;
-import net.minecraft.core.block.BlockDispenser;
 import net.minecraft.core.world.World;
 import org.lwjgl.opengl.GL11;
 

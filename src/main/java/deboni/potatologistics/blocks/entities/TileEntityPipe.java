@@ -8,6 +8,8 @@ import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityChest;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import sunsetsatellite.sunsetutils.util.Connection;
@@ -104,10 +106,10 @@ public class TileEntityPipe extends TileEntity {
     public void writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         ListTag nbttaglist = new ListTag();
-        for (int i = 0; i < this.stacks.size(); i++) {
-            if (this.stacks.get(i) == null) continue;
+        for (PipeStack stack : this.stacks) {
+            if (stack == null) continue;
             CompoundTag nbttagcompound1 = new CompoundTag();
-            this.stacks.get(i).writeToNBT(nbttagcompound1);
+            stack.writeToNBT(nbttagcompound1);
             nbttaglist.addTag(nbttagcompound1);
         }
         nbttagcompound.put("Items", nbttaglist);
@@ -143,11 +145,11 @@ public class TileEntityPipe extends TileEntity {
 
         timer--;
 
-        for (int stackindex = 0; stackindex < stacks.size(); stackindex++) {
-            PipeStack stack = stacks.get(stackindex);
+        for (int stackIndex = 0; stackIndex < stacks.size(); stackIndex++) {
+            PipeStack stack = stacks.get(stackIndex);
             if (stack == null || stack.stack == null) {
-                stacks.remove(stackindex);
-                stackindex--;
+                stacks.remove(stackIndex);
+                stackIndex--;
                 continue;
             }
 
@@ -246,10 +248,14 @@ public class TileEntityPipe extends TileEntity {
                 }
 
                 stacks.remove(stack);
-                stackindex--;
+                stackIndex--;
             } else {
                 stack.timer--;
             }
         }
+    }
+    @Override
+    public Packet getDescriptionPacket() {
+        return new Packet140TileEntityData(this);
     }
 }

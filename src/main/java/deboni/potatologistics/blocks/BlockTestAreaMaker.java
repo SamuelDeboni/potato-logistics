@@ -1,6 +1,5 @@
 package deboni.potatologistics.blocks;
 
-import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.EntityLiving;

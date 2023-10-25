@@ -43,7 +43,6 @@ public class BlockPipe extends BlockTileEntity {
     @Override
     public void onBlockPlaced(World world, int x, int y, int z, Side side, EntityLiving entity, double sideHeight) {
         if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
             if (isDirectional) {
                 int meta = side.getDirection().getId() << 3;
                 meta |= (1 << 2);
@@ -58,7 +57,6 @@ public class BlockPipe extends BlockTileEntity {
 
     @Override
     public void onBlockRemoval(World world, int x, int y, int z) {
-        int id = world.getBlockId(x, y, z);
         TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
         if (te != null) {
             te.dropItems();
