@@ -38,10 +38,10 @@ public class TileEntityRendererEnergyConnector extends TileEntityRenderer<TileEn
                 double ty = t * y2;
                 double tz = t * z2;
 
-                double yoff0 = -0.8*((t-0.5)*(t-0.5)) + 0.2f;
-                double yoff1 = -0.8*((t-0.5 + t_increment)*(t-0.5 + t_increment)) + 0.2f;
-                yoff0 *= yOff;
-                yoff1 *= yOff;
+                double yOff0 = -0.8*((t-0.5)*(t-0.5)) + 0.2f;
+                double yOff1 = -0.8*((t-0.5 + t_increment)*(t-0.5 + t_increment)) + 0.2f;
+                yOff0 *= yOff;
+                yOff1 *= yOff;
 
                 b = !b;
                 float r_col = 1.7f;
@@ -53,8 +53,8 @@ public class TileEntityRendererEnergyConnector extends TileEntityRenderer<TileEn
                 }
 
                 Util.draw3dLine(0.05,
-                        tx, ty - yoff0 , tz,
-                        tx + x2 * t_increment, ty + y2 * t_increment - yoff1, tz + z2 * t_increment, r_col, g_col, b_col);
+                        tx, ty - yOff0 , tz,
+                        tx + x2 * t_increment, ty + y2 * t_increment - yOff1, tz + z2 * t_increment, r_col, g_col, b_col);
             }
         }
 
