@@ -95,7 +95,6 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
             {
                 ItemStack itemstack = contents[i];
                 contents[i] = null;
-                onInventoryChanged();
                 return itemstack;
             }
             ItemStack itemstack1 = contents[i].splitStack(j);
@@ -105,10 +104,8 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
             }
             onInventoryChanged();
             return itemstack1;
-        } else
-        {
-            return null;
         }
+        return null;
     }
 
 

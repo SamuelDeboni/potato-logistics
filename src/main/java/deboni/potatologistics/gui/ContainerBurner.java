@@ -35,7 +35,19 @@ public class ContainerBurner extends ContainerEnergy {
 
     @Override
     public void updateInventory() {
-        //super.updateInventory();
+        // Updates container inventory
+        for (int i = 0; i < this.inventorySlots.size(); ++i) {
+            ItemStack itemstack = this.inventorySlots.get(i).getStack();
+            ItemStack itemstack1 = this.inventoryItemStacks.get(i);
+            if (ItemStack.areItemStacksEqual(itemstack1, itemstack)) continue;
+            itemstack1 = itemstack != null ? itemstack.copy() : null;
+            this.inventoryItemStacks.set(i, itemstack1);
+            for (ICrafting crafter : this.crafters) {
+                crafter.updateInventorySlot(this, i, itemstack1);
+            }
+        }
+
+        // Updates progress bars
         TileEntityBurner teBurner = (TileEntityBurner) tile;
         for (ICrafting crafter : this.crafters) {
             if (this.currentBurnTime != teBurner.currentBurnTime) {
