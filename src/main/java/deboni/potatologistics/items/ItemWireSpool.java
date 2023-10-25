@@ -37,7 +37,7 @@ public class ItemWireSpool extends Item {
                     if (connectedSuccessfully) {
                         itemstack.consumeItem(entityplayer);
                     }
-                    itemstack.setCustomName(this.displayName);
+                    removedConnectionData(itemstack);
                 }
             } else {
                 itemstack.getData().putBoolean("connected", true);
@@ -56,5 +56,12 @@ public class ItemWireSpool extends Item {
         }
 
         return false;
+    }
+    private void removedConnectionData(ItemStack stack){
+        stack.getData().getValue().remove("connected");
+        stack.getData().getValue().remove("x");
+        stack.getData().getValue().remove("y");
+        stack.getData().getValue().remove("z");
+        stack.removeCustomName();
     }
 }
