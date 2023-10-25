@@ -131,6 +131,9 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
             }
             result.stackSize++;
         }
+        if (result.stackSize < 1){
+            return null;
+        }
 
         return result;
     }
