@@ -6,11 +6,9 @@ import net.minecraft.client.render.entity.ItemEntityRenderer;
 import net.minecraft.client.render.tileentity.TileEntityRenderer;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.entity.EntityItem;
-import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class TileEntityRendererPipe extends TileEntityRenderer<TileEntityPipe> {

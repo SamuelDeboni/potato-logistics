@@ -1,16 +1,13 @@
 package deboni.potatologistics.gui;
 
 import net.minecraft.client.gui.GuiContainer;
-import net.minecraft.client.gui.GuiTooltip;
-import net.minecraft.core.block.BlockFurnace;
-import net.minecraft.core.player.inventory.Container;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.player.inventory.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 
 public class GuiFilter extends GuiContainer {
-    private IInventory filterInventory;
-    private int inventoryRows = 0;
+    private final IInventory filterInventory;
+    private final int inventoryRows;
 
     public GuiFilter(InventoryPlayer playerInventory, IInventory iinventory) {
         super(new ContainerFilter(playerInventory, iinventory));
@@ -38,7 +35,7 @@ public class GuiFilter extends GuiContainer {
         this.drawTexturedModalRect(x, y, 0, 0, this.xSize, h1);
         int rows = this.inventoryRows;
         while (rows > 6) {
-            int h2 = Math.min(rows, 6) * 18;
+            int h2 = 6 * 18;
             this.drawTexturedModalRect(x, y + h1, 0, 17, this.xSize, h2);
             rows -= 6;
             h1 += h2;

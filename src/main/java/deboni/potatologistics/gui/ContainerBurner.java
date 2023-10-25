@@ -1,14 +1,11 @@
 package deboni.potatologistics.gui;
 
 import deboni.potatologistics.blocks.entities.TileEntityBurner;
-import net.minecraft.core.crafting.ICrafting;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.player.inventory.slot.Slot;
 import sunsetsatellite.energyapi.template.containers.ContainerEnergy;
-
-import java.util.Iterator;
 
 public class ContainerBurner extends ContainerEnergy {
 

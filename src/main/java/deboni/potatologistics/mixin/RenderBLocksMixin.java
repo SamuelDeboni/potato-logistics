@@ -46,7 +46,7 @@ public abstract class RenderBLocksMixin {
             cir.setReturnValue(render((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
         } else if (PotatoLogisticsMod.blockAutoBasket != null && PotatoLogisticsMod.blockAutoBasket.id == block.id) {
             cir.setReturnValue(renderBlockAutoBasket(((RenderBlocks)(Object)this), block, x, y, z));
-        } else if (PotatoLogisticsMod.blockTreeChoper != null && PotatoLogisticsMod.blockTreeChoper.id == block.id) {
+        } else if (PotatoLogisticsMod.blockTreeChopper != null && PotatoLogisticsMod.blockTreeChopper.id == block.id) {
             cir.setReturnValue(renderTreeChopper((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
         } else if (PotatoLogisticsMod.blockEnergyConnector != null && PotatoLogisticsMod.blockEnergyConnector.id == block.id) {
             cir.setReturnValue(renderEnergyConnector((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));

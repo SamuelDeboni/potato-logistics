@@ -2,7 +2,6 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
-import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.BlockFurnaceBurner;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;

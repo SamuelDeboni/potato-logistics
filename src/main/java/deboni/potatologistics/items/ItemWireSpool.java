@@ -10,11 +10,9 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
-import java.util.Objects;
-
 public class ItemWireSpool extends Item {
 
-    private String displayName;
+    private final String displayName;
 
     public ItemWireSpool(String name, int id) {
         super(name, id);

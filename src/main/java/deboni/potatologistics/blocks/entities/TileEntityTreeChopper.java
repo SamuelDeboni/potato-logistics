@@ -55,10 +55,10 @@ public class TileEntityTreeChopper extends TileEntityEnergyConductor {
     public void writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         ListTag nbttaglist = new ListTag();
-        for (int i = 0; i < this.stacks.size(); i++) {
-            if (this.stacks.get(i) == null) continue;
+        for (ItemStack stack : this.stacks) {
+            if (stack == null) continue;
             CompoundTag nbttagcompound1 = new CompoundTag();
-            this.stacks.get(i).writeToNBT(nbttagcompound1);
+            stack.writeToNBT(nbttagcompound1);
             nbttaglist.addTag(nbttagcompound1);
         }
         nbttagcompound.put("Items", nbttaglist);
@@ -77,8 +77,7 @@ public class TileEntityTreeChopper extends TileEntityEnergyConductor {
         Block block = world.getBlock(x, y, z);
         if (block == null) return 0;
 
-        if (block instanceof BlockLog || block instanceof BlockLeavesBase) {
-        }  else {
+        if (!(block instanceof BlockLog || block instanceof BlockLeavesBase)) {
             return 0;
         }
 
@@ -112,7 +111,7 @@ public class TileEntityTreeChopper extends TileEntityEnergyConductor {
 
         Block block = worldObj.getBlock(b[0], b[1], b[2]);
 
-        ItemStack[] breakResult = null;
+        ItemStack[] breakResult;
         int energyRequired = 100;
         if (block instanceof BlockLog) {
             breakResult = new ItemStack[1];

@@ -6,8 +6,6 @@ import net.minecraft.client.render.tileentity.TileEntityRenderer;
 import net.minecraft.core.world.World;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-
 public class TileEntityRendererEnergyConnector extends TileEntityRenderer<TileEntityEnergyConnector> {
 
     @Override
@@ -30,7 +28,7 @@ public class TileEntityRendererEnergyConnector extends TileEntityRenderer<TileEn
             if (x2 > 0 || x2 == 0 && y2 > 0 || x2 == 0 && y2 == 0 && z2 > 0) continue;
 
             double dist = Math.sqrt(x2*x2 + y2*y2 + z2*z2);
-            double yoff = Math.log(dist + 0.15);
+            double yOff = Math.log(dist + 0.15);
 
             boolean b = false;
 
@@ -42,8 +40,8 @@ public class TileEntityRendererEnergyConnector extends TileEntityRenderer<TileEn
 
                 double yoff0 = -0.8*((t-0.5)*(t-0.5)) + 0.2f;
                 double yoff1 = -0.8*((t-0.5 + t_increment)*(t-0.5 + t_increment)) + 0.2f;
-                yoff0 *= yoff;
-                yoff1 *= yoff;
+                yoff0 *= yOff;
+                yoff1 *= yOff;
 
                 b = !b;
                 float r_col = 1.7f;

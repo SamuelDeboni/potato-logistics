@@ -1,23 +1,14 @@
 package deboni.potatologistics.blocks;
 
-import com.mojang.nbt.CompoundTag;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.TileEntityBurner;
-import deboni.potatologistics.blocks.entities.TileEntityMiningDrill;
-import deboni.potatologistics.gui.ContainerBurner;
-import deboni.potatologistics.gui.GuiBurner;
 import net.minecraft.core.block.Block;
-import net.minecraft.core.block.BlockFurnace;
-import net.minecraft.core.block.BlockPistonBase;
 import net.minecraft.core.block.BlockTileEntityRotatable;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.entity.TileEntityFurnace;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.EnergyAPI;
-
-import java.util.Random;
 
 public class BlockFurnaceBurner extends BlockTileEntityRotatable {
     public BlockFurnaceBurner(String key, int id, Material material) {

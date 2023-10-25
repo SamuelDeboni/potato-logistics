@@ -77,8 +77,8 @@ public class BlockBlockCrusher extends BlockRotatable {
 
 
             ItemStack[] breakResult;
-            if (block.id == Block.bedrock.id) {
-            } if (block.id == Block.cobbleStone.id) {
+            // if (block.id == Block.bedrock.id) {} // Not sure why this was here
+            if (block.id == Block.cobbleStone.id) {
                 breakResult = new ItemStack[1];
                 breakResult[0] = new ItemStack(Block.gravel.asItem());
             } else if (block.id == Block.gravel.id) {

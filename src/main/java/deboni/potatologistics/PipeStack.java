@@ -18,11 +18,10 @@ public class PipeStack {
     public PipeStack() {
     }
 
-    public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
+    public void writeToNBT(CompoundTag nbttagcompound) {
         nbttagcompound.putShort("direction", (short) this.direction.getId());
         nbttagcompound.putShort("timer", (short) this.timer);
         stack.writeToNBT(nbttagcompound);
-        return nbttagcompound;
     }
 
     public void readFromNBT(CompoundTag nbttagcompound) {

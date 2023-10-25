@@ -1,7 +1,6 @@
 package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
-import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.entity.TileEntity;
 
 public class TileEntityStirlingEngine extends TileEntity {

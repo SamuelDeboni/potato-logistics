@@ -1,8 +1,6 @@
 package deboni.potatologistics.blocks;
 
 import deboni.potatologistics.blocks.entities.TileEntityFilter;
-import deboni.potatologistics.gui.ContainerFilter;
-import deboni.potatologistics.gui.GuiFilter;
 import net.minecraft.core.block.BlockTileEntity;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;

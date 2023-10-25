@@ -2,16 +2,10 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
-import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.entity.TileEntityChest;
-import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
-import net.minecraft.core.world.World;
-
-import java.util.Arrays;
 
 public class TileEntityFilter extends TileEntity implements IInventory {
     private ItemStack[] filterContents;
@@ -76,7 +70,7 @@ public class TileEntityFilter extends TileEntity implements IInventory {
         for (int i = 0; i < nbttaglist.tagCount(); ++i) {
             CompoundTag nbttagcompound1 = (CompoundTag)nbttaglist.tagAt(i);
             int j = nbttagcompound1.getByte("Slot") & 0xFF;
-            if (j < 0 || j >= this.filterContents.length) continue;
+            if (j >= this.filterContents.length) continue;
             this.filterContents[j] = ItemStack.readItemStackFromNbt(nbttagcompound1);
         }
     }

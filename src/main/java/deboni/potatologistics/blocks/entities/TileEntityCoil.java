@@ -1,6 +1,5 @@
 package deboni.potatologistics.blocks.entities;
 
-import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.entity.TileEntity;
 import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
 import sunsetsatellite.sunsetutils.util.Connection;
