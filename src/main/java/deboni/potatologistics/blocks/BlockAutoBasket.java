@@ -1,7 +1,7 @@
 package deboni.potatologistics.blocks;
 
 import deboni.potatologistics.PotatoLogisticsMod;
-import deboni.potatologistics.blocks.entities.TileEntityAutoBascket;
+import deboni.potatologistics.blocks.entities.TileEntityAutoBasket;
 import net.minecraft.core.block.BlockTileEntity;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
@@ -18,12 +18,12 @@ public class BlockAutoBasket extends BlockTileEntity {
     }
     @Override
     protected TileEntity getNewBlockEntity() {
-        return new TileEntityAutoBascket();
+        return new TileEntityAutoBasket();
     }
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer) {
-        TileEntityAutoBascket te = (TileEntityAutoBascket)world.getBlockTileEntity(x, y, z);
+        TileEntityAutoBasket te = (TileEntityAutoBasket)world.getBlockTileEntity(x, y, z);
         if (te.getNumUnitsInside() > 0) {
             te.givePlayerAllItems(world, entityplayer);
             return true;
@@ -38,7 +38,7 @@ public class BlockAutoBasket extends BlockTileEntity {
 
 
     public int getFillLevel(World world, int x, int y, int z) {
-        TileEntityAutoBascket te = (TileEntityAutoBascket)world.getBlockTileEntity(x, y, z);
+        TileEntityAutoBasket te = (TileEntityAutoBasket)world.getBlockTileEntity(x, y, z);
         float fill = (float)te.getNumUnitsInside() / (float)te.getMaxUnits();
         return (int)Math.ceil(10.0f * fill);
     }
@@ -50,7 +50,7 @@ public class BlockAutoBasket extends BlockTileEntity {
 
     @Override
     public void onBlockRemoval(World world, int x, int y, int z) {
-        TileEntityAutoBascket te = (TileEntityAutoBascket)world.getBlockTileEntity(x, y, z);
+        TileEntityAutoBasket te = (TileEntityAutoBasket)world.getBlockTileEntity(x, y, z);
         world.removeBlockTileEntity(x, y, z);
         if (world.isClientSide) {
             return;
@@ -70,7 +70,7 @@ public class BlockAutoBasket extends BlockTileEntity {
 
     @Override
     public boolean isPoweringTo(WorldSource blockAccess, int x, int y, int z, int side) {
-        TileEntityAutoBascket basketTileEntity = (TileEntityAutoBascket) blockAccess.getBlockTileEntity(x, y, z);
+        TileEntityAutoBasket basketTileEntity = (TileEntityAutoBasket) blockAccess.getBlockTileEntity(x, y, z);
         if (basketTileEntity != null) {
             return basketTileEntity.getNumUnitsInside() == basketTileEntity.getMaxUnits();
         }

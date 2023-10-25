@@ -2,6 +2,8 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.Packet140TileEntityData;
 
 public class TileEntityStirlingEngine extends TileEntity {
     public int temperature;
@@ -46,5 +48,9 @@ public class TileEntityStirlingEngine extends TileEntity {
     public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         temperature = nbttagcompound.getInteger("temperature");
+    }
+    @Override
+    public Packet getDescriptionPacket() {
+        return new Packet140TileEntityData(this);
     }
 }

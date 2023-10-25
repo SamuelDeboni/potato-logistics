@@ -1,6 +1,6 @@
 package deboni.potatologistics;
 
-import deboni.potatologistics.blocks.entities.TileEntityAutoBascket;
+import deboni.potatologistics.blocks.entities.TileEntityAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.core.block.BlockChest;
@@ -174,8 +174,8 @@ public class Util {
                     inventory.setInventorySlotContents(2, stack);
                 }
             }
-        } else if (te instanceof TileEntityAutoBascket && dir == Direction.UP) {
-            ItemStack stack = ((TileEntityAutoBascket)te).removeOneItem();
+        } else if (te instanceof TileEntityAutoBasket && dir == Direction.UP) {
+            ItemStack stack = ((TileEntityAutoBasket)te).removeOneItem();
             if (stack != null) {
                 returnStack = new PipeStack(stack, dir, stackTimer);
             }

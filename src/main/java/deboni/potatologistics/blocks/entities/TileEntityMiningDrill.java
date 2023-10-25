@@ -10,6 +10,8 @@ import net.minecraft.core.block.entity.TileEntityChest;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
@@ -154,5 +156,9 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
                 stacks.remove(0);
             }
         }
+    }
+    @Override
+    public Packet getDescriptionPacket() {
+        return new Packet140TileEntityData(this);
     }
 }

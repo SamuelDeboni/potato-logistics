@@ -220,7 +220,7 @@ public class PotatoLogisticsMod implements ModInitializer {
 
         EntityHelper.createSpecialTileEntity(TileEntityPipe.class, new TileEntityRendererPipe(), "pipe.tile");
         EntityHelper.createTileEntity(TileEntityFilter.class, "filter.tile");
-        EntityHelper.createTileEntity(TileEntityAutoBascket.class, "auto_basket.tile");
+        EntityHelper.createTileEntity(TileEntityAutoBasket.class, "auto_basket.tile");
         EntityHelper.createTileEntity(TileEntityTreeChopper.class, "tree_chopper.tile");
         EntityHelper.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
         EntityHelper.createTileEntity(TileEntityBurner.class, "furnace_burner.tile");

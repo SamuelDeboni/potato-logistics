@@ -8,6 +8,8 @@ import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.crafting.LookupFuelFurnace;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.player.inventory.IInventory;
 import sunsetsatellite.energyapi.api.LookupFuelEnergy;
 import sunsetsatellite.sunsetutils.util.Connection;
@@ -214,5 +216,9 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
     @Override
     public Connection getItemIOForSide(Direction direction) {
         return Connection.BOTH;
+    }
+    @Override
+    public Packet getDescriptionPacket() {
+        return new Packet140TileEntityData(this);
     }
 }

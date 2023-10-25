@@ -5,6 +5,8 @@ import com.mojang.nbt.ListTag;
 import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.util.helper.Direction;
 import sunsetsatellite.energyapi.api.IEnergySink;
 import sunsetsatellite.energyapi.impl.TileEntityEnergy;
@@ -173,5 +175,9 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
             }
         }
 
+    }
+    @Override
+    public Packet getDescriptionPacket() {
+        return new Packet140TileEntityData(this);
     }
 }
