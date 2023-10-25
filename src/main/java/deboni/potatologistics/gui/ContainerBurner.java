@@ -1,6 +1,7 @@
 package deboni.potatologistics.gui;
 
 import deboni.potatologistics.blocks.entities.TileEntityBurner;
+import net.minecraft.core.crafting.ICrafting;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
@@ -35,37 +36,29 @@ public class ContainerBurner extends ContainerEnergy {
     @Override
     public void updateInventory() {
         //super.updateInventory();
-        /*
-        Iterator var1 = this.crafters.iterator();
-
-        while (var1.hasNext()) {
-            Object crafter = var1.next();
-            ICrafting icrafting = (ICrafting)crafter;
-
-            if (this.currentBurnTime != ((TileEntityGenerator)tile).currentBurnTime) {
-                icrafting.updateCraftingInventoryInfo(this, 1, ((TileEntityGenerator)tile).currentBurnTime);
+        TileEntityBurner teBurner = (TileEntityBurner) tile;
+        for (ICrafting crafter : this.crafters) {
+            if (this.currentBurnTime != teBurner.currentBurnTime) {
+                crafter.updateCraftingInventoryInfo(this, 0, teBurner.currentBurnTime);
             }
-
-            if (this.maxBurnTime != ((TileEntityGenerator)tile).maxBurnTime) {
-                icrafting.updateCraftingInventoryInfo(this, 3, ((TileEntityGenerator)tile).maxBurnTime);
+            if (this.maxBurnTime != teBurner.maxBurnTime) {
+                crafter.updateCraftingInventoryInfo(this, 1, teBurner.maxBurnTime);
             }
         }
-        */
 
         this.currentBurnTime = ((TileEntityBurner)tile).currentBurnTime;
         this.maxBurnTime = ((TileEntityBurner)tile).maxBurnTime;
     }
 
+    @Override
     public void updateClientProgressBar(int id, int value) {
-        /*
+        TileEntityBurner teBurner = (TileEntityBurner) tile;
+        if (id == 0) {
+            teBurner.currentBurnTime = value;
+        }
         if (id == 1) {
-            ((TileEntityGenerator)tile).currentBurnTime = value;
+            teBurner.maxBurnTime = value;
         }
-
-        if (id == 3) {
-            ((TileEntityGenerator)tile).maxBurnTime = value;
-        }
-         */
     }
 
     @Override

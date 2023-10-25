@@ -18,6 +18,11 @@ import sunsetsatellite.sunsetutils.util.IItemIO;
 
 public class TileEntityBurner extends TileEntity implements IInventory, IItemIO {
     public int maxBurnTemperature;
+    private ItemStack[] contents;
+    public int maxBurnTime = 0;
+    public int currentBurnTime = 0;
+    public ItemStack currentFuel;
+    public boolean isPowered;
     public TileEntityBurner(){
         contents = new ItemStack[1];
         maxBurnTemperature = 10000;
@@ -201,12 +206,6 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
     public boolean isBurning() {
         return this.currentBurnTime > 0;
     }
-
-    private ItemStack[] contents;
-    public int maxBurnTime = 0;
-    public int currentBurnTime = 0;
-    public ItemStack currentFuel;
-    public boolean isPowered;
 
     @Override
     public int getActiveItemSlotForSide(Direction direction) {
