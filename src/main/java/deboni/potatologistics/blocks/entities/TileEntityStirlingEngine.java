@@ -35,6 +35,7 @@ public class TileEntityStirlingEngine extends TileEntity {
             temperature = Math.max(Math.min(temperature, maxTemperature), 0);
 
             worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+            onInventoryChanged();
         }
     }
 
