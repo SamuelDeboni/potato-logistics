@@ -7,6 +7,8 @@ import net.minecraft.core.block.BlockTileEntityRotatable;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.player.EntityPlayer;
+import net.minecraft.core.enums.EnumDropCause;
+import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.EnergyAPI;
 
@@ -49,6 +51,11 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
                 world.scheduleBlockUpdate(x, y, z, this.id, 0);
             }
         }
+    }
+
+    @Override
+    public ItemStack[] getBreakResult(World world, EnumDropCause dropCause, int x, int y, int z, int meta, TileEntity tileEntity) {
+        return new ItemStack[]{new ItemStack(PotatoLogisticsMod.blockFurnaceBurner)};
     }
 
     @Override
