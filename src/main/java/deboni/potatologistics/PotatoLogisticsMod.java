@@ -2,6 +2,10 @@ package deboni.potatologistics;
 
 import deboni.potatologistics.blocks.*;
 import deboni.potatologistics.blocks.entities.*;
+import deboni.potatologistics.gui.ContainerBurner;
+import deboni.potatologistics.gui.ContainerFilter;
+import deboni.potatologistics.gui.GuiBurner;
+import deboni.potatologistics.gui.GuiFilter;
 import deboni.potatologistics.items.ItemWireSpool;
 import deboni.potatologistics.items.Potato;
 import net.fabricmc.api.ModInitializer;
@@ -66,6 +70,9 @@ public class PotatoLogisticsMod implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("PotatoLogistics initialized.");
+
+        EnergyAPI.addToNameGuiMap("Filter", GuiFilter.class, TileEntityFilter.class, ContainerFilter.class);
+        EnergyAPI.addToNameGuiMap("Coal Burner", GuiBurner.class, TileEntityBurner.class, ContainerBurner.class);
 
         int blockNum = config.getInt("starting_block_id");
         //potatoBlock = BlockHelper.createBlock(MOD_ID, new Block("crop.potato", blockNum++, Material.plant), "potato.png", "potato.png", null, 0.0f, 0.0f, 0.0f);

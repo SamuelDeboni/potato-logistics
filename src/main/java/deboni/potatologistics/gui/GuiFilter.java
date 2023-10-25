@@ -5,14 +5,15 @@ import net.minecraft.client.gui.GuiTooltip;
 import net.minecraft.core.block.BlockFurnace;
 import net.minecraft.core.player.inventory.Container;
 import net.minecraft.core.player.inventory.IInventory;
+import net.minecraft.core.player.inventory.InventoryPlayer;
 import org.lwjgl.opengl.GL11;
 
 public class GuiFilter extends GuiContainer {
     private IInventory filterInventory;
     private int inventoryRows = 0;
 
-    public GuiFilter(IInventory iinventory, IInventory playerInventory) {
-        super(new ContainerFilter(iinventory, playerInventory));
+    public GuiFilter(InventoryPlayer playerInventory, IInventory iinventory) {
+        super(new ContainerFilter(playerInventory, iinventory));
         this.filterInventory = iinventory;
         this.allowIngameInput = false;
         int c = 222;

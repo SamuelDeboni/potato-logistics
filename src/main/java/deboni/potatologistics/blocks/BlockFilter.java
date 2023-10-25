@@ -48,11 +48,10 @@ public class BlockFilter extends BlockTileEntity {
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
-        if (world.isClientSide) {
-            return true;
+        if (!world.isClientSide) {
+            IInventory inventory = (IInventory) world.getBlockTileEntity(x, y, z);
+            EnergyAPI.displayGui(player, inventory);
         }
-        IInventory inventory = (IInventory) world.getBlockTileEntity(x, y, z);
-        EnergyAPI.displayGui(player, new GuiFilter(inventory, player.inventory), new ContainerFilter(inventory, player.inventory), player.inventory);
         return true;
     }
 }

@@ -28,13 +28,12 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if(!world.isClientSide)
         {
-            return true;
+            TileEntityBurner tile = (TileEntityBurner) world.getBlockTileEntity(x, y, z);
+            if(tile != null) {
+                EnergyAPI.displayGui(player,tile);
+            }
         }
 
-        TileEntityBurner tile = (TileEntityBurner) world.getBlockTileEntity(x, y, z);
-        if(tile != null) {
-            EnergyAPI.displayGui(player, new GuiBurner(player.inventory, tile), new ContainerBurner(player.inventory, tile), tile);
-        }
         return true;
     }
 
