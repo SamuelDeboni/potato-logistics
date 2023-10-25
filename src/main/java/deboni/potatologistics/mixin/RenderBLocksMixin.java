@@ -4,25 +4,29 @@ import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.BlockAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import deboni.potatologistics.blocks.entities.TileEntityStirlingEngine;
-import deboni.potatologistics.blocks.entities.TileEntiyTreeChopper;
+import deboni.potatologistics.blocks.entities.TileEntityTreeChopper;
 import net.minecraft.client.render.RenderBlocks;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.block.color.BlockColor;
+import net.minecraft.client.render.block.color.BlockColorDispatcher;
+import net.minecraft.client.render.block.model.BlockModelDispatcher;
+import net.minecraft.client.render.block.model.BlockModelRenderBlocks;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockRotatable;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.material.Material;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import turniplabs.halplibe.helper.TextureHelper;
-import turniplabs.halplibe.util.TextureHandler;
 
 
 @Mixin(
@@ -30,13 +34,30 @@ import turniplabs.halplibe.util.TextureHandler;
         remap=false
 )
 
-public abstract class RenderBLocksMixin {
+public abstract class RenderBlocksMixin {
     @Shadow
     private WorldSource blockAccess;
 
     @Shadow private World world;
 
-    @Shadow protected abstract boolean renderBlockBasket(Block block, int x, int y, int z);
+    @Shadow public abstract void renderBottomFace(Block block, double d, double d1, double d2, int i);
+
+    @Shadow public abstract void renderTopFace(Block block, double d, double d1, double d2, int i);
+
+    @Shadow public abstract void renderNorthFace(Block block, double d, double d1, double d2, int i);
+
+    @Shadow public abstract void renderSouthFace(Block block, double d, double d1, double d2, int i);
+
+    @Shadow public abstract void renderWestFace(Block block, double d, double d1, double d2, int i);
+
+    @Shadow public abstract void renderEastFace(Block block, double d, double d1, double d2, int i);
+
+    @Shadow public boolean useInventoryTint;
+
+    @Shadow public abstract boolean renderStandardBlock(Block block, int x, int y, int z);
+
+    @Unique
+    private final RenderBlocks thisAs = (RenderBlocks) ((Object)this);
 
     @Inject(
             method = "renderBlockByRenderType",
@@ -45,19 +66,121 @@ public abstract class RenderBLocksMixin {
     )
 
     void renderBlockByRenderType(Block block, int renderType, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
-        if (PotatoLogisticsMod.blockPipe != null && block.id == PotatoLogisticsMod.blockPipe.id || PotatoLogisticsMod.blockDirectionalPipe != null && block.id == PotatoLogisticsMod.blockDirectionalPipe.id) {
-            cir.setReturnValue(render((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
-        } else if (PotatoLogisticsMod.blockAutoBasket != null && PotatoLogisticsMod.blockAutoBasket.id == block.id) {
-            cir.setReturnValue(renderBlockAutoBasket(((RenderBlocks)(Object)this), block, x, y, z));
-        } else if (PotatoLogisticsMod.blockTreeChoper != null && PotatoLogisticsMod.blockTreeChoper.id == block.id) {
-            cir.setReturnValue(renderTreeChopper((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
-        } else if (PotatoLogisticsMod.blockEnergyConnector != null && PotatoLogisticsMod.blockEnergyConnector.id == block.id) {
-            cir.setReturnValue(renderEnergyConnector((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
-        } else if (PotatoLogisticsMod.blockStirlingEngine != null && PotatoLogisticsMod.blockStirlingEngine.id == block.id) {
-            cir.setReturnValue(renderBlockStirlingEngine((RenderBlocks) ((Object)this), this.blockAccess, x, y, z, block, world));
+        if (renderType == 150){
+            cir.setReturnValue(renderBlockAutoBasket(thisAs, block, x, y, z));
+        }
+        if (renderType == 151) {
+            cir.setReturnValue(renderPipe(thisAs, this.blockAccess, x, y, z, block, world));
+        }
+        if (renderType == 152) {
+            cir.setReturnValue(renderTreeChopper(thisAs, this.blockAccess, x, y, z, block, world));
+        }
+        if (renderType == 153) {
+            cir.setReturnValue(renderEnergyConnector(thisAs, this.blockAccess, x, y, z, block, world));
+        }
+        if (renderType == 154) {
+            cir.setReturnValue(renderBlockStirlingEngine(thisAs, this.blockAccess, x, y, z, block, world));
         }
     }
+    @Inject(method = "renderBlockOnInventory(Lnet/minecraft/core/block/Block;IF)V", at = @At("TAIL"))
+    private void renderBlockOnInventory(Block block, int metadata, float brightness, CallbackInfo ci){
+        int renderType = ((BlockModelRenderBlocks) BlockModelDispatcher.getInstance().getDispatch(block)).renderType;
+        if (renderType == 150 || renderType == 151 || renderType == 152){
+            renderBlockInvNormal(block, metadata, brightness);
+        }
+        if (renderType == 154){
+            renderBlockStirlingEngineInventory(block, metadata, brightness);
+        }
+    }
+    @Unique
+    private void renderBlockInvNormal(Block block, int metadata, float brightness){
+        float f4;
+        float f9;
+        float f8;
+        float f42;
+        int renderType = ((BlockModelRenderBlocks)BlockModelDispatcher.getInstance().getDispatch(block)).renderType;
+        boolean isGrass;
+        Tessellator tessellator = Tessellator.instance;
+        boolean bl = isGrass = block.id == Block.grass.id;
+        if (this.useInventoryTint) {
+            int j = ((BlockColor)BlockColorDispatcher.getInstance().getDispatch(block)).getFallbackColor(metadata);
+            if (isGrass) {
+                j = 0xFFFFFF;
+            }
+            float f1 = (float)(j >> 16 & 0xFF) / 255.0f;
+            float f3 = (float)(j >> 8 & 0xFF) / 255.0f;
+            float f5 = (float)(j & 0xFF) / 255.0f;
+            GL11.glColor4f(f1 * brightness, f3 * brightness, f5 * brightness, 1.0f);
+        }
+        float yOffset = 0.5f;
+        if (renderType == 16) {
+            metadata = 1;
+        }
+        if (renderType == 30) {
+            yOffset = 0.25f;
+        }
+        block.setBlockBoundsForItemRender();
+        GL11.glTranslatef(-0.5f, 0.0f - yOffset, -0.5f);
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0f, -1.0f, 0.0f);
+        this.renderBottomFace(block, 0.0, 0.0, 0.0, block.getBlockTextureFromSideAndMetadata(Side.BOTTOM, metadata));
+        tessellator.draw();
+        if (isGrass && this.useInventoryTint) {
+            int l = ((BlockColor)BlockColorDispatcher.getInstance().getDispatch(block)).getFallbackColor(metadata);
+            f42 = (float)(l >> 16 & 0xFF) / 255.0f;
+            f8 = (float)(l >> 8 & 0xFF) / 255.0f;
+            f9 = (float)(l & 0xFF) / 255.0f;
+            GL11.glColor4f(f42 * brightness, f8 * brightness, f9 * brightness, 1.0f);
+        }
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0f, 1.0f, 0.0f);
+        this.renderTopFace(block, 0.0, 0.0, 0.0, block.getBlockTextureFromSideAndMetadata(Side.TOP, metadata));
+        tessellator.draw();
+        if (isGrass && this.useInventoryTint) {
+            GL11.glColor4f(brightness, brightness, brightness, 1.0f);
+        }
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0f, 0.0f, -1.0f);
+        this.renderNorthFace(block, 0.0, 0.0, 0.0, block.getBlockTextureFromSideAndMetadata(Side.NORTH, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0f, 0.0f, 1.0f);
+        this.renderSouthFace(block, 0.0, 0.0, 0.0, block.getBlockTextureFromSideAndMetadata(Side.SOUTH, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(-1.0f, 0.0f, 0.0f);
+        this.renderWestFace(block, 0.0, 0.0, 0.0, block.getBlockTextureFromSideAndMetadata(Side.WEST, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(1.0f, 0.0f, 0.0f);
+        this.renderEastFace(block, 0.0, 0.0, 0.0, block.getBlockTextureFromSideAndMetadata(Side.EAST, metadata));
+        tessellator.draw();
+        GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+    }
+    @Unique
+    private void renderBlockStirlingEngineInventory(Block block, int metadata, float brightness){
+        float onepix = 0.0625f;
+        block.setBlockBounds(0, 0.0f, 0, 1, 0.5f - onepix, 1);
+        this.renderBlockInvNormal(block,metadata, brightness);
 
+
+        boolean b = false;
+        for (float yf = 0.5f - onepix * 1; yf <= 1.0f; yf += onepix) {
+            if (b) {
+                block.setBlockBounds(onepix * 2, yf, onepix * 2, 1 - onepix * 2, yf + onepix, 1 - onepix * 2);
+            } else {
+                block.setBlockBounds(0, yf, 0, 1, yf + onepix, 1);
+            }
+            renderBlockInvNormal(block,metadata, brightness);
+
+            b = !b;
+        }
+
+        block.setBlockBounds(0, 0.0f, 0, 1, 1, 1);
+    }
+
+
+    @Unique
     private static boolean renderBlockStirlingEngine(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {
         float onepix = 0.0625f;
         block.setBlockBounds(0, 0.0f, 0, 1, 0.5f - onepix, 1);
@@ -116,8 +239,10 @@ public abstract class RenderBLocksMixin {
         }
         block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
         return true;
+
     }
 
+    @Unique
     private static float[] getConnectorColor(int i ) {
         float r = 0.41f;
         float g = 0.23f;
@@ -206,7 +331,7 @@ public abstract class RenderBLocksMixin {
 
         float offset = pixelSize * 2;
         TileEntity te = world.getBlockTileEntity(x, y, z);
-        if (te instanceof TileEntiyTreeChopper && ((TileEntiyTreeChopper)te).isActive) {
+        if (te instanceof TileEntityTreeChopper && ((TileEntityTreeChopper)te).isActive) {
             offset = pixelSize * 6;
         }
 
@@ -253,7 +378,7 @@ public abstract class RenderBLocksMixin {
     }
 
     @Unique
-    private static boolean render(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {
+    private static boolean renderPipe(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {
         int meta = blockAccess.getBlockMetadata(x, y, z);
         int type = meta & 0x03;
         boolean isDirectional = (meta & (1 << 2)) != 0;

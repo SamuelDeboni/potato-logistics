@@ -9,6 +9,7 @@ import deboni.potatologistics.gui.GuiFilter;
 import deboni.potatologistics.items.ItemWireSpool;
 import deboni.potatologistics.items.Potato;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.client.render.block.model.BlockModelRenderBlocks;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
@@ -83,11 +84,13 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setTextures("pipe.png")
                 .setLightOpacity(0)
                 .setHardness(0.1f)
+                .setBlockModel(new BlockModelRenderBlocks(151))
                 .build(new BlockPipe("pipe", blockNum++, Material.glass, false));
         blockDirectionalPipe = new BlockBuilder(MOD_ID)
                 .setTextures("directional_pipe.png")
                 .setLightOpacity(0)
                 .setHardness(0.1f)
+                .setBlockModel(new BlockModelRenderBlocks(151))
                 .build(new BlockPipe("directional_pipe", blockNum++, Material.glass, true));
 
         blockFilter = new BlockBuilder(MOD_ID)
@@ -103,6 +106,7 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setSideTextures("auto_basket_sides.png")
                 .setLightOpacity(0)
                 .setHardness(0.1f)
+                .setBlockModel(new BlockModelRenderBlocks(150))
                 .build(new BlockAutoBasket("auto_basket", blockNum++, Material.cloth));
 
         blockBlockCrusher = new BlockBuilder(MOD_ID)
@@ -129,6 +133,7 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setLightOpacity(0)
                 .setHardness(1.5f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+                .setBlockModel(new BlockModelRenderBlocks(152))
                 .build(new BlockTreeChopper("tree_chopper", blockNum++, Material.metal));
 
         blockTreeChopperSaw = new BlockBuilder(MOD_ID)
@@ -166,6 +171,7 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setLightOpacity(0)
                 .setHardness(1.5f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE, BlockTags.NOT_IN_CREATIVE_MENU)
+                .setBlockModel(new BlockModelRenderBlocks(153))
                 .build(new BlockEnergyConnector("energy_connector", blockNum++, Material.metal));
 
         blockAdvancedDispenser = new BlockBuilder(MOD_ID)
@@ -195,6 +201,7 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setTextures("iron_machine_block.png")
                 .setHardness(2.0f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+                .setBlockModel(new BlockModelRenderBlocks(154))
                 .build(new BlockStirlingEngine("stirling_engine", blockNum++, Material.metal));
 
         blockCoil = new BlockBuilder(MOD_ID)
