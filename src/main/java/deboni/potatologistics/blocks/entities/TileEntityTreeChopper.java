@@ -2,7 +2,6 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
-import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.Util;
 import net.minecraft.core.block.*;
 import net.minecraft.core.block.entity.TileEntity;
@@ -13,19 +12,18 @@ import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
-import sunsetsatellite.energyapi.impl.TileEntityEnergySink;
 import sunsetsatellite.sunsetutils.util.Connection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TileEntiyTreeChopper extends TileEntityEnergyConductor {
+public class TileEntityTreeChopper extends TileEntityEnergyConductor {
     public List<ItemStack> stacks = new ArrayList<>();
     public List<int[]> blocksToBreak = new ArrayList<>();
     public boolean isActive = false;
 
-    public TileEntiyTreeChopper() {
+    public TileEntityTreeChopper() {
         this.setCapacity(3000);
         this.setEnergy(0);
         this.setTransfer(250);
@@ -57,10 +55,10 @@ public class TileEntiyTreeChopper extends TileEntityEnergyConductor {
     public void writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         ListTag nbttaglist = new ListTag();
-        for (int i = 0; i < this.stacks.size(); i++) {
-            if (this.stacks.get(i) == null) continue;
+        for (ItemStack stack : this.stacks) {
+            if (stack == null) continue;
             CompoundTag nbttagcompound1 = new CompoundTag();
-            this.stacks.get(i).writeToNBT(nbttagcompound1);
+            stack.writeToNBT(nbttagcompound1);
             nbttaglist.addTag(nbttagcompound1);
         }
         nbttagcompound.put("Items", nbttaglist);
@@ -79,8 +77,7 @@ public class TileEntiyTreeChopper extends TileEntityEnergyConductor {
         Block block = world.getBlock(x, y, z);
         if (block == null) return 0;
 
-        if (block instanceof BlockLog || block instanceof BlockLeavesBase) {
-        }  else {
+        if (!(block instanceof BlockLog || block instanceof BlockLeavesBase)) {
             return 0;
         }
 
@@ -114,7 +111,7 @@ public class TileEntiyTreeChopper extends TileEntityEnergyConductor {
 
         Block block = worldObj.getBlock(b[0], b[1], b[2]);
 
-        ItemStack[] breakResult = null;
+        ItemStack[] breakResult;
         int energyRequired = 100;
         if (block instanceof BlockLog) {
             breakResult = new ItemStack[1];

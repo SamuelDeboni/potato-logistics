@@ -1,12 +1,10 @@
 package deboni.potatologistics;
 
-import deboni.potatologistics.blocks.entities.TileEntityAutoBascket;
-import deboni.potatologistics.blocks.entities.TileEntityEnergyConnector;
+import deboni.potatologistics.blocks.entities.TileEntityAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
@@ -137,7 +135,7 @@ public class Util {
                 ItemStack stack = null;
                 int j = 0;
 
-                if (inventoryName != "Filter") {
+                if (!inventoryName.equals("Filter")) {
                     for (; stack == null && j < inventorySize; j++) stack = inventory.getStackInSlot(j);
                 } else {
                     for (; stack == null && j < inventorySize; j++) {
@@ -176,8 +174,8 @@ public class Util {
                     inventory.setInventorySlotContents(2, stack);
                 }
             }
-        } else if (te instanceof TileEntityAutoBascket && dir == Direction.UP) {
-            ItemStack stack = ((TileEntityAutoBascket)te).removeOneItem();
+        } else if (te instanceof TileEntityAutoBasket && dir == Direction.UP) {
+            ItemStack stack = ((TileEntityAutoBasket)te).removeOneItem();
             if (stack != null) {
                 returnStack = new PipeStack(stack, dir, stackTimer);
             }
@@ -192,14 +190,14 @@ public class Util {
         String inventoryName = inventory.getInvName();
 
 
-        if (inventoryName == "Chest" || inventoryName == "Large Chest" || inventoryName == "Trap" || inventoryName == "Filter") {
+        if (Objects.equals(inventoryName, "Chest") || Objects.equals(inventoryName, "Large Chest") || Objects.equals(inventoryName, "Trap") || Objects.equals(inventoryName, "Filter")) {
             int j = 0;
             ItemStack chestStack;
             while (j < inventorySize) {
                 chestStack = inventory.getStackInSlot(j);
 
                 if (chestStack == null) {
-                    if (inventoryName != "Filter") {
+                    if (!inventoryName.equals("Filter")) {
                         inventory.setInventorySlotContents(j, stack);
                         hasInserted = true;
                     }
@@ -220,7 +218,7 @@ public class Util {
             int fuelSlot = 1;
             int inputSlot = 0;
 
-            if (inventoryName == "Trommel") {
+            if (Objects.equals(inventoryName, "Trommel")) {
                 fuelSlot = 4;
                 for (; inputSlot < 3; inputSlot++) {
                     ItemStack s = inventory.getStackInSlot(inputSlot);

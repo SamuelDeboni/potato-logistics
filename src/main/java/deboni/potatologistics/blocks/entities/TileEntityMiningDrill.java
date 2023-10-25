@@ -3,16 +3,17 @@ package deboni.potatologistics.blocks.entities;
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
 import deboni.potatologistics.Util;
-import net.minecraft.core.block.*;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityChest;
-import net.minecraft.core.block.entity.TileEntityDispenser;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
 import sunsetsatellite.sunsetutils.util.Connection;
 
@@ -57,10 +58,10 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
     public void writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         ListTag nbttaglist = new ListTag();
-        for (int i = 0; i < this.stacks.size(); i++) {
-            if (this.stacks.get(i) == null) continue;
+        for (ItemStack stack : this.stacks) {
+            if (stack == null) continue;
             CompoundTag nbttagcompound1 = new CompoundTag();
-            this.stacks.get(i).writeToNBT(nbttagcompound1);
+            stack.writeToNBT(nbttagcompound1);
             nbttaglist.addTag(nbttagcompound1);
         }
         nbttagcompound.put("Items", nbttaglist);
@@ -155,5 +156,9 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
                 stacks.remove(0);
             }
         }
+    }
+    @Override
+    public Packet getDescriptionPacket() {
+        return new Packet140TileEntityData(this);
     }
 }

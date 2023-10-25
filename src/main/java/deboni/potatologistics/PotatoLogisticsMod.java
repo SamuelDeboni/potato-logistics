@@ -54,7 +54,7 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Block blockAutoBasket;
     public static Block blockBlockCrusher;
     public static Block blockBlockPlacer;
-    public static Block blockTreeChoper;
+    public static Block blockTreeChopper;
     public static Block blockTreeChopperSaw;
 
     public static Block blockIronMachineBlock;
@@ -73,6 +73,9 @@ public class PotatoLogisticsMod implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("PotatoLogistics initialized.");
+
+        EnergyAPI.addToNameGuiMap("Filter", GuiFilter.class, TileEntityFilter.class, ContainerFilter.class);
+        EnergyAPI.addToNameGuiMap("Coal Burner", GuiBurner.class, TileEntityBurner.class, ContainerBurner.class);
 
         int blockNum = config.getInt("starting_block_id");
         //potatoBlock = BlockHelper.createBlock(MOD_ID, new Block("crop.potato", blockNum++, Material.plant), "potato.png", "potato.png", null, 0.0f, 0.0f, 0.0f);
@@ -121,10 +124,10 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockBlockPlacer("block_placer", blockNum++, Material.stone));
 
-        blockTreeChoper = new BlockBuilder(MOD_ID)
+        blockTreeChopper = new BlockBuilder(MOD_ID)
                 .setSideTextures("iron_machine_side.png")
                 .setNorthTexture("iron_machine_block.png")
-                .setTopTexture("tree_choper_front.png")
+                .setTopTexture("tree_chopper_front.png")
                 .setBottomTexture("iron_machine_out.png")
                 .setLightOpacity(0)
                 .setHardness(1.5f)
@@ -226,8 +229,8 @@ public class PotatoLogisticsMod implements ModInitializer {
         EntityHelper.createTileEntity(TileEntityBurner.class, "furnace_burner.tile");
         EnergyAPI.addToNameGuiMap("Coal Burner", GuiBurner.class, TileEntityBurner.class, ContainerBurner.class);
 
-        EntityHelper.createTileEntity(TileEntityAutoBascket.class, "auto_basket.tile");
-        EntityHelper.createTileEntity(TileEntiyTreeChopper.class, "tree_chopper.tile");
+        EntityHelper.createTileEntity(TileEntityAutoBasket.class, "auto_basket.tile");
+        EntityHelper.createTileEntity(TileEntityTreeChopper.class, "tree_chopper.tile");
         EntityHelper.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
 
         EntityHelper.createTileEntity(TileEntityCoil.class, "coil.tile");
@@ -247,7 +250,7 @@ public class PotatoLogisticsMod implements ModInitializer {
         RecipeHelper.Crafting.createRecipe(itemAutoBasket, 1, new Object[]{"AAA", "CBC", "CCC", 'A', Item.leather, 'B', Item.dustRedstone, 'C', Item.wheat});
         RecipeHelper.Crafting.createRecipe(blockBlockCrusher, 1, new Object[]{"ABA", "ECF", "ADA", 'A', Block.cobbleStone, 'B', Block.obsidian, 'C', Item.toolPickaxeDiamond, 'D', Block.pistonBaseSticky, 'E', blockPipe, 'F', Item.dustRedstone});
         RecipeHelper.Crafting.createRecipe(blockBlockPlacer, 1, new Object[]{"ADA", "ACA", "ABA", 'A', Block.cobbleStone, 'B', blockPipe, 'C', Item.dustRedstone, 'D', Block.pistonBase});
-        RecipeHelper.Crafting.createRecipe(blockTreeChoper, 1, new Object[]{"AAA", "BCD", "AEA", 'A', Item.ingotIron, 'B', Item.toolAxeDiamond, 'C', blockIronMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
+        RecipeHelper.Crafting.createRecipe(blockTreeChopper, 1, new Object[]{"AAA", "BCD", "AEA", 'A', Item.ingotIron, 'B', Item.toolAxeDiamond, 'C', blockIronMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
         RecipeHelper.Crafting.createRecipe(blockMiningDrill, 1, new Object[]{"ADA", "CBC", "AEA", 'A', Item.ingotSteel, 'B', Item.toolPickaxeDiamond, 'C', blockSteelMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
         RecipeHelper.Crafting.createRecipe(itemIronGear, 1, new Object[]{" A ", "A A", " A ", 'A', Item.ingotIron});
         RecipeHelper.Crafting.createRecipe(itemSteelGear, 1, new Object[]{" A ", "A A", " A ", 'A', Item.ingotSteel});

@@ -2,13 +2,14 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
-import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.BlockFurnaceBurner;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.crafting.LookupFuelFurnace;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.player.inventory.IInventory;
 import sunsetsatellite.energyapi.api.LookupFuelEnergy;
 import sunsetsatellite.sunsetutils.util.Connection;
@@ -17,6 +18,11 @@ import sunsetsatellite.sunsetutils.util.IItemIO;
 
 public class TileEntityBurner extends TileEntity implements IInventory, IItemIO {
     public int maxBurnTemperature;
+    private ItemStack[] contents;
+    public int maxBurnTime = 0;
+    public int currentBurnTime = 0;
+    public ItemStack currentFuel;
+    public boolean isPowered;
     public TileEntityBurner(){
         contents = new ItemStack[1];
         maxBurnTemperature = 10000;
@@ -89,7 +95,6 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
             {
                 ItemStack itemstack = contents[i];
                 contents[i] = null;
-                onInventoryChanged();
                 return itemstack;
             }
             ItemStack itemstack1 = contents[i].splitStack(j);
@@ -99,10 +104,8 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
             }
             onInventoryChanged();
             return itemstack1;
-        } else
-        {
-            return null;
         }
+        return null;
     }
 
 
@@ -201,12 +204,6 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
         return this.currentBurnTime > 0;
     }
 
-    private ItemStack[] contents;
-    public int maxBurnTime = 0;
-    public int currentBurnTime = 0;
-    public ItemStack currentFuel;
-    public boolean isPowered;
-
     @Override
     public int getActiveItemSlotForSide(Direction direction) {
         return 0;
@@ -215,5 +212,9 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
     @Override
     public Connection getItemIOForSide(Direction direction) {
         return Connection.BOTH;
+    }
+    @Override
+    public Packet getDescriptionPacket() {
+        return new Packet140TileEntityData(this);
     }
 }

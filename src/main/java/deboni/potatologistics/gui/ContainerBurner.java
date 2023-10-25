@@ -8,8 +8,6 @@ import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.player.inventory.slot.Slot;
 import sunsetsatellite.energyapi.template.containers.ContainerEnergy;
 
-import java.util.Iterator;
-
 public class ContainerBurner extends ContainerEnergy {
 
     private int maxBurnTime = 0;
@@ -37,35 +35,41 @@ public class ContainerBurner extends ContainerEnergy {
 
     @Override
     public void updateInventory() {
-        //super.updateInventory();
-        /*
-        Iterator var1 = this.crafters.iterator();
-
-        while (var1.hasNext()) {
-            Object crafter = var1.next();
-            ICrafting icrafting = (ICrafting)crafter;
-
-            if (this.currentBurnTime != ((TileEntityGenerator)tile).currentBurnTime) {
-                icrafting.updateCraftingInventoryInfo(this, 1, ((TileEntityGenerator)tile).currentBurnTime);
-            }
-
-            if (this.maxBurnTime != ((TileEntityGenerator)tile).maxBurnTime) {
-                icrafting.updateCraftingInventoryInfo(this, 3, ((TileEntityGenerator)tile).maxBurnTime);
+        // Updates container inventory
+        for (int i = 0; i < this.inventorySlots.size(); ++i) {
+            ItemStack itemstack = this.inventorySlots.get(i).getStack();
+            ItemStack itemstack1 = this.inventoryItemStacks.get(i);
+            if (ItemStack.areItemStacksEqual(itemstack1, itemstack)) continue;
+            itemstack1 = itemstack != null ? itemstack.copy() : null;
+            this.inventoryItemStacks.set(i, itemstack1);
+            for (ICrafting crafter : this.crafters) {
+                crafter.updateInventorySlot(this, i, itemstack1);
             }
         }
-        */
+
+        // Updates progress bars
+        TileEntityBurner teBurner = (TileEntityBurner) tile;
+        for (ICrafting crafter : this.crafters) {
+            if (this.currentBurnTime != teBurner.currentBurnTime) {
+                crafter.updateCraftingInventoryInfo(this, 0, teBurner.currentBurnTime);
+            }
+            if (this.maxBurnTime != teBurner.maxBurnTime) {
+                crafter.updateCraftingInventoryInfo(this, 1, teBurner.maxBurnTime);
+            }
+        }
 
         this.currentBurnTime = ((TileEntityBurner)tile).currentBurnTime;
         this.maxBurnTime = ((TileEntityBurner)tile).maxBurnTime;
     }
 
+    @Override
     public void updateClientProgressBar(int id, int value) {
-        if (id == 1) {
-            ((TileEntityBurner)tile).currentBurnTime = value;
+        TileEntityBurner teBurner = (TileEntityBurner) tile;
+        if (id == 0) {
+            teBurner.currentBurnTime = value;
         }
-
-        if (id == 3) {
-            ((TileEntityBurner)tile).maxBurnTime = value;
+        if (id == 1) {
+            teBurner.maxBurnTime = value;
         }
     }
 

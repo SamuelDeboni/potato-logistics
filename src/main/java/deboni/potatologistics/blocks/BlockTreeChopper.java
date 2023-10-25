@@ -1,24 +1,13 @@
 package deboni.potatologistics.blocks;
 
-import deboni.potatologistics.PotatoLogisticsMod;
-import deboni.potatologistics.Util;
-import deboni.potatologistics.blocks.entities.TileEntityPipe;
-import deboni.potatologistics.blocks.entities.TileEntiyTreeChopper;
+import deboni.potatologistics.blocks.entities.TileEntityTreeChopper;
 import net.minecraft.core.block.*;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.entity.TileEntityChest;
 import net.minecraft.core.block.material.Material;
-import net.minecraft.core.entity.EntityLiving;
-import net.minecraft.core.enums.EnumDropCause;
-import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.player.inventory.IInventory;
-import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.helper.Sides;
 import net.minecraft.core.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class BlockTreeChopper extends BlockTileEntityRotatable {
@@ -34,9 +23,9 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
             int j1 = world.getBlockId(x - 1, y, z);
             int k1 = world.getBlockId(x + 1, y, z);
             byte byte0 = 3;
-            if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1]) {
-                byte0 = 3;
-            }
+//            if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1]) {
+//                byte0 = 3;
+//            }
 
             if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l]) {
                 byte0 = 2;
@@ -83,14 +72,14 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
 
     @Override
     protected TileEntity getNewBlockEntity() {
-        return new TileEntiyTreeChopper();
+        return new TileEntityTreeChopper();
     }
 
     @Override
     public void onBlockRemoval(World world, int x, int y, int z) {
         TileEntity te = world.getBlockTileEntity(x, y, z);
-        if (te instanceof TileEntiyTreeChopper) {
-            ((TileEntiyTreeChopper) te).dropItems();
+        if (te instanceof TileEntityTreeChopper) {
+            ((TileEntityTreeChopper) te).dropItems();
         }
         super.onBlockRemoval(world, x, y, z);
     }
@@ -103,7 +92,7 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
     @Override
     public void updateTick(World world, int x, int y, int z, Random rand) {
         if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockGettingPowered(x, y, z)) {
-            TileEntiyTreeChopper te = (TileEntiyTreeChopper) world.getBlockTileEntity(x, y, z);
+            TileEntityTreeChopper te = (TileEntityTreeChopper) world.getBlockTileEntity(x, y, z);
             te.blocksToBreak.clear();
         }
     }

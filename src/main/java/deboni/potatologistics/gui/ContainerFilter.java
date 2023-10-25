@@ -4,6 +4,7 @@ import net.minecraft.core.InventoryAction;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.player.inventory.Container;
 import net.minecraft.core.player.inventory.IInventory;
+import net.minecraft.core.player.inventory.InventoryPlayer;
 import net.minecraft.core.player.inventory.slot.Slot;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class ContainerFilter extends Container {
     private final IInventory inventory;
     private final int numberOfRows;
 
-    public ContainerFilter(IInventory playerInventory, IInventory inventory) {
+    public ContainerFilter(InventoryPlayer playerInventory, IInventory inventory) {
         this.inventory = inventory;
         numberOfRows = 1;
 

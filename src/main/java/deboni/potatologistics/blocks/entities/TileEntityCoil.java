@@ -1,7 +1,8 @@
 package deboni.potatologistics.blocks.entities;
 
-import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.Packet140TileEntityData;
 import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
 import sunsetsatellite.sunsetutils.util.Connection;
 import sunsetsatellite.sunsetutils.util.Direction;
@@ -27,6 +28,10 @@ public class TileEntityCoil extends TileEntityEnergyConductor {
             int energyProduced = engine.consumeEnergy();
             modifyEnergy(energyProduced);
         }
+    }
+    @Override
+    public Packet getDescriptionPacket() {
+        return new Packet140TileEntityData(this);
     }
 
 
