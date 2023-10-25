@@ -5,14 +5,19 @@ import deboni.potatologistics.blocks.entities.TileEntityBurner;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockTileEntityRotatable;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.block.entity.TileEntityFurnace;
 import net.minecraft.core.block.material.Material;
+import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
 import sunsetsatellite.energyapi.EnergyAPI;
 
+import java.util.Random;
+
 public class BlockFurnaceBurner extends BlockTileEntityRotatable {
+    protected Random furnaceRand = new Random();
     public BlockFurnaceBurner(String key, int id, Material material) {
         super(key, id, material);
     }
@@ -28,6 +33,33 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
         }
 
         return true;
+    }
+    @Override
+    public void onBlockRemoval(World world, int x, int y, int z) {
+        int blockId = world.getBlockId(x,y,z);
+        if (blockId == PotatoLogisticsMod.blockFurnaceBurner.id || blockId == PotatoLogisticsMod.blockFurnaceBurnerOn.id) {return;}
+        TileEntityBurner tileEntityBurner = (TileEntityBurner)world.getBlockTileEntity(x, y, z);
+        for (int l = 0; l < tileEntityBurner.getSizeInventory(); ++l) {
+            ItemStack itemstack = tileEntityBurner.getStackInSlot(l);
+            if (itemstack == null) continue;
+            float f = this.furnaceRand.nextFloat() * 0.8f + 0.1f;
+            float f1 = this.furnaceRand.nextFloat() * 0.8f + 0.1f;
+            float f2 = this.furnaceRand.nextFloat() * 0.8f + 0.1f;
+            while (itemstack.stackSize > 0) {
+                int i1 = this.furnaceRand.nextInt(21) + 10;
+                if (i1 > itemstack.stackSize) {
+                    i1 = itemstack.stackSize;
+                }
+                itemstack.stackSize -= i1;
+                EntityItem entityitem = new EntityItem(world, (float)x + f, (float)y + f1, (float)z + f2, new ItemStack(itemstack.itemID, i1, itemstack.getMetadata()));
+                float f3 = 0.05f;
+                entityitem.xd = (float)this.furnaceRand.nextGaussian() * f3;
+                entityitem.yd = (float)this.furnaceRand.nextGaussian() * f3 + 0.2f;
+                entityitem.zd = (float)this.furnaceRand.nextGaussian() * f3;
+                world.entityJoinedWorld(entityitem);
+            }
+        }
+        super.onBlockRemoval(world, x, y, z);
     }
 
     public void setOn(World world, int x, int y, int z, boolean isOn) {
