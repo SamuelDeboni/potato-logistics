@@ -66,6 +66,14 @@ repositories {
 		}
 		metadataSources { artifact() }
 	}
+	ivy {
+		url = "https://github.com/ToufouMaster"
+		patternLayout {
+			artifact "[organisation]/releases/download/[revision]/[module]-[revision].jar"
+			m2compatible = true
+		}
+		metadataSources { artifact() }
+	}
 	maven { url = "https://jitpack.io" }
 
 }
@@ -93,8 +101,9 @@ dependencies {
 
 	// Energy API
 	modImplementation "sunsetutils:sunsetutils:${project.sunsetutils_version}"
-	//modImplementation "energyapi:energyapi:${project.energyapi_version}"
-	modImplementation name: "energyapi-useless", group: "" , version: "${project.energyapi_version}"
+	modImplementation "energyapi:energyapi:${project.energyapi_version}"
+	//modImplementation name: "energyapi-useless", group: "" , version: "${project.energyapi_version}"
+	modImplementation "BTWaila:btwaila:${project.waila_version}"
 
 	var log4jVersion = "2.20.0"
 	implementation("org.apache.logging.log4j:log4j-core:${log4jVersion}")

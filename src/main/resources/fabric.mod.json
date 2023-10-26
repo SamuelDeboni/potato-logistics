@@ -19,12 +19,14 @@
   "entrypoints": {
     "main": [
         "deboni.potatologistics.PotatoLogisticsMod"
+    ],
+    "btwaila": [
+        "deboni.potatologistics.modintegrations.BTWaila.WailaPlugin"
     ]
   },
   "mixins": [
       "potatologistics.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.13.3"
   },
