@@ -1,12 +1,15 @@
 package deboni.potatologistics.gui;
 
 import deboni.potatologistics.blocks.entities.TileEntityBurner;
+import net.minecraft.core.InventoryAction;
 import net.minecraft.core.crafting.ICrafting;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.player.inventory.slot.Slot;
 import sunsetsatellite.energyapi.template.containers.ContainerEnergy;
+
+import java.util.List;
 
 public class ContainerBurner extends ContainerEnergy {
 
@@ -72,6 +75,30 @@ public class ContainerBurner extends ContainerEnergy {
             teBurner.maxBurnTime = value;
         }
     }
+    public List<Integer> getMoveSlots(InventoryAction action, Slot slot, int target, EntityPlayer player) {
+        if (slot.id == 0){ // Quick stack inside the container
+            return getSlots(0,1,false);
+        }
+        return getSlots(1,36, true); // Quick stack inside the inventory
+
+    }
+
+    public List<Integer> getTargetSlots(InventoryAction action, Slot slot, int target, EntityPlayer player) {
+        if (slot.id == 0){ // Burner slot -> inventory
+            List<Integer> listOut = getSlots(28,9, false); // Hotbar first
+            listOut.addAll(getSlots(1,27, false)); // Then Inventory
+            return listOut;
+            //return getSlots(1,36, true);
+        }
+        if (target == 2){ // Inventory Fuel Item -> Burner Slot
+            return getSlots(0,1,false);
+        }
+        if (slot.id < 28) { // Main inventory -> Hotbar
+            return getSlots(28, 9, false);
+        }
+        return getSlots(1, 27, false); // Hotbar -> Main Inventory
+    }
+
 
     @Override
     public boolean isUsableByPlayer(EntityPlayer entityPlayer1) {
