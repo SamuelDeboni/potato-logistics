@@ -34,32 +34,24 @@ public class ContainerFilter extends Container {
 
     @Override
     public List<Integer> getMoveSlots(InventoryAction action, Slot slot, int i, EntityPlayer entityPlayer) {
-        /*
-        int chestSize = this.numberOfRows * 9;
-        if (slot.id >= 0 && slot.id < chestSize) {
-            return this.getSlots(0, chestSize, false);
+        if (slot.id < 9){
+            return getSlots(0, 9, false);
         }
-        if (action == InventoryAction.MOVE_ALL) {
-            if (slot.id >= chestSize && slot.id < chestSize + 27) {
-                return this.getSlots(chestSize, 27, false);
-            }
-            if (slot.id >= chestSize + 27 && slot.id < chestSize + 36) {
-                return this.getSlots(chestSize + 27, 9, false);
-            }
-        } else if (slot.id >= chestSize && slot.id < chestSize + 36) {
-            return this.getSlots(chestSize, 36, false);
+        if (slot.id < 36){
+            return getSlots(9, 27, false);
         }
-         */
-        return null;
+        return getSlots(36, 9, false);
     }
 
     @Override
     public List<Integer> getTargetSlots(InventoryAction inventoryAction, Slot slot, int i, EntityPlayer entityPlayer) {
-        int chestSize = this.numberOfRows * 9;
-        if (slot.id < chestSize) {
-            return this.getSlots(chestSize, 9, true);
+        int filterSize = this.numberOfRows * 9;
+        if (slot.id < filterSize) { // Filter -> Inventory
+            List<Integer> listOut = getSlots(filterSize + 27,9, false); // Hotbar first
+            listOut.addAll(getSlots(filterSize,27, false)); // Then Inventory
+            return listOut;
         }
-        return this.getSlots(0, chestSize, false);
+        return this.getSlots(0, filterSize, false); // Inventory -> Filter
     }
 
     @Override
