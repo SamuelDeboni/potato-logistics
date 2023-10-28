@@ -77,10 +77,18 @@ public class ContainerBurner extends ContainerEnergy {
     }
     public List<Integer> getMoveSlots(InventoryAction action, Slot slot, int target, EntityPlayer player) {
         if (slot.id == 0){ // Quick stack inside the container
-            return getSlots(0,1,false);
+            return getSlots(0, 1, false);
         }
-        return getSlots(1,36, true); // Quick stack inside the inventory
+        if (target == 2){ // Only move one stack of coal
+            return getSlots(slot.id, 1, false);
+        }
+        // Quick move from Inventory -> Hotbar
+        if (slot.id < 28){
+            return getSlots(1,27, false);
 
+        }
+        // Quick move from Hotbar -> Inventory
+        return getSlots(28, 9, false);
     }
 
     public List<Integer> getTargetSlots(InventoryAction action, Slot slot, int target, EntityPlayer player) {

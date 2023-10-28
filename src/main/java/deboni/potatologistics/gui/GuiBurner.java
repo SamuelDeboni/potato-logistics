@@ -92,7 +92,7 @@ public class GuiBurner extends GuiContainer {
             action = InventoryAction.CLICK_RIGHT;
         }
         if (slot instanceof SlotCrafting) {
-            if (((Boolean)this.mc.gameSettings.swapCraftingButtons.value).booleanValue()) {
+            if (this.mc.gameSettings.swapCraftingButtons.value) {
                 if (shiftPressed && ctrlPressed) {
                     action = InventoryAction.MOVE_SIMILAR;
                 } else if (shiftPressed) {
