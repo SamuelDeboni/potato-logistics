@@ -80,3 +80,6 @@ item.potatologistics.iron_gear.desc=TODO
 
 item.potatologistics.steel_gear.name=Steel Gear
 item.potatologistics.steel_gear.desc=TODO
+
+tile.potatologistics.auto_crafter.name=Auto Crafter
+tile.potatologistics.auto_crafter.desc=TODO

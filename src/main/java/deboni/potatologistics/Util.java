@@ -1,10 +1,12 @@
 package deboni.potatologistics;
 
 import deboni.potatologistics.blocks.entities.TileEntityAutoBasket;
+import deboni.potatologistics.blocks.entities.TileEntityAutoCrafter;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.crafting.CraftingManager;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
@@ -165,6 +167,12 @@ public class Util {
                     inventory.setInventorySlotContents(j - 1, stack);
                     return returnStack;
                 }
+            } else if (Objects.equals(inventoryName, "Auto Crafter")) {
+                TileEntityAutoCrafter ac = (TileEntityAutoCrafter) te;
+                ItemStack stack = ac.removeOneResult();
+                if (stack != null) {
+                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
+                }
             } else if (inventory.getSizeInventory() > 2){
                 ItemStack stack = inventory.getStackInSlot(2);
                 if (stack != null) {
@@ -190,29 +198,39 @@ public class Util {
         String inventoryName = inventory.getInvName();
 
 
-        if (Objects.equals(inventoryName, "Chest") || Objects.equals(inventoryName, "Large Chest") || Objects.equals(inventoryName, "Trap") || Objects.equals(inventoryName, "Filter")) {
+        if (Objects.equals(inventoryName, "Chest")
+                || Objects.equals(inventoryName, "Large Chest")
+                || Objects.equals(inventoryName, "Trap")
+                || Objects.equals(inventoryName, "Filter")
+                || Objects.equals(inventoryName, "Auto Crafter")
+        ) {
             int j = 0;
-            ItemStack chestStack;
-            while (j < inventorySize) {
-                chestStack = inventory.getStackInSlot(j);
+            if (Objects.equals(inventoryName, "Auto Crafter") && inventory instanceof TileEntityAutoCrafter) {
+                TileEntityAutoCrafter ac = (TileEntityAutoCrafter) inventory;
+                hasInserted = ac.insertItem(stack);
+            } else {
+                ItemStack chestStack;
+                while (j < inventorySize) {
+                    chestStack = inventory.getStackInSlot(j);
 
-                if (chestStack == null) {
-                    if (!inventoryName.equals("Filter")) {
-                        inventory.setInventorySlotContents(j, stack);
-                        hasInserted = true;
+                    if (chestStack == null) {
+                        if (!inventoryName.equals("Filter") && !inventoryName.equals("Auto Crafter")) {
+                            inventory.setInventorySlotContents(j, stack);
+                            hasInserted = true;
+                        }
+                        break;
                     }
-                    break;
+
+                    if (chestStack.itemID == stack.itemID && chestStack.getMetadata() == stack.getMetadata() && chestStack.stackSize < chestStack.getMaxStackSize()) {
+                        chestStack.stackSize++;
+                        inventory.setInventorySlotContents(j, chestStack);
+
+                        hasInserted = true;
+                        break;
+                    }
+
+                    j++;
                 }
-
-                if (chestStack.itemID == stack.itemID && chestStack.getMetadata() == stack.getMetadata() && chestStack.stackSize < chestStack.getMaxStackSize()) {
-                    chestStack.stackSize++;
-                    inventory.setInventorySlotContents(j, chestStack);
-
-                    hasInserted = true;
-                    break;
-                }
-
-                j++;
             }
         } else {
             int fuelSlot = 1;

@@ -5,6 +5,7 @@ import com.mojang.nbt.ListTag;
 import deboni.potatologistics.Util;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockChest;
+import net.minecraft.core.block.BlockStone;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityChest;
 import net.minecraft.core.block.tag.BlockTags;

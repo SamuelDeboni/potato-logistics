@@ -2,10 +2,7 @@ package deboni.potatologistics;
 
 import deboni.potatologistics.blocks.*;
 import deboni.potatologistics.blocks.entities.*;
-import deboni.potatologistics.gui.ContainerBurner;
-import deboni.potatologistics.gui.ContainerFilter;
-import deboni.potatologistics.gui.GuiBurner;
-import deboni.potatologistics.gui.GuiFilter;
+import deboni.potatologistics.gui.*;
 import deboni.potatologistics.items.ItemWireSpool;
 import deboni.potatologistics.items.Potato;
 import net.fabricmc.api.ModInitializer;
@@ -70,6 +67,7 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Block blockFurnaceBurnerOn;
     public static Block blockStirlingEngine;
     public static Block blockCoil;
+    public static Block blockAutoCrafter;
 
     @Override
     public void onInitialize() {
@@ -215,6 +213,15 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockCoil("coil", blockNum++, Material.metal));
 
+        blockAutoCrafter = new BlockBuilder(MOD_ID)
+                .setTextures("iron_machine_side.png")
+                .setTopTexture("auto_crafter_top.png")
+                .setBottomTexture("iron_machine_block.png")
+                .setNorthTexture("auto_crafter_front.png")
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+                .build(new BlockAutoCrafter("auto_crafter", blockNum++, Material.metal));
+
         int itemNum = config.getInt("starting_item_id");
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
         itemWrench = ItemHelper.createItem(MOD_ID, new Item("Wrench", itemNum++), "wrench", "wrench.png");
@@ -243,6 +250,9 @@ public class PotatoLogisticsMod implements ModInitializer {
         EntityHelper.createTileEntity(TileEntityCoil.class, "coil.tile");
         EntityHelper.createSpecialTileEntity(TileEntityMiningDrill.class, new TileEntityRendererMiningDrill(), "mining_drill.tile");
         EntityHelper.createSpecialTileEntity(TileEntityEnergyConnector.class, new TileEntityRendererEnergyConnector(), "energy_connector.tile");
+
+        EntityHelper.createTileEntity(TileEntityAutoCrafter.class, "auto_crafter.tile");
+        EnergyAPI.addToNameGuiMap("Auto Crafter", GuiAutoCrafter.class, TileEntityAutoCrafter.class, ContainerAutoCrafter.class);
 
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 1, new Object[]{Item.clay, Item.dustSugar, Item.dustGlowstone});
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 9, new Object[]{blockPotato});

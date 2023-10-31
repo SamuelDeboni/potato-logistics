@@ -23,9 +23,6 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
             int j1 = world.getBlockId(x - 1, y, z);
             int k1 = world.getBlockId(x + 1, y, z);
             byte byte0 = 3;
-//            if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1]) {
-//                byte0 = 3;
-//            }
 
             if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l]) {
                 byte0 = 2;
