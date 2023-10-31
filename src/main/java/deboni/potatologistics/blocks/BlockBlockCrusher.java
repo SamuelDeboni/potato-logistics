@@ -76,15 +76,14 @@ public class BlockBlockCrusher extends BlockRotatable {
             TileEntity te = world.getBlockTileEntity(tx, ty ,tz);
 
 
-            ItemStack[] breakResult;
-            // if (block.id == Block.bedrock.id) {} // Not sure why this was here
+            ItemStack[] breakResult = null;
             if (block.id == Block.cobbleStone.id) {
                 breakResult = new ItemStack[1];
                 breakResult[0] = new ItemStack(Block.gravel.asItem());
             } else if (block.id == Block.gravel.id) {
                 breakResult = new ItemStack[1];
                 breakResult[0] = new ItemStack(Block.sand.asItem());
-            } else {
+            } else if (block.getHardness() != -1){
                 breakResult = block.getBreakResult(world, EnumDropCause.PROPER_TOOL, tx, ty, tz, tmeta, te);
             }
 
