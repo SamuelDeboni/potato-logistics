@@ -111,10 +111,9 @@ public class BlockBlockCrusher extends BlockRotatable {
                         world.dropItem(ix, iy, iz, stack);
                     }
                 }
+                world.playSoundEffect(2001, tx, ty, tz, block.id);
+                world.setBlockWithNotify(tx, ty, tz, 0);
             }
-
-            world.playSoundEffect(2001, tx, ty, tz, block.id);
-            world.setBlockWithNotify(tx, ty, tz, 0);
         }
     }
 }
