@@ -16,9 +16,15 @@ import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
+import java.util.HashMap;
 import java.util.Random;
 
 public class BlockBlockCrusher extends BlockRotatable {
+    public static HashMap<Block, ItemStack[]> crushResults = new HashMap<>();
+    static {
+        crushResults.put(Block.cobbleStone, new ItemStack[]{new ItemStack(Block.gravel)});
+        crushResults.put(Block.gravel, new ItemStack[]{new ItemStack(Block.sand)});
+    }
     public BlockBlockCrusher(String key, int id, Material material) {
         super(key, id, material);
     }
@@ -51,6 +57,14 @@ public class BlockBlockCrusher extends BlockRotatable {
     public void onBlockRemoval(World world, int x, int y, int z) {
         super.onBlockRemoval(world, x, y, z);
     }
+    public static ItemStack[] cloneStackArray(ItemStack[] stacks){
+        ItemStack[] _result = new ItemStack[stacks.length];
+        for (int i = 0; i < _result.length; i++) {
+            ItemStack stack = stacks[i];
+            _result[i] = new ItemStack(stack.itemID,  stack.stackSize, stack.getMetadata());
+        }
+        return _result;
+    }
 
     @Override
     public void updateTick(World world, int x, int y, int z, Random rand) {
@@ -76,15 +90,10 @@ public class BlockBlockCrusher extends BlockRotatable {
             TileEntity te = world.getBlockTileEntity(tx, ty ,tz);
 
 
-            ItemStack[] breakResult;
-            // if (block.id == Block.bedrock.id) {} // Not sure why this was here
-            if (block.id == Block.cobbleStone.id) {
-                breakResult = new ItemStack[1];
-                breakResult[0] = new ItemStack(Block.gravel.asItem());
-            } else if (block.id == Block.gravel.id) {
-                breakResult = new ItemStack[1];
-                breakResult[0] = new ItemStack(Block.sand.asItem());
-            } else {
+            ItemStack[] breakResult = crushResults.get(block);
+            if (breakResult != null){
+                breakResult = cloneStackArray(breakResult);
+            } else if (block.getHardness() >= 0){
                 breakResult = block.getBreakResult(world, EnumDropCause.PROPER_TOOL, tx, ty, tz, tmeta, te);
             }
 
@@ -112,10 +121,9 @@ public class BlockBlockCrusher extends BlockRotatable {
                         world.dropItem(ix, iy, iz, stack);
                     }
                 }
+                world.playSoundEffect(2001, tx, ty, tz, block.id);
+                world.setBlockWithNotify(tx, ty, tz, 0);
             }
-
-            world.playSoundEffect(2001, tx, ty, tz, block.id);
-            world.setBlockWithNotify(tx, ty, tz, 0);
         }
     }
 }
