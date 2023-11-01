@@ -8,7 +8,7 @@ public class WailaPlugin implements BTWailaCustomTootltipPlugin {
     @Override
     public void initializePlugin(Logger logger) {
         new AutoBasketTooltip().addTooltip();
-        new FilterTooltip().addTooltip();
+        new InventoriesTooltip().addTooltip();
         new BurnerTooltip().addTooltip();
         new StirlingEngineTooltip().addTooltip();
         new EntityEnergyTooltip().addTooltip();
