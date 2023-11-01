@@ -89,12 +89,14 @@ public class BlockBlockCrusher extends BlockRotatable {
             int tmeta = world.getBlockMetadata(tx, ty, tz);
             TileEntity te = world.getBlockTileEntity(tx, ty ,tz);
 
-
+            boolean breakBlock = false;
             ItemStack[] breakResult = crushResults.get(block);
             if (breakResult != null){
                 breakResult = cloneStackArray(breakResult);
+                breakBlock = true;
             } else if (block.getHardness() >= 0){
                 breakResult = block.getBreakResult(world, EnumDropCause.PROPER_TOOL, tx, ty, tz, tmeta, te);
+                breakBlock = true;
             }
 
             if (breakResult != null && breakResult.length > 0) {
@@ -121,6 +123,8 @@ public class BlockBlockCrusher extends BlockRotatable {
                         world.dropItem(ix, iy, iz, stack);
                     }
                 }
+            }
+            if (breakBlock){
                 world.playSoundEffect(2001, tx, ty, tz, block.id);
                 world.setBlockWithNotify(tx, ty, tz, 0);
             }
