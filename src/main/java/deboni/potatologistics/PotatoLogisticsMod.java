@@ -275,6 +275,7 @@ public class PotatoLogisticsMod implements ModInitializer {
         RecipeHelper.Crafting.createRecipe(blockSteelMachineBlock, 1, new Object[]{"AAA", "BCB", "AAA", 'A', Item.ingotSteel, 'B', itemSteelGear, 'C', itemRedstoneAlloy});
         RecipeHelper.Crafting.createRecipe(itemWireSpool, 8, new Object[]{" A ", "ABA", " A ", 'A', itemRedstoneAlloy, 'B', Item.stick});
         RecipeHelper.Crafting.createRecipe(itemEnergyConnector, 4, new Object[]{" A ", "BAB", "BAB", 'A', Item.ingotIron, 'B', Item.brickClay});
+        RecipeHelper.Crafting.createRecipe(blockAutoCrafter, 1, new Object[]{"RRR", "ICI", "IGI", 'R', Item.dustRedstone, 'I', Item.ingotIron, 'C', Block.workbench, 'G', itemIronGear});
 
         RecipeHelper.Smelting.createRecipe(itemRedstoneAlloy, itemRedstoneIronMix);
 
