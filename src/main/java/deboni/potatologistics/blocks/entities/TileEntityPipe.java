@@ -179,16 +179,10 @@ public class TileEntityPipe extends TileEntity {
                         IInventory inventory = (IInventory) itemIo;
 
                         Connection con = itemIo.getItemIOForSide(sdir);
-                        if (con == Connection.INPUT || con == Connection.BOTH) {
+                        if (type == 2 && (con == Connection.INPUT || con == Connection.BOTH)) {
                             ioInventories.add(inventory);
                             itemIOs.add(itemIo);
                             ioDirections.add(sdir);
-                        }
-                    } else if (te instanceof TileEntityPipe && stack.direction != Direction.getDirectionById(i)) {
-                        TileEntityPipe pipe = (TileEntityPipe) te;
-                        if (pipe.stacks.size() < pipe.stackLimit && (!isDirectional || pipeDirection.getId() == i)) {
-                            pipes.add(pipe);
-                            directions.add(Direction.getDirectionById(i));
                         }
                     } else if (te instanceof IInventory) {
                         IInventory inventory = (IInventory) te;
@@ -200,6 +194,12 @@ public class TileEntityPipe extends TileEntity {
                         if (type == 2) {
                             inventories.add(inventory);
                             inventoriesDirection.add(Direction.getDirectionById(i));
+                        }
+                    } else if (te instanceof TileEntityPipe && stack.direction != Direction.getDirectionById(i)) {
+                        TileEntityPipe pipe = (TileEntityPipe) te;
+                        if (pipe.stacks.size() < pipe.stackLimit && (!isDirectional || pipeDirection.getId() == i)) {
+                            pipes.add(pipe);
+                            directions.add(Direction.getDirectionById(i));
                         }
                     }
                 }
