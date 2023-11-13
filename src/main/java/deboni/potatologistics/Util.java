@@ -6,7 +6,6 @@ import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.crafting.CraftingManager;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
@@ -16,6 +15,7 @@ import org.lwjgl.util.vector.Vector3f;
 import sunsetsatellite.sunsetutils.util.Connection;
 import sunsetsatellite.sunsetutils.util.IItemIO;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class Util {
@@ -194,6 +194,16 @@ public class Util {
 
     public static boolean insertOnInventory(IInventory inventory, ItemStack stack, Direction direction, TileEntityPipe[] pipes) {
         boolean hasInserted = false;
+        if (inventory == null || pipes == null){
+            System.out.println(Arrays.toString(new NullPointerException("Null Pointer in insertOnInventory!!").getStackTrace()));
+            StringBuilder builder = new StringBuilder("Error something is null when it shouldn't be!! | Inventory: ")
+                    .append(inventory == null? "null" : inventory.getInvName())
+                    .append(" | Pipes: ")
+                    .append(pipes == null? "null" : pipes.length);
+            System.out.println(builder);
+            PotatoLogisticsMod.LOGGER.info(builder.toString());
+            return false;
+        }
         int inventorySize = inventory.getSizeInventory();
         String inventoryName = inventory.getInvName();
 
