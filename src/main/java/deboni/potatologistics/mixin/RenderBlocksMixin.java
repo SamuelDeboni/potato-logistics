@@ -195,21 +195,26 @@ public abstract class RenderBlocksMixin {
         TileEntity te = world.getBlockTileEntity(x, y, z);
         if (te instanceof TileEntityStirlingEngine) {
             TileEntityStirlingEngine engine = (TileEntityStirlingEngine) te;
-            if (engine.temperature != 0) {
+            if (engine.temperature > 0) {
                 float t = (float) (engine.temperature - engine.minTemperature) / (float) (engine.maxTemperature - engine.minTemperature);
-                heatColor[1] = (1 - t) + t * 0.4f;
-                heatColor[2] = (1 - t) + t * 0.2f;
+                heatColor[1] = Math.min((1 - t) + t * 0.4f, 1);
+                heatColor[2] = Math.min((1 - t) + t * 0.2f, 1);
             }
         }
 
         boolean b = false;
-        for (float yf = 0.5f - onepix * 1; yf <= 1.0f; yf += onepix) {
+        for (float yf = 0.5f - onepix * 1; yf < 1.0f; yf += onepix) {
+            float t = (yf - 0.4f) * 1.8f;
+
             if (b) {
                 block.setBlockBounds(onepix * 2, yf, onepix * 2, 1 - onepix * 2, yf + onepix, 1 - onepix * 2);
             } else {
                 block.setBlockBounds(0, yf, 0, 1, yf + onepix, 1);
             }
-            renderblocks.renderStandardBlockWithColorMultiplier(block, x, y, z, heatColor[0], heatColor[1], heatColor[2]);
+
+            float heatColor_1 = (1 - t) + t * heatColor[1];
+            float heatColor_2 = (1 - t) + t * heatColor[2];
+            renderblocks.renderStandardBlockWithColorMultiplier(block, x, y, z, heatColor[0], heatColor_1, heatColor_2);
 
             b = !b;
         }
@@ -329,10 +334,10 @@ public abstract class RenderBlocksMixin {
         float pixelSize = 1.0f / 16.0f;
         float halfPixelSize = pixelSize * 0.5f;
 
-        float offset = pixelSize * 2;
+        float offset = pixelSize * 3;
         TileEntity te = world.getBlockTileEntity(x, y, z);
         if (te instanceof TileEntityTreeChopper && ((TileEntityTreeChopper)te).isActive) {
-            offset = pixelSize * 6;
+            offset = pixelSize * 7;
         }
 
         float size = 1.0f;
@@ -340,28 +345,28 @@ public abstract class RenderBlocksMixin {
         float max = 0.5f + size * 0.5f;
 
         if (direction == Direction.NORTH) {
-            block.setBlockBounds(0.0f, 0.0f, pixelSize, 1.0f, 1.0f, 1.0f);
+            //block.setBlockBounds(0.0f, 0.0f, pixelSize, 1.0f, 1.0f, 1.0f);
 
             PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(
                     pixelSize * 2, 0.5f, min - offset,
                     1.0f - pixelSize * 2, 0.5f, max - offset
             );
         } else if (direction == Direction.SOUTH) {
-            block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f - pixelSize);
+            //block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f - pixelSize);
 
             PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(
                     pixelSize * 2, 0.5f, min + offset,
                     1.0f - pixelSize * 2, 0.5f, max + offset
             );
         } else if (direction == Direction.EAST) {
-            block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f - pixelSize, 1.0f, 1.0f);
+            //block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f - pixelSize, 1.0f, 1.0f);
 
             PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(
                     min + offset, 0.5f, pixelSize * 2,
                     max + offset, 0.5f, 1.0f - pixelSize * 2
             );
         } else {
-            block.setBlockBounds(pixelSize, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+            //block.setBlockBounds(pixelSize, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
 
             PotatoLogisticsMod.blockTreeChopperSaw.setBlockBounds(
                     min - offset, 0.5f, pixelSize * 2,

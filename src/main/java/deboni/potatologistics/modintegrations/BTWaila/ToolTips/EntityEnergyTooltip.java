@@ -20,6 +20,7 @@ public class EntityEnergyTooltip implements IBTWailaCustomBlockTooltip {
         tooltipGroup.addTooltip(TileEntityEnergyConnector.class);
         tooltipGroup.addTooltip(TileEntityMiningDrill.class);
         tooltipGroup.addTooltip(TileEntityTreeChopper.class);
+        tooltipGroup.addTooltip(TileEntityCapacitor.class);
         TooltipRegistry.tooltipMap.add(tooltipGroup);
     }
 

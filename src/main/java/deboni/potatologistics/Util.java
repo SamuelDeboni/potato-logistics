@@ -115,8 +115,7 @@ public class Util {
 
                 ItemStack stack = inventory.getStackInSlot(index);
                 if (stack != null) {
-                    stack.stackSize--;
-                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
+                    returnStack = new PipeStack(removeItemFromStack(stack), dir, stackTimer);
                     if (stack.stackSize <= 0) stack = null;
                     inventory.setInventorySlotContents(index, stack);
                 }
@@ -147,9 +146,7 @@ public class Util {
                 }
 
                 if (stack != null && j > 0) {
-                    stack.stackSize--;
-
-                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
+                    returnStack = new PipeStack(removeItemFromStack(stack), dir, stackTimer);
                     if (stack.stackSize <= 0) stack = null;
                     inventory.setInventorySlotContents(j - 1, stack);
                     return returnStack;
@@ -161,8 +158,7 @@ public class Util {
                 for (; stack == null && j < inventorySize; j++) stack = inventory.getStackInSlot(j);
 
                 if (stack != null && j > 0) {
-                    stack.stackSize--;
-                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
+                    returnStack = new PipeStack(removeItemFromStack(stack), dir, stackTimer);
                     if (stack.stackSize <= 0) stack = null;
                     inventory.setInventorySlotContents(j - 1, stack);
                     return returnStack;
@@ -171,13 +167,12 @@ public class Util {
                 TileEntityAutoCrafter ac = (TileEntityAutoCrafter) te;
                 ItemStack stack = ac.removeOneResult();
                 if (stack != null) {
-                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
+                    returnStack = new PipeStack(removeItemFromStack(stack), dir, stackTimer);
                 }
             } else if (inventory.getSizeInventory() > 2){
                 ItemStack stack = inventory.getStackInSlot(2);
                 if (stack != null) {
-                    stack.stackSize--;
-                    returnStack = new PipeStack(new ItemStack(stack.getItem(), 1, stack.getMetadata()), dir, stackTimer);
+                    returnStack = new PipeStack(removeItemFromStack(stack), dir, stackTimer);
                     if (stack.stackSize <= 0) stack = null;
                     inventory.setInventorySlotContents(2, stack);
                 }
@@ -221,7 +216,7 @@ public class Util {
                         break;
                     }
 
-                    if (chestStack.itemID == stack.itemID && chestStack.getMetadata() == stack.getMetadata() && chestStack.stackSize < chestStack.getMaxStackSize()) {
+                    if (chestStack.canStackWith(stack) && chestStack.stackSize < chestStack.getMaxStackSize()) {
                         chestStack.stackSize++;
                         inventory.setInventorySlotContents(j, chestStack);
 
@@ -240,7 +235,7 @@ public class Util {
                 fuelSlot = 4;
                 for (; inputSlot < 3; inputSlot++) {
                     ItemStack s = inventory.getStackInSlot(inputSlot);
-                    if (s == null || s.itemID == stack.itemID && s.stackSize < s.getMaxStackSize()) break;
+                    if (s == null || s.canStackWith(stack) && s.stackSize < s.getMaxStackSize()) break;
                 }
             }
 
@@ -257,7 +252,7 @@ public class Util {
                     maxStackSize = Math.min(maxStackSize, 8);
                 }
 
-                if (furnaceStack.itemID == stack.itemID && furnaceStack.stackSize < maxStackSize) {
+                if (furnaceStack.canStackWith(stack) && furnaceStack.stackSize < maxStackSize) {
                     furnaceStack.stackSize++;
                     inventory.setInventorySlotContents(targetSlot, furnaceStack);
                     hasInserted = true;
@@ -266,5 +261,12 @@ public class Util {
         }
 
         return  hasInserted;
+    }
+
+    public static ItemStack removeItemFromStack(ItemStack stack) {
+        ItemStack newStack = stack.copy();
+        newStack.stackSize = 1;
+        stack.stackSize--;
+        return newStack;
     }
 }

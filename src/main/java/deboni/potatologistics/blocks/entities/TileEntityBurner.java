@@ -41,14 +41,9 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
         boolean updated = false;
 
         if (!this.worldObj.isClientSide) {
-            if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockGettingPowered(xCoord, yCoord, zCoord)) {
-                isPowered = true;
-                return 0;
-            } else {
-                isPowered = false;
-            }
+            isPowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockGettingPowered(xCoord, yCoord, zCoord);
 
-            if (this.currentBurnTime == 0) {
+            if (this.currentBurnTime <= 0 && !isPowered) {
                 this.maxBurnTime = this.currentBurnTime = this.getBurnTimeFromItem(this.contents[0]) / 5;
                 if (this.currentBurnTime > 0) {
                     currentFuel = this.contents[0];

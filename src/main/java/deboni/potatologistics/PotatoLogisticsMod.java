@@ -15,9 +15,6 @@ import net.minecraft.core.item.ItemPlaceable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sunsetsatellite.energyapi.EnergyAPI;
-import sunsetsatellite.energyapi.template.containers.ContainerMachine;
-import sunsetsatellite.energyapi.template.gui.GuiMachine;
-import sunsetsatellite.energyapi.template.tiles.TileEntityMachine;
 import turniplabs.halplibe.helper.*;
 import turniplabs.halplibe.util.ConfigHandler;
 
@@ -68,6 +65,7 @@ public class PotatoLogisticsMod implements ModInitializer {
     public static Block blockStirlingEngine;
     public static Block blockCoil;
     public static Block blockAutoCrafter;
+    public static Block blockCapacitorLv;
 
     @Override
     public void onInitialize() {
@@ -129,6 +127,7 @@ public class PotatoLogisticsMod implements ModInitializer {
         blockTreeChopper = new BlockBuilder(MOD_ID)
                 .setSideTextures("iron_machine_side.png")
                 .setNorthTexture("iron_machine_block.png")
+                .setSouthTexture("iron_chasing_details1.png")
                 .setTopTexture("tree_chopper_front.png")
                 .setBottomTexture("iron_machine_out.png")
                 .setLightOpacity(0)
@@ -177,8 +176,8 @@ public class PotatoLogisticsMod implements ModInitializer {
 
         blockAdvancedDispenser = new BlockBuilder(MOD_ID)
                 .setTextures("iron_machine_side.png")
-                .setTopTexture("iron_machine_block.png")
-                .setBottomTexture("iron_machine_block.png")
+                .setTopTexture("iron_chasing_details0.png")
+                .setBottomTexture("iron_chasing_details1.png")
                 .setNorthTexture("advanced_dispenser_front.png")
                 .setHardness(1.5f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
@@ -199,7 +198,9 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .build(new BlockFurnaceBurner("furnace_burner_on", blockNum++, Material.metal));
 
         blockStirlingEngine = new BlockBuilder(MOD_ID)
-                .setTextures("iron_machine_block.png")
+                .setBottomTexture("stirling_engine_bottom.png")
+                .setTopTexture("stirling_engine_top.png")
+                .setSideTextures("stirling_engine_sides.png")
                 .setHardness(2.0f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .setBlockModel(new BlockModelRenderBlocks(154))
@@ -221,6 +222,13 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .setHardness(1.5f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockAutoCrafter("auto_crafter", blockNum++, Material.metal));
+
+        blockCapacitorLv = new BlockBuilder(MOD_ID)
+                .setTextures("capacitor_out.png")
+                .setTopTexture("capacitor_in.png")
+                .setHardness(1.5f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+                .build(new BlockCapacitor("lv_capacitor", blockNum++, Material.metal));
 
         int itemNum = config.getInt("starting_item_id");
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
@@ -254,6 +262,8 @@ public class PotatoLogisticsMod implements ModInitializer {
         EntityHelper.createTileEntity(TileEntityAutoCrafter.class, "auto_crafter.tile");
         EnergyAPI.addToNameGuiMap("Auto Crafter", GuiAutoCrafter.class, TileEntityAutoCrafter.class, ContainerAutoCrafter.class);
 
+        EntityHelper.createTileEntity(TileEntityCapacitor.class, "capacitor.tile");
+
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 1, new Object[]{Item.clay, Item.dustSugar, Item.dustGlowstone});
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 9, new Object[]{blockPotato});
         RecipeHelper.Crafting.createShapelessRecipe(itemWireSpool, 1, new Object[]{itemWireSpool});
@@ -273,9 +283,12 @@ public class PotatoLogisticsMod implements ModInitializer {
         RecipeHelper.Crafting.createRecipe(itemSteelGear, 1, new Object[]{" A ", "A A", " A ", 'A', Item.ingotSteel});
         RecipeHelper.Crafting.createRecipe(blockIronMachineBlock, 1, new Object[]{"AAA", "BCB", "AAA", 'A', Item.ingotIron, 'B', itemIronGear, 'C', itemRedstoneAlloy});
         RecipeHelper.Crafting.createRecipe(blockSteelMachineBlock, 1, new Object[]{"AAA", "BCB", "AAA", 'A', Item.ingotSteel, 'B', itemSteelGear, 'C', itemRedstoneAlloy});
-        RecipeHelper.Crafting.createRecipe(itemWireSpool, 8, new Object[]{" A ", "ABA", " A ", 'A', itemRedstoneAlloy, 'B', Item.stick});
+        RecipeHelper.Crafting.createRecipe(itemWireSpool, 4, new Object[]{" A ", "ABA", " A ", 'A', itemRedstoneAlloy, 'B', Item.stick});
         RecipeHelper.Crafting.createRecipe(itemEnergyConnector, 4, new Object[]{" A ", "BAB", "BAB", 'A', Item.ingotIron, 'B', Item.brickClay});
         RecipeHelper.Crafting.createRecipe(blockAutoCrafter, 1, new Object[]{"RRR", "ICI", "IGI", 'R', Item.dustRedstone, 'I', Item.ingotIron, 'C', Block.workbench, 'G', itemIronGear});
+        RecipeHelper.Crafting.createRecipe(blockFurnaceBurner, 1, new Object[]{"III", "I I", "IFI", 'I', Item.ingotIron, 'F', Block.furnaceStoneIdle});
+        RecipeHelper.Crafting.createRecipe(blockStirlingEngine, 1, new Object[]{"IPI", " M ", "IPI", 'I', Item.ingotIron, 'P', Block.pistonBase, 'M', blockIronMachineBlock});
+        RecipeHelper.Crafting.createRecipe(blockCoil, 1, new Object[]{"WWW", "W W", "WWW", 'W', itemWireSpool});
 
         RecipeHelper.Smelting.createRecipe(itemRedstoneAlloy, itemRedstoneIronMix);
 

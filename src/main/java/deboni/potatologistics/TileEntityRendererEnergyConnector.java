@@ -44,17 +44,21 @@ public class TileEntityRendererEnergyConnector extends TileEntityRenderer<TileEn
                 yOff1 *= yOff;
 
                 b = !b;
-                float r_col = 1.7f;
-                float g_col = 1;
-                float b_col = 1;
+                float r_col = 0.88f;
+                float g_col = 0.22f;
+                float b_col = 0.22f;
                 if (b) {
-                    g_col = 1.2f;
-                    b_col = 1.2f;
+                    r_col = 1.0f;
+                    g_col = 0.57f;
+                    b_col = 0.57f;
                 }
+
+                float bright = 1.8f;
 
                 Util.draw3dLine(0.05,
                         tx, ty - yOff0 , tz,
-                        tx + x2 * t_increment, ty + y2 * t_increment - yOff1, tz + z2 * t_increment, r_col, g_col, b_col);
+                        tx + x2 * t_increment, ty + y2 * t_increment - yOff1, tz + z2 * t_increment,
+                        r_col * bright, g_col * bright, b_col * bright);
             }
         }
 
