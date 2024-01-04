@@ -15,9 +15,10 @@ public class GuiAutoCrafter extends GuiContainer {
         super(new ContainerAutoCrafter(inventoryPlayer, tile));
     }
 
+
     @Override
-    public void onGuiClosed() {
-        super.onGuiClosed();
+    public void onClosed() {
+        super.onClosed();
         this.inventorySlots.onCraftGuiClosed(this.mc.thePlayer);
     }
 

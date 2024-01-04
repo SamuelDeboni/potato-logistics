@@ -12,9 +12,11 @@ import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemPlaceable;
+import net.minecraft.core.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sunsetsatellite.energyapi.EnergyAPI;
+import sunsetsatellite.catalyst.Catalyst;
+import sunsetsatellite.catalyst.core.util.MpGuiEntry;
 import turniplabs.halplibe.helper.*;
 import turniplabs.halplibe.util.ConfigHandler;
 
@@ -71,9 +73,6 @@ public class PotatoLogisticsMod implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("PotatoLogistics initialized.");
 
-        EnergyAPI.addToNameGuiMap("Filter", GuiFilter.class, TileEntityFilter.class, ContainerFilter.class);
-        EnergyAPI.addToNameGuiMap("Coal Burner", GuiBurner.class, TileEntityBurner.class, ContainerBurner.class);
-
         int blockNum = config.getInt("starting_block_id");
         //potatoBlock = BlockHelper.createBlock(MOD_ID, new Block("crop.potato", blockNum++, Material.plant), "potato.png", "potato.png", null, 0.0f, 0.0f, 0.0f);
         blockPotato = new BlockBuilder(MOD_ID)
@@ -109,7 +108,7 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .build(new BlockAutoBasket("auto_basket", blockNum++, Material.cloth));
 
         blockBlockCrusher = new BlockBuilder(MOD_ID)
-                .setSideTextures(14, 3)
+                .setSideTextures("block_crusher_side.png")
                 .setTopTexture("block_crusher_front.png")
                 .setBottomTexture("block_crusher_back.png")
                 .setHardness(1.5f)
@@ -117,7 +116,7 @@ public class PotatoLogisticsMod implements ModInitializer {
                 .build(new BlockBlockCrusher("block_crusher", blockNum++, Material.stone));
 
         blockBlockPlacer = new BlockBuilder(MOD_ID)
-                .setSideTextures(14, 3)
+                .setSideTextures("block_placer_side.png")
                 .setTopTexture("block_placer_front.png")
                 .setBottomTexture("block_crusher_back.png")
                 .setHardness(1.5f)
@@ -246,10 +245,10 @@ public class PotatoLogisticsMod implements ModInitializer {
         EntityHelper.createSpecialTileEntity(TileEntityPipe.class, new TileEntityRendererPipe(), "pipe.tile");
 
         EntityHelper.createTileEntity(TileEntityFilter.class, "filter.tile");
-        EnergyAPI.addToNameGuiMap("Filter", GuiFilter.class, TileEntityFilter.class, ContainerFilter.class);
+        Catalyst.GUIS.register("Filter", new MpGuiEntry(TileEntityFilter.class, GuiFilter.class, ContainerFilter.class));
 
         EntityHelper.createTileEntity(TileEntityBurner.class, "furnace_burner.tile");
-        EnergyAPI.addToNameGuiMap("Coal Burner", GuiBurner.class, TileEntityBurner.class, ContainerBurner.class);
+        Catalyst.GUIS.register("Coal Burner", new MpGuiEntry(TileEntityBurner.class, GuiBurner.class, ContainerBurner.class));
 
         EntityHelper.createTileEntity(TileEntityAutoBasket.class, "auto_basket.tile");
         EntityHelper.createTileEntity(TileEntityTreeChopper.class, "tree_chopper.tile");
@@ -260,7 +259,7 @@ public class PotatoLogisticsMod implements ModInitializer {
         EntityHelper.createSpecialTileEntity(TileEntityEnergyConnector.class, new TileEntityRendererEnergyConnector(), "energy_connector.tile");
 
         EntityHelper.createTileEntity(TileEntityAutoCrafter.class, "auto_crafter.tile");
-        EnergyAPI.addToNameGuiMap("Auto Crafter", GuiAutoCrafter.class, TileEntityAutoCrafter.class, ContainerAutoCrafter.class);
+        Catalyst.GUIS.register("Auto Crafter", new MpGuiEntry(TileEntityAutoCrafter.class, GuiAutoCrafter.class, ContainerAutoCrafter.class));
 
         EntityHelper.createTileEntity(TileEntityCapacitor.class, "capacitor.tile");
 
@@ -269,31 +268,31 @@ public class PotatoLogisticsMod implements ModInitializer {
         RecipeHelper.Crafting.createShapelessRecipe(itemWireSpool, 1, new Object[]{itemWireSpool});
         RecipeHelper.Crafting.createShapelessRecipe(itemRedstoneIronMix, 1, new Object[]{Item.ingotIron, Item.dustRedstone, Item.dustRedstone, Item.dustRedstone});
 
-        RecipeHelper.Crafting.createRecipe(blockPotato, 1, new Object[]{"AAA", "AAA", "AAA", 'A', itemPotato});
-        RecipeHelper.Crafting.createRecipe(blockPipe, 16, new Object[]{"   ", "ABA", "   ", 'A', Item.ingotIron, 'B', Block.glass});
-        RecipeHelper.Crafting.createRecipe(blockDirectionalPipe, 16, new Object[]{"   ", "ABC", "   ", 'A', Item.ingotIron, 'B', Block.glass, 'C', Item.ingotGold});
-        RecipeHelper.Crafting.createRecipe(itemWrench, 1, new Object[]{" A ", "AA ", "  A", 'A', Item.ingotIron, 'B', Block.glass});
-        RecipeHelper.Crafting.createRecipe(blockFilter, 1, new Object[]{"ABA", "BCB", "ABA", 'A', Block.planksOak, 'B', Item.dustRedstone, 'C', Block.mesh});
-        RecipeHelper.Crafting.createRecipe(itemAutoBasket, 1, new Object[]{"AAA", "CBC", "CCC", 'A', Item.leather, 'B', Item.dustRedstone, 'C', Item.wheat});
-        RecipeHelper.Crafting.createRecipe(blockBlockCrusher, 1, new Object[]{"ABA", "ECF", "ADA", 'A', Block.cobbleStone, 'B', Block.obsidian, 'C', Item.toolPickaxeDiamond, 'D', Block.pistonBaseSticky, 'E', blockPipe, 'F', Item.dustRedstone});
-        RecipeHelper.Crafting.createRecipe(blockBlockPlacer, 1, new Object[]{"ADA", "ACA", "ABA", 'A', Block.cobbleStone, 'B', blockPipe, 'C', Item.dustRedstone, 'D', Block.pistonBase});
-        RecipeHelper.Crafting.createRecipe(blockTreeChopper, 1, new Object[]{"AAA", "BCD", "AEA", 'A', Item.ingotIron, 'B', Item.toolAxeDiamond, 'C', blockIronMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
-        RecipeHelper.Crafting.createRecipe(blockMiningDrill, 1, new Object[]{"ADA", "CBC", "AEA", 'A', Item.ingotSteel, 'B', Item.toolPickaxeDiamond, 'C', blockSteelMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
-        RecipeHelper.Crafting.createRecipe(itemIronGear, 1, new Object[]{" A ", "A A", " A ", 'A', Item.ingotIron});
-        RecipeHelper.Crafting.createRecipe(itemSteelGear, 1, new Object[]{" A ", "A A", " A ", 'A', Item.ingotSteel});
-        RecipeHelper.Crafting.createRecipe(blockIronMachineBlock, 1, new Object[]{"AAA", "BCB", "AAA", 'A', Item.ingotIron, 'B', itemIronGear, 'C', itemRedstoneAlloy});
-        RecipeHelper.Crafting.createRecipe(blockSteelMachineBlock, 1, new Object[]{"AAA", "BCB", "AAA", 'A', Item.ingotSteel, 'B', itemSteelGear, 'C', itemRedstoneAlloy});
-        RecipeHelper.Crafting.createRecipe(itemWireSpool, 4, new Object[]{" A ", "ABA", " A ", 'A', itemRedstoneAlloy, 'B', Item.stick});
-        RecipeHelper.Crafting.createRecipe(itemEnergyConnector, 4, new Object[]{" A ", "BAB", "BAB", 'A', Item.ingotIron, 'B', Item.brickClay});
-        RecipeHelper.Crafting.createRecipe(blockAutoCrafter, 1, new Object[]{"RRR", "ICI", "IGI", 'R', Item.dustRedstone, 'I', Item.ingotIron, 'C', Block.workbench, 'G', itemIronGear});
-        RecipeHelper.Crafting.createRecipe(blockFurnaceBurner, 1, new Object[]{"III", "I I", "IFI", 'I', Item.ingotIron, 'F', Block.furnaceStoneIdle});
-        RecipeHelper.Crafting.createRecipe(blockStirlingEngine, 1, new Object[]{"IPI", " M ", "IPI", 'I', Item.ingotIron, 'P', Block.pistonBase, 'M', blockIronMachineBlock});
-        RecipeHelper.Crafting.createRecipe(blockCoil, 1, new Object[]{"WWW", "W W", "WWW", 'W', itemWireSpool});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockPotato, 1), new Object[]{"AAA", "AAA", "AAA", 'A', itemPotato});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockPipe, 16), new Object[]{"   ", "ABA", "   ", 'A', Item.ingotIron, 'B', Block.glass});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockDirectionalPipe, 16), new Object[]{"   ", "ABC", "   ", 'A', Item.ingotIron, 'B', Block.glass, 'C', Item.ingotGold});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(itemWrench, 1), new Object[]{" A ", "AA ", "  A", 'A', Item.ingotIron, 'B', Block.glass});
+        RecipeHelper.craftingManager.addRecipe(new ItemStack(blockFilter, 1), true, false,
+                new Object[]{"ABA", "BCB", "ABA", 'A', Block.planksOak, 'B', Item.dustRedstone, 'C', Block.mesh});
+
+        //RecipeHelper.Crafting.createRecipe(blockFilter, 1, new Object[]{"ABA", "BCB", "ABA", 'A', Block.planksOakPainted, 'B', Item.dustRedstone, 'C', Block.mesh});
+        //RecipeHelper.Crafting.createRecipe(blockFilter, 1, new Object[]{"ABA", "BCB", "ABA", 'A', new ItemStack(Block.planksOakPainted.id, 1, 1), 'B', Item.dustRedstone, 'C', Block.mesh});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(itemAutoBasket, 1), new Object[]{"AAA", "CBC", "CCC", 'A', Item.leather, 'B', Item.dustRedstone, 'C', Item.wheat});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockBlockCrusher, 1), new Object[]{"ABA", "ECF", "ADA", 'A', Block.cobbleStone, 'B', Block.obsidian, 'C', Item.toolPickaxeDiamond, 'D', Block.pistonBaseSticky, 'E', blockPipe, 'F', Item.dustRedstone});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockBlockPlacer, 1), new Object[]{"ADA", "ACA", "ABA", 'A', Block.cobbleStone, 'B', blockPipe, 'C', Item.dustRedstone, 'D', Block.pistonBase});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockTreeChopper, 1), new Object[]{"AAA", "BCD", "AEA", 'A', Item.ingotIron, 'B', Item.toolAxeDiamond, 'C', blockIronMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockMiningDrill, 1), new Object[]{"ADA", "CBC", "AEA", 'A', Item.ingotSteel, 'B', Item.toolPickaxeDiamond, 'C', blockSteelMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(itemIronGear, 1), new Object[]{" A ", "A A", " A ", 'A', Item.ingotIron});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(itemSteelGear, 1), new Object[]{" A ", "A A", " A ", 'A', Item.ingotSteel});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockIronMachineBlock, 1), new Object[]{"AAA", "BCB", "AAA", 'A', Item.ingotIron, 'B', itemIronGear, 'C', itemRedstoneAlloy});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockSteelMachineBlock, 1), new Object[]{"AAA", "BCB", "AAA", 'A', Item.ingotSteel, 'B', itemSteelGear, 'C', itemRedstoneAlloy});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(itemWireSpool, 4), new Object[]{" A ", "ABA", " A ", 'A', itemRedstoneAlloy, 'B', Item.stick});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(itemEnergyConnector, 4), new Object[]{" A ", "BAB", "BAB", 'A', Item.ingotIron, 'B', Item.brickClay});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockAutoCrafter, 1), new Object[]{"RRR", "ICI", "IGI", 'R', Item.dustRedstone, 'I', Item.ingotIron, 'C', Block.workbench, 'G', itemIronGear});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockFurnaceBurner, 1), new Object[]{"III", "I I", "IFI", 'I', Item.ingotIron, 'F', Block.furnaceStoneIdle});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockStirlingEngine, 1), new Object[]{"IPI", " M ", "IPI", 'I', Item.ingotIron, 'P', Block.pistonBase, 'M', blockIronMachineBlock});
+        RecipeHelper.Crafting.createRecipe(new ItemStack(blockCoil, 1), new Object[]{"WWW", "W W", "WWW", 'W', itemWireSpool});
 
         RecipeHelper.Smelting.createRecipe(itemRedstoneAlloy, itemRedstoneIronMix);
-
-        if (EnergyAPI.generator != null) {
-            RecipeHelper.Crafting.createRecipe(EnergyAPI.generator, 1, new Object[]{"AAA", "ABA", "ACA", 'A', Item.ingotIron, 'B', blockIronMachineBlock, 'C', Block.furnaceStoneIdle});
-        }
     }
 }

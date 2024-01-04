@@ -26,10 +26,27 @@ public class BlockBlockPlacer extends BlockRotatable {
         if (blockId > 0 && Block.blocksList[blockId].canProvidePower()) {
             boolean flag = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
             if (flag) {
-                world.scheduleBlockUpdate(x, y, z, this.id, 0);
+                world.scheduleBlockUpdate(x, y, z, this.id, this.tickRate());
             }
         }
     }
+
+    /*
+    @Override
+    public int getBlockTextureFromSideAndMetadata(Side side, int j) {
+        int orientation = BlockPistonBase.getOrientation(j);
+        if (orientation > 5) {
+            return this.atlasIndices[0];
+        }
+        if (side.getId() == orientation) {
+            if (BlockPistonBase.isPowered(j) || this.minX > 0.0 || this.minY > 0.0 || this.minZ > 0.0 || this.maxX < 1.0 || this.maxY < 1.0 || this.maxZ < 1.0) {
+                return BlockPistonBase.texCoordToIndex(14, 6);
+            }
+            return this.atlasIndices[0];
+        }
+        return side.getId() != PistonDirections.orientationMap[orientation] ? BlockPistonBase.texCoordToIndex(12, 6) : BlockPistonBase.texCoordToIndex(13, 6);
+    }
+     */
 
     @Override
     public void onBlockPlaced(World world, int x, int y, int z, Side side, EntityLiving entity, double sideHeight) {
@@ -43,11 +60,6 @@ public class BlockBlockPlacer extends BlockRotatable {
     public void onBlockAdded(World world, int i, int j, int k) {
         super.onBlockAdded(world, i, j, k);
         this.setDefaultDirection(world, i, j, k);
-    }
-
-    @Override
-    public void onBlockRemoval(World world, int x, int y, int z) {
-        super.onBlockRemoval(world, x, y, z);
     }
 
     @Override
@@ -83,7 +95,6 @@ public class BlockBlockPlacer extends BlockRotatable {
 
             world.playSoundEffect(2000, tx, ty, tz, blockToPlace.itemID);
             boolean placed = world.setBlockWithNotify(tx, ty, tz, blockToPlace.itemID);
-
         }
     }
 }

@@ -28,8 +28,7 @@
       "potatologistics.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.13.3",
-    "energyapi": ">=1.1.9"
+    "fabricloader": ">=0.13.3"
   },
   "suggests": {
   }

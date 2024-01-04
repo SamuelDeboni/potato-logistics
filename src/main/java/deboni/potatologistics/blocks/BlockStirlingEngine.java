@@ -21,7 +21,7 @@ public class BlockStirlingEngine extends BlockTileEntity {
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isSolidRender() {
         return false;
     }
 }

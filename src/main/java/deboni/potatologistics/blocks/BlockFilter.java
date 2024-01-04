@@ -9,9 +9,7 @@ import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.world.World;
-import sunsetsatellite.energyapi.EnergyAPI;
-import sunsetsatellite.energyapi.interfaces.mixins.IEntityPlayer;
-import sunsetsatellite.energyapi.template.blocks.BlockGenerator;
+import sunsetsatellite.catalyst.Catalyst;
 
 public class BlockFilter extends BlockTileEntity {
     public BlockFilter(String key, int id, Material material) {
@@ -24,9 +22,9 @@ public class BlockFilter extends BlockTileEntity {
     }
 
     @Override
-    public void onBlockRemoval(World world, int x, int y, int z) {
+    public void onBlockRemoved(World world, int x, int y, int z, int data) {
         dropFilterContent(world, x, y, z);
-        super.onBlockRemoval(world, x, y, z);
+        super.onBlockRemoved(world, x, y, z, data);
     }
 
     public static void dropFilterContent(World world, int x, int y, int z) {
@@ -49,8 +47,8 @@ public class BlockFilter extends BlockTileEntity {
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if (!world.isClientSide) {
-            IInventory inventory = (IInventory) world.getBlockTileEntity(x, y, z);
-            EnergyAPI.displayGui(player, inventory);
+            TileEntity inventory = world.getBlockTileEntity(x, y, z);
+            Catalyst.displayGui(player, inventory, "Filter");
         }
         return true;
     }

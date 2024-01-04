@@ -44,7 +44,7 @@ public class BlockCapacitor extends BlockTileEntityRotatable {
     }
 
     @Override
-    public void onBlockRemoval(World world, int x, int y, int z) {
+    public void onBlockRemoved(World world, int x, int y, int z, int data) {
         world.notifyBlocksOfNeighborChange(x, y - 1, z, this.id);
         world.notifyBlocksOfNeighborChange(x, y + 1, z, this.id);
         world.notifyBlocksOfNeighborChange(x - 1, y, z, this.id);

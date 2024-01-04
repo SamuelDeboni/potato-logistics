@@ -2,21 +2,22 @@ package deboni.potatologistics.blocks.entities;
 
 import net.minecraft.core.block.BlockRedstone;
 import net.minecraft.core.block.BlockRedstoneWire;
-import sunsetsatellite.sunsetutils.util.Direction;
+import sunsetsatellite.catalyst.core.util.Direction;
+import sunsetsatellite.catalyst.energy.impl.TileEntityEnergyConductor;
 
-public class TileEntityCapacitor extends TileEntityEnergyConnector {
+public class TileEntityCapacitor extends TileEntityEnergyConductor {
 
     public int prevEnergyLevel = 0;
 
     public TileEntityCapacitor(int capacity) {
-        setCapacity(capacity);
+        this.setCapacity(capacity);
         setEnergy(0);
         setTransfer(32);
 
         for (Direction dir: Direction.values()) {
-            setConnection(dir, sunsetsatellite.sunsetutils.util.Connection.OUTPUT);
+            setConnection(dir, sunsetsatellite.catalyst.core.util.Connection.OUTPUT);
         }
-        setConnection(Direction.Y_POS, sunsetsatellite.sunsetutils.util.Connection.INPUT);
+        setConnection(Direction.Y_POS, sunsetsatellite.catalyst.core.util.Connection.INPUT);
     }
 
     public boolean needPower() {
@@ -27,8 +28,8 @@ public class TileEntityCapacitor extends TileEntityEnergyConnector {
     }
 
     @Override
-    public void updateEntity() {
+    public void tick() {
         prevEnergyLevel = energy;
-        super.updateEntity();
+        super.tick();
     }
 }
