@@ -5,7 +5,10 @@ import deboni.potatologistics.blocks.BlockAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import deboni.potatologistics.blocks.entities.TileEntityStirlingEngine;
 import deboni.potatologistics.blocks.entities.TileEntityTreeChopper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.hud.HotbarComponent;
 import net.minecraft.client.render.RenderBlocks;
+import net.minecraft.client.render.RenderEngine;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.color.BlockColor;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
@@ -27,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import sunsetsatellite.catalyst.core.util.RenderBlockSimple;
 
 
 @Mixin(
@@ -64,7 +68,6 @@ public abstract class RenderBlocksMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-
     void renderBlockByRenderType(Block block, int renderType, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         if (renderType == 150){
             cir.setReturnValue(renderBlockAutoBasket(thisAs, block, x, y, z));
@@ -82,8 +85,9 @@ public abstract class RenderBlocksMixin {
             cir.setReturnValue(renderBlockStirlingEngine(thisAs, this.blockAccess, x, y, z, block, world));
         }
     }
-    @Inject(method = "renderBlockOnInventory(Lnet/minecraft/core/block/Block;IF)V", at = @At("TAIL"))
-    private void renderBlockOnInventory(Block block, int metadata, float brightness, CallbackInfo ci){
+
+    @Inject(method = "renderBlockOnInventory(Lnet/minecraft/core/block/Block;IFF)V", at = @At("TAIL"))
+    private void renderBlockOnInventory(Block block, int metadata, float brightness, float alpha, CallbackInfo ci){
         int renderType = ((BlockModelRenderBlocks) BlockModelDispatcher.getInstance().getDispatch(block)).renderType;
         if (renderType == 150 || renderType == 151 || renderType == 152){
             renderBlockInvNormal(block, metadata, brightness);
@@ -92,6 +96,7 @@ public abstract class RenderBlocksMixin {
             renderBlockStirlingEngineInventory(block, metadata, brightness);
         }
     }
+
     @Unique
     private void renderBlockInvNormal(Block block, int metadata, float brightness){
         int renderType = ((BlockModelRenderBlocks)BlockModelDispatcher.getInstance().getDispatch(block)).renderType;
@@ -145,7 +150,6 @@ public abstract class RenderBlocksMixin {
         float onepix = 0.0625f;
         block.setBlockBounds(0, 0.0f, 0, 1, 0.5f - onepix, 1);
         this.renderBlockInvNormal(block,metadata, brightness);
-
 
         boolean b = false;
         for (float yf = 0.5f - onepix * 1; yf <= 1.0f; yf += onepix) {
