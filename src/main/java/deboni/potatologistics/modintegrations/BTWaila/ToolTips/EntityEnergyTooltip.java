@@ -15,11 +15,11 @@ public class EntityEnergyTooltip implements IBTWailaCustomBlockTooltip {
     public void addTooltip() {
         BTWaila.LOGGER.info("Adding tooltips for: " + this.getClass().getSimpleName());
         TooltipGroup tooltipGroup = new TooltipGroup(PotatoLogisticsMod.MOD_ID, TileEntityEnergy.class, this);
+        tooltipGroup.addTooltip(TileEntityCapacitor.class);
         tooltipGroup.addTooltip(TileEntityCoil.class);
         tooltipGroup.addTooltip(TileEntityEnergyConnector.class);
         tooltipGroup.addTooltip(TileEntityMiningDrill.class);
         tooltipGroup.addTooltip(TileEntityTreeChopper.class);
-        tooltipGroup.addTooltip(TileEntityCapacitor.class);
         TooltipRegistry.tooltipMap.add(tooltipGroup);
     }
 

@@ -2,19 +2,24 @@ package deboni.potatologistics.blocks;
 
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.TileEntityCapacitor;
+import net.minecraft.core.block.BlockLever;
+import net.minecraft.core.block.BlockTileEntity;
 import net.minecraft.core.block.BlockTileEntityRotatable;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
 
-public class BlockCapacitor extends BlockTileEntityRotatable {
+import java.util.Random;
+
+public class BlockCapacitor extends BlockTileEntity {
 
     public int capacity;
     public BlockCapacitor(String key, int id, Material material) {
         super(key, id, material);
         capacity = 100000;
     }
+
     @Override
     public boolean canProvidePower() {
         return true;
@@ -24,7 +29,6 @@ public class BlockCapacitor extends BlockTileEntityRotatable {
     public boolean isPoweringTo(WorldSource blockAccess, int x, int y, int z, int side) {
         TileEntityCapacitor capacitor = (TileEntityCapacitor) blockAccess.getBlockTileEntity(x, y, z);
         boolean needPower = !capacitor.needPower();
-        PotatoLogisticsMod.LOGGER.info("need power" + needPower + " " + capacitor.energy);
         return needPower;
     }
 
@@ -34,17 +38,12 @@ public class BlockCapacitor extends BlockTileEntityRotatable {
     }
 
     @Override
-    public void onBlockAdded(World world, int i, int j, int k) {
-        world.notifyBlocksOfNeighborChange(i, j - 1, k, this.id);
-        world.notifyBlocksOfNeighborChange(i, j + 1, k, this.id);
-        world.notifyBlocksOfNeighborChange(i - 1, j, k, this.id);
-        world.notifyBlocksOfNeighborChange(i + 1, j, k, this.id);
-        world.notifyBlocksOfNeighborChange(i, j, k - 1, this.id);
-        world.notifyBlocksOfNeighborChange(i, j, k + 1, this.id);
+    public int tickRate() {
+        return 20;
     }
 
     @Override
-    public void onBlockRemoved(World world, int x, int y, int z, int data) {
+    public void updateTick(World world, int x, int y, int z, Random rand) {
         world.notifyBlocksOfNeighborChange(x, y - 1, z, this.id);
         world.notifyBlocksOfNeighborChange(x, y + 1, z, this.id);
         world.notifyBlocksOfNeighborChange(x - 1, y, z, this.id);
@@ -55,6 +54,7 @@ public class BlockCapacitor extends BlockTileEntityRotatable {
 
     @Override
     protected TileEntity getNewBlockEntity() {
-        return new TileEntityCapacitor(capacity);
+        PotatoLogisticsMod.LOGGER.info("New block entity");
+        return new TileEntityCapacitor(100000);
     }
 }

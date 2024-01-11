@@ -83,4 +83,4 @@ tile.potatologistics.auto_crafter.name=Auto Crafter
 tile.potatologistics.auto_crafter.desc=No, it does not have a face
 
 tile.potatologistics.lv_capacitor.name=Capacitor
-tile.potatologistics.lv_capacitor.desc=You can store over 9000 energy units (actually it is 100000)
+tile.potatologistics.lv_capacitor.desc=Stores 100000 Eu
