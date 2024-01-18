@@ -18,7 +18,7 @@ public class BlockEnergyConnector extends BlockTileEntity {
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isSolidRender() {
         return false;
     }
     @Override
@@ -29,7 +29,10 @@ public class BlockEnergyConnector extends BlockTileEntity {
     @Override
     public void onBlockPlaced(World world, int x, int y, int z, Side side, EntityLiving entity, double sideHeight) {
         world.setBlockMetadataWithNotify(x, y, z, side.getId());
-        ((TileEntityEnergyConnector)world.getBlockTileEntity(x, y, z)).updateMachineConnections(side.getOpposite().getDirection());
+        TileEntity te = world.getBlockTileEntity(x, y, z);
+        if (te instanceof TileEntityEnergyConnector) {
+            ((TileEntityEnergyConnector) te).updateMachineConnections(side.getOpposite().getDirection());
+        }
         super.onBlockPlaced(world, x, y, z, side, entity, sideHeight);
     }
 
@@ -73,11 +76,11 @@ public class BlockEnergyConnector extends BlockTileEntity {
     }
 
     @Override
-    public void onBlockRemoval(World world, int x, int y, int z) {
+    public void onBlockRemoved(World world, int x, int y, int z, int data) {
         TileEntityEnergyConnector ec = (TileEntityEnergyConnector) world.getBlockTileEntity(x, y, z);
         ItemStack drops = ec.getBreakDrops();
         if (drops != null) world.dropItem(x, y, z, drops);
-        super.onBlockRemoval(world, x, y, z);
+        super.onBlockRemoved(world, x, y, z, data);
     }
 
     @Override

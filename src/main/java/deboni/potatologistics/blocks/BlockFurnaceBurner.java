@@ -12,9 +12,7 @@ import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
-import sunsetsatellite.energyapi.EnergyAPI;
-import sunsetsatellite.energyapi.interfaces.mixins.IEntityPlayer;
-import sunsetsatellite.energyapi.template.tiles.TileEntityMachine;
+import sunsetsatellite.catalyst.Catalyst;
 
 import java.util.Random;
 
@@ -30,14 +28,15 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
         {
             TileEntityBurner tile = (TileEntityBurner) world.getBlockTileEntity(x, y, z);
             if(tile != null) {
-                EnergyAPI.displayGui(player,tile);
+                Catalyst.displayGui(player, tile, tile.getInvName());
             }
         }
 
         return true;
     }
+
     @Override
-    public void onBlockRemoval(World world, int x, int y, int z) {
+    public void onBlockRemoved(World world, int x, int y, int z, int data) {
         int blockId = world.getBlockId(x,y,z);
         if (blockId == PotatoLogisticsMod.blockFurnaceBurner.id || blockId == PotatoLogisticsMod.blockFurnaceBurnerOn.id) {return;}
         TileEntityBurner tileEntityBurner = (TileEntityBurner)world.getBlockTileEntity(x, y, z);
@@ -61,7 +60,7 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
                 world.entityJoinedWorld(entityitem);
             }
         }
-        super.onBlockRemoval(world, x, y, z);
+        super.onBlockRemoved(world, x, y, z, data);
     }
 
     public void setOn(World world, int x, int y, int z, boolean isOn) {

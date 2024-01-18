@@ -3,8 +3,7 @@ package deboni.potatologistics.modintegrations.BTWaila.ToolTips;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.*;
 import net.minecraft.core.block.entity.TileEntity;
-import sunsetsatellite.energyapi.impl.TileEntityEnergy;
-import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
+import sunsetsatellite.catalyst.energy.impl.TileEntityEnergy;
 import toufoumaster.btwaila.BTWaila;
 import toufoumaster.btwaila.IBTWailaCustomBlockTooltip;
 import toufoumaster.btwaila.TooltipGroup;
@@ -16,6 +15,7 @@ public class EntityEnergyTooltip implements IBTWailaCustomBlockTooltip {
     public void addTooltip() {
         BTWaila.LOGGER.info("Adding tooltips for: " + this.getClass().getSimpleName());
         TooltipGroup tooltipGroup = new TooltipGroup(PotatoLogisticsMod.MOD_ID, TileEntityEnergy.class, this);
+        tooltipGroup.addTooltip(TileEntityCapacitor.class);
         tooltipGroup.addTooltip(TileEntityCoil.class);
         tooltipGroup.addTooltip(TileEntityEnergyConnector.class);
         tooltipGroup.addTooltip(TileEntityMiningDrill.class);

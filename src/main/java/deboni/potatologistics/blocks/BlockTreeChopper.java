@@ -24,15 +24,15 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
             int k1 = world.getBlockId(x + 1, y, z);
             byte byte0 = 3;
 
-            if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l]) {
+            if (Block.solid[i1] && !Block.solid[l]) {
                 byte0 = 2;
             }
 
-            if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1]) {
+            if (Block.solid[j1] && !Block.solid[k1]) {
                 byte0 = 5;
             }
 
-            if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1]) {
+            if (Block.solid[k1] && !Block.solid[j1]) {
                 byte0 = 4;
             }
 
@@ -57,7 +57,7 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isSolidRender() {
         return false;
     }
 
@@ -73,12 +73,12 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
     }
 
     @Override
-    public void onBlockRemoval(World world, int x, int y, int z) {
+    public void onBlockRemoved(World world, int x, int y, int z, int data) {
         TileEntity te = world.getBlockTileEntity(x, y, z);
         if (te instanceof TileEntityTreeChopper) {
             ((TileEntityTreeChopper) te).dropItems();
         }
-        super.onBlockRemoval(world, x, y, z);
+        super.onBlockRemoved(world, x, y, z, data);
     }
 
     @Override

@@ -6,12 +6,18 @@ item.potatologistics.wrench.desc=You can change pipes
 
 item.potatologistics.auto_basket.name=Auto Basket
 item.potatologistics.auto_basket.desc=Automate item collection
+
 tile.potatologistics.auto_basket.name=Auto Basket
 tile.potatologistics.auto_basket.desc=Automate item collection
 
 item.potatologistics.energy_connector.name=Energy Connector
+item.potatologistics.energy_connector.desc=Connect energy to your machines
+
+tile.potatologistics.energy_connector.name=Energy Connector
+tile.potatologistics.energy_connector.desc=Connect energy to your machines
 
 item.potatologistics.wire_spool.name=Wire Spool
+item.potatologistics.wire_spool.desc=Use to connect two connectors
 
 item.potatologistics.redstone_alloy.name=Redstone Alloy
 item.potatologistics.redstone_alloy.desc=Who needs copper anyway?
@@ -22,11 +28,11 @@ item.potatologistics.redstone_iron_mix.desc=Try baking it
 tile.potatologistics.potato.name=Potato Block
 tile.potatologistics.potato.desc=Don't thrust him
 
-tile.potatologistics.iron_gear.name=Iron Gear
-tile.potatologistics.iron_gear.desc=TODO
+item.potatologistics.iron_gear.name=Iron Gear
+item.potatologistics.iron_gear.desc=Can turn
 
-tile.potatologistics.iron_gear.name=Steel Gear
-tile.potatologistics.iron_gear.desc=TODO
+item.potatologistics.steel_gear.name=Steel Gear
+item.potatologistics.steel_gear.desc=Can turn but better
 
 tile.potatologistics.pipe.name=Pipe
 tile.potatologistics.pipe.desc=It does not fit a Italian
@@ -44,42 +50,37 @@ tile.potatologistics.block_placer.name=Block Placer
 tile.potatologistics.block_placer.desc=It will rePlace your job
 
 tile.potatologistics.tree_chopper.name=Tree Chopper
-tile.potatologistics.tree_chopper.desc=TODO
+tile.potatologistics.tree_chopper.desc=For you who are too lazy to cut down trees
 
 tile.potatologistics.iron_machine_block.name=Iron Machine Block
-tile.potatologistics.iron_machine_block.desc=TODO
+tile.potatologistics.iron_machine_block.desc=A basic building block for simple machines
 
 tile.potatologistics.steel_machine_block.name=Steel Machine Block
-tile.potatologistics.steel_machine_block.desc=TODO
+tile.potatologistics.steel_machine_block.desc=A basic building block for more advanced machines
 
 tile.potatologistics.mining_drill.name=Mining Drill
-tile.potatologistics.mining_drill.desc=TODO
-
-tile.potatologistics.energy_connector.name=Energy Connector
-tile.potatologistics.energy_connector.desc=TODO
+tile.potatologistics.mining_drill.desc=Mines for you
 
 tile.potatologistics.advanced_dispenser.name=Advanced Dispenser
-tile.potatologistics.advanced_dispenser.desc=TODO
+tile.potatologistics.advanced_dispenser.desc=It can use bone meal
 
 tile.potatologistics.furnace_burner.name=Furnace Burner
-tile.potatologistics.furnace_burner.desc=TODO
+tile.potatologistics.furnace_burner.desc=Burn fuel to generate heat
+
 tile.potatologistics.furnace_burner_on.name=Furnace Burner
-tile.potatologistics.furnace_burner_on.desc=TODO
+tile.potatologistics.furnace_burner_on.desc=Burn fuel to generate heat
 
 tile.potatologistics.stirling_engine.name=Stirling Engine
-tile.potatologistics.stirling_engine.desc=TODO
+tile.potatologistics.stirling_engine.desc=Transform heat from bellow into kinetic energy above
 
 tile.potatologistics.coil.name=Coil
-tile.potatologistics.coil.desc=TODO
+tile.potatologistics.coil.desc=Transform kinetic energy bellow into electric energy
 
 tile.potatologistics.test_area_maker.name=Test Area Maker
-tile.potatologistics.test_area_maker.desc=TODO
-
-item.potatologistics.iron_gear.name=Iron Gear
-item.potatologistics.iron_gear.desc=TODO
-
-item.potatologistics.steel_gear.name=Steel Gear
-item.potatologistics.steel_gear.desc=TODO
+tile.potatologistics.test_area_maker.desc=Turn the chunk placed into a flat surface, it will destroy all blocks above
 
 tile.potatologistics.auto_crafter.name=Auto Crafter
-tile.potatologistics.auto_crafter.desc=TODO
+tile.potatologistics.auto_crafter.desc=No, it does not have a face
+
+tile.potatologistics.lv_capacitor.name=Capacitor
+tile.potatologistics.lv_capacitor.desc=Stores 100000 Eu

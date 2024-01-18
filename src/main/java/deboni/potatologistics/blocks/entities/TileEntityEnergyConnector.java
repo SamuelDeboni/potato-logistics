@@ -8,9 +8,9 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.util.helper.Direction;
-import sunsetsatellite.energyapi.api.IEnergySink;
-import sunsetsatellite.energyapi.impl.TileEntityEnergy;
-import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
+import sunsetsatellite.catalyst.energy.api.IEnergySink;
+import sunsetsatellite.catalyst.energy.impl.TileEntityEnergy;
+import sunsetsatellite.catalyst.energy.impl.TileEntityEnergyConductor;
 
 import java.util.ArrayList;
 
@@ -78,14 +78,14 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
         nbttagcompound.put("connections", nbttaglist);
     }
 
-    public boolean addConnection(int x, int y, int z)  {
-        TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+    public boolean addConnection(int xi, int yi, int zi)  {
+        TileEntity te = worldObj.getBlockTileEntity(xi, yi, zi);
 
         if (!(te instanceof TileEntityEnergyConnector)) return false;
 
         boolean hasConnection = false;
         for (Connection c: connections) {
-            if (c.x == x && c.y == y && c.z == z) {
+            if (c.x == xi && c.y == yi && c.z == zi) {
                 hasConnection = true;
                 break;
             }
@@ -93,7 +93,7 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
         if (hasConnection) return false;
 
         for (Connection c: ((TileEntityEnergyConnector) te).connections) {
-            if (c.x == xCoord && c.y == yCoord && c.z == zCoord) {
+            if (c.x == this.x && c.y == this.y && c.z == this.z) {
                 hasConnection = true;
                 break;
             }
@@ -101,17 +101,17 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
 
         if (hasConnection) return false;
 
-        connections.add(new Connection(x, y, z));
-        ((TileEntityEnergyConnector) te).connections.add(new Connection(xCoord, yCoord, zCoord));
-        PotatoLogisticsMod.LOGGER.info("Added connection on: " + x + " " + y + " " + z);
+        connections.add(new Connection(xi, yi, zi));
+        ((TileEntityEnergyConnector) te).connections.add(new Connection(this.x, this.y, this.z));
+        PotatoLogisticsMod.LOGGER.info("Added connection on: " + xi + " " + yi + " " + zi);
 
         return true;
     }
 
-    public void removeConnection(int x, int y, int z) {
+    public void removeConnection(int xi, int yi, int zi) {
         int i = 0;
         for (Connection c: connections) {
-            if (c.x == x && c.y == y && c.z == z) {
+            if (c.x == xi && c.y == yi && c.z == zi) {
                 break;
             }
             i++;
@@ -121,10 +121,12 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
 
     public ItemStack getBreakDrops() {
         ItemStack result = new ItemStack(PotatoLogisticsMod.itemWireSpool, 0);
-        for (Connection c: connections) {
+
+        ArrayList<Connection> connectionsCopy = (ArrayList<Connection>) connections.clone();
+        for (Connection c: connectionsCopy) {
             TileEntity te = worldObj.getBlockTileEntity(c.x, c.y, c.z);
             if (te instanceof TileEntityEnergyConnector) {
-                ((TileEntityEnergyConnector) te).removeConnection(xCoord, yCoord, zCoord);
+                ((TileEntityEnergyConnector) te).removeConnection(x, y, z);
             }
             result.stackSize++;
         }
@@ -136,17 +138,18 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
     }
 
     public void updateMachineConnections(Direction dir) {
-        setConnection(sunsetsatellite.sunsetutils.util.Direction.getDirectionFromSide(dir.getId()), sunsetsatellite.sunsetutils.util.Connection.BOTH);
+        setConnection(sunsetsatellite.catalyst.core.util.Direction.getDirectionFromSide(dir.getId()), sunsetsatellite.catalyst.core.util.Connection.BOTH);
     }
 
-    public void updateEntity() {
-        sunsetsatellite.sunsetutils.util.Direction[] directions = sunsetsatellite.sunsetutils.util.Direction.values();
+    @Override
+    public void tick() {
+        sunsetsatellite.catalyst.core.util.Direction[] directions = sunsetsatellite.catalyst.core.util.Direction.values();
 
-        int side = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        int side = worldObj.getBlockMetadata(x, y, z);
         updateMachineConnections(Direction.getDirectionById(side).getOpposite());
 
         {
-            sunsetsatellite.sunsetutils.util.Direction dir = sunsetsatellite.sunsetutils.util.Direction.getDirectionFromSide(side).getOpposite();
+            sunsetsatellite.catalyst.core.util.Direction dir = sunsetsatellite.catalyst.core.util.Direction.getDirectionFromSide(side).getOpposite();
             TileEntity facingTile = dir.getTileEntity(this.worldObj, this);
             if (facingTile instanceof IEnergySink && !facingTile.equals(this.lastReceived)) {
                 int provided = this.provide(dir, this.getMaxProvide(), true);

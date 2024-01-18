@@ -23,9 +23,9 @@ public class TileEntityStirlingEngine extends TileEntity {
     }
 
     @Override
-    public void updateEntity() {
+    public void tick() {
         ticksSinceLastPacket++;
-        TileEntity te = worldObj.getBlockTileEntity(xCoord, yCoord-1, zCoord);
+        TileEntity te = worldObj.getBlockTileEntity(x, y-1, z);
         if (te instanceof TileEntityBurner) {
             TileEntityBurner burner = (TileEntityBurner) te;
             targetTemperature = Math.min(burner.consumeFuel(), maxTemperature);
@@ -37,7 +37,7 @@ public class TileEntityStirlingEngine extends TileEntity {
             temperature += delta;
             temperature = Math.max(Math.min(temperature, maxTemperature), 0);
 
-            worldObj.markBlockNeedsUpdate(xCoord, yCoord, zCoord);
+            worldObj.markBlockNeedsUpdate(x, y, z);
             sendPacket();
         }
     }

@@ -26,7 +26,7 @@ public class BlockPipe extends BlockTileEntity {
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isSolidRender() {
         return false;
     }
 
@@ -56,12 +56,12 @@ public class BlockPipe extends BlockTileEntity {
     }
 
     @Override
-    public void onBlockRemoval(World world, int x, int y, int z) {
+    public void onBlockRemoved(World world, int x, int y, int z, int data) {
         TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
         if (te != null) {
             te.dropItems();
         }
-        super.onBlockRemoval(world, x, y, z);
+        super.onBlockRemoved(world, x, y, z, data);
     }
 
     @Override

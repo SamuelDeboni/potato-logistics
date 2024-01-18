@@ -28,17 +28,17 @@ public class BlockMiningDrill extends BlockTileEntity {
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isSolidRender() {
         return false;
     }
 
     @Override
-    public void onBlockRemoval(World world, int x, int y, int z) {
+    public void onBlockRemoved(World world, int x, int y, int z, int data) {
         TileEntity te = world.getBlockTileEntity(x, y, z);
         if (te instanceof TileEntityMiningDrill) {
             ((TileEntityMiningDrill) te).dropItems();
         }
-        super.onBlockRemoval(world, x, y, z);
+        super.onBlockRemoved(world, x, y, z, data);
     }
 
     @Override

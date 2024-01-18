@@ -11,8 +11,8 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
-import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
-import sunsetsatellite.sunsetutils.util.Connection;
+import sunsetsatellite.catalyst.energy.impl.TileEntityEnergyConductor;
+import sunsetsatellite.catalyst.core.util.Connection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,15 +28,15 @@ public class TileEntityTreeChopper extends TileEntityEnergyConductor {
         this.setEnergy(0);
         this.setTransfer(250);
 
-        sunsetsatellite.sunsetutils.util.Direction[] directions = sunsetsatellite.sunsetutils.util.Direction.values();
-        for (sunsetsatellite.sunsetutils.util.Direction dir : directions) {
+        sunsetsatellite.catalyst.core.util.Direction[] directions = sunsetsatellite.catalyst.core.util.Direction.values();
+        for (sunsetsatellite.catalyst.core.util.Direction dir : directions) {
             this.setConnection(dir, Connection.INPUT);
         }
     }
 
     public void dropItems() {
         for (ItemStack stack : stacks) {
-            worldObj.dropItem(xCoord, yCoord, zCoord, stack);
+            worldObj.dropItem(x, y, z, stack);
         }
     }
 
@@ -97,12 +97,12 @@ public class TileEntityTreeChopper extends TileEntityEnergyConductor {
     public void breakTree() {
         if (!this.stacks.isEmpty()) return;
 
-        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        int meta = worldObj.getBlockMetadata(x, y, z);
         Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta));
 
-        int tx = xCoord + dir.getOffsetX();
-        int ty = yCoord + dir.getOffsetY();
-        int tz = zCoord + dir.getOffsetZ();
+        int tx = x + dir.getOffsetX();
+        int ty = y + dir.getOffsetY();
+        int tz = z + dir.getOffsetZ();
 
         if (blocksToBreak.isEmpty()) fillBlocksToBreak(worldObj, tx, ty, tz, 0);
         if (blocksToBreak.isEmpty()) return;
@@ -136,12 +136,12 @@ public class TileEntityTreeChopper extends TileEntityEnergyConductor {
     }
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void tick() {
+        super.tick();
 
         //PotatoLogisticsMod.LOGGER.info("Energy is: " + this.energy + " blocks to break count: " + blocksToBreak.size());
 
-        if (!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && !worldObj.isBlockGettingPowered(xCoord, yCoord, zCoord)) {
+        if (!worldObj.isBlockIndirectlyGettingPowered(x, y, z) && !worldObj.isBlockGettingPowered(x, y, z)) {
             isActive = false;
             return;
         }
@@ -150,12 +150,12 @@ public class TileEntityTreeChopper extends TileEntityEnergyConductor {
 
         if (stacks.isEmpty()) return;
 
-        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        int meta = worldObj.getBlockMetadata(x, y, z);
         Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta));
 
-        int ix = xCoord - dir.getOffsetX();
-        int iy = yCoord - dir.getOffsetY();
-        int iz = zCoord - dir.getOffsetZ();
+        int ix = x - dir.getOffsetX();
+        int iy = y - dir.getOffsetY();
+        int iz = z - dir.getOffsetZ();
 
         TileEntity outTe = worldObj.getBlockTileEntity(ix, iy, iz) ;
 

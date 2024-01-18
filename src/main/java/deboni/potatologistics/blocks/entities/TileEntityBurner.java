@@ -11,10 +11,10 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.player.inventory.IInventory;
-import sunsetsatellite.energyapi.api.LookupFuelEnergy;
-import sunsetsatellite.sunsetutils.util.Connection;
-import sunsetsatellite.sunsetutils.util.Direction;
-import sunsetsatellite.sunsetutils.util.IItemIO;
+import sunsetsatellite.catalyst.core.util.Connection;
+import sunsetsatellite.catalyst.core.util.Direction;
+import sunsetsatellite.catalyst.core.util.IItemIO;
+import sunsetsatellite.catalyst.energy.api.LookupFuelEnergy;
 
 public class TileEntityBurner extends TileEntity implements IInventory, IItemIO {
     public int maxBurnTemperature;
@@ -41,14 +41,9 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
         boolean updated = false;
 
         if (!this.worldObj.isClientSide) {
-            if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockGettingPowered(xCoord, yCoord, zCoord)) {
-                isPowered = true;
-                return 0;
-            } else {
-                isPowered = false;
-            }
+            isPowered = worldObj.isBlockIndirectlyGettingPowered(x, y, z) || worldObj.isBlockGettingPowered(x, y, z);
 
-            if (this.currentBurnTime == 0) {
+            if (this.currentBurnTime <= 0 && !isPowered) {
                 this.maxBurnTime = this.currentBurnTime = this.getBurnTimeFromItem(this.contents[0]) / 5;
                 if (this.currentBurnTime > 0) {
                     currentFuel = this.contents[0];
@@ -64,9 +59,9 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
                 }
             }
 
-            Block b = worldObj.getBlock(xCoord, yCoord, zCoord);
+            Block b = worldObj.getBlock(x, y, z);
             if (b instanceof BlockFurnaceBurner) {
-                ((BlockFurnaceBurner) b).setOn(worldObj, xCoord, yCoord, zCoord, this.currentBurnTime > 0);
+                ((BlockFurnaceBurner) b).setOn(worldObj, x, y, z, this.currentBurnTime > 0);
             }
         }
 
@@ -181,11 +176,16 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
 
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+        if(worldObj.getBlockTileEntity(x, y, z) != this)
         {
             return false;
         }
-        return entityplayer.distanceToSqr((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
+        return entityplayer.distanceToSqr((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D) <= 64D;
+    }
+
+    @Override
+    public void sortInventory() {
+
     }
 
     private int getBurnTimeFromItem(ItemStack itemStack) {

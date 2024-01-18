@@ -7,7 +7,7 @@ import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.player.inventory.slot.Slot;
-import sunsetsatellite.energyapi.template.containers.ContainerEnergy;
+import sunsetsatellite.catalyst.energy.impl.ContainerEnergy;
 
 import java.util.List;
 

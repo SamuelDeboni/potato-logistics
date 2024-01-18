@@ -37,7 +37,7 @@ public class TileEntityAutoBasket extends TileEntity {
             }
         }
         this.contents.clear();
-        this.worldObj.notifyBlockChange(this.xCoord, this.yCoord, this.zCoord, Block.basket.id);
+        this.worldObj.notifyBlockChange(this.x, this.y, this.z, Block.basket.id);
         this.updateNumUnits();
     }
 
@@ -59,7 +59,7 @@ public class TileEntityAutoBasket extends TileEntity {
         float f = rand.nextFloat() * 0.8f + 0.1f;
         float f1 = rand.nextFloat() * 0.8f + 0.1f;
         float f2 = rand.nextFloat() * 0.8f + 0.1f;
-        EntityItem entityitem = new EntityItem(this.worldObj, (float)this.xCoord + f, (float)this.yCoord + f1, (float)this.zCoord + f2, itemstack);
+        EntityItem entityitem = new EntityItem(this.worldObj, (float)this.x + f, (float)this.y + f1, (float)this.z + f2, itemstack);
         float f3 = 0.05f;
         entityitem.xd = (float)rand.nextGaussian() * 0.05f;
         entityitem.yd = (float)rand.nextGaussian() * 0.05f + 0.25f;
@@ -98,7 +98,7 @@ public class TileEntityAutoBasket extends TileEntity {
         }
 
         this.updateNumUnits();
-        this.worldObj.notifyBlockChange(this.xCoord, this.yCoord, this.zCoord, Block.basket.id);
+        this.worldObj.notifyBlockChange(this.x, this.y, this.z, Block.basket.id);
     }
     public ItemStack removeOneItem() {
         TileEntityAutoBasket.BasketEntry firstKey = null;
@@ -121,7 +121,7 @@ public class TileEntityAutoBasket extends TileEntity {
             this.contents.put(firstKey, itemCount);
         }
 
-        this.worldObj.notifyBlockChange(this.xCoord, this.yCoord, this.zCoord, Block.basket.id);
+        this.worldObj.notifyBlockChange(this.x, this.y, this.z, Block.basket.id);
         this.updateNumUnits();
 
         return itemStack;
@@ -142,11 +142,11 @@ public class TileEntityAutoBasket extends TileEntity {
     }
 
     @Override
-    public void updateEntity() {
+    public void tick() {
         if (this.worldObj == null || this.worldObj.isClientSide) {
             return;
         }
-        AABB aabb = AABB.getBoundingBoxFromPool(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
+        AABB aabb = AABB.getBoundingBoxFromPool(this.x, this.y, this.z, this.x + 1, this.y + 2, this.z + 1);
         List<Entity> entities = this.worldObj.getEntitiesWithinAABB(EntityItem.class, aabb);
         boolean shouldUpdate = false;
         if (!entities.isEmpty()) {
@@ -160,7 +160,7 @@ public class TileEntityAutoBasket extends TileEntity {
             }
         }
         if (shouldUpdate) {
-            this.worldObj.notifyBlockChange(this.xCoord, this.yCoord, this.zCoord, Block.basket.id);
+            this.worldObj.notifyBlockChange(this.x, this.y, this.z, Block.basket.id);
             this.updateNumUnits();
         }
     }

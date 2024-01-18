@@ -15,8 +15,8 @@ import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
-import sunsetsatellite.energyapi.impl.TileEntityEnergyConductor;
-import sunsetsatellite.sunsetutils.util.Connection;
+import sunsetsatellite.catalyst.core.util.Connection;
+import sunsetsatellite.catalyst.energy.impl.TileEntityEnergyConductor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,15 +32,15 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
         this.setEnergy(0);
         this.setTransfer(250);
 
-        sunsetsatellite.sunsetutils.util.Direction[] directions = sunsetsatellite.sunsetutils.util.Direction.values();
-        for (sunsetsatellite.sunsetutils.util.Direction dir : directions) {
+        sunsetsatellite.catalyst.core.util.Direction[] directions = sunsetsatellite.catalyst.core.util.Direction.values();
+        for (sunsetsatellite.catalyst.core.util.Direction dir : directions) {
             this.setConnection(dir, Connection.INPUT);
         }
     }
 
     public void dropItems() {
         for (ItemStack stack : stacks) {
-            worldObj.dropItem(xCoord, yCoord, zCoord, stack);
+            worldObj.dropItem(x, y, z, stack);
         }
     }
 
@@ -71,14 +71,14 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
     private void fillBlocksToBreak() {
         int radius = 10;
 
-        for (int y = 2; y < yCoord; y++) {
-            for (int z = zCoord - radius; z <= zCoord + radius; z++) {
-                for (int x = xCoord - radius; x <= xCoord + radius; x++) {
-                    Block block = worldObj.getBlock(x, y, z);
+        for (int y2 = 2; y2 < y; y2++) {
+            for (int z2 = z - radius; z2 <= z + radius; z2++) {
+                for (int x2 = x - radius; x2 <= x + radius; x2++) {
+                    Block block = worldObj.getBlock(x2, y2, z2);
                     if (block == null || block.hasTag(BlockTags.IS_WATER) || block.hasTag(BlockTags.IS_LAVA) || block.immovable && block.id != Block.obsidian.id || block.id == Block.bedrock.id) {
                         continue;
                     }
-                    blocksToBreak.add(new int[]{x, y, z});
+                    blocksToBreak.add(new int[]{x2, y2, z2});
                 }
             }
         }
@@ -115,12 +115,12 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
     }
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void tick() {
+        super.tick();
 
         //PotatoLogisticsMod.LOGGER.info("Energy is: " + this.energy + " blocks to break count: " + blocksToBreak.size());
 
-        if (!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && !worldObj.isBlockGettingPowered(xCoord, yCoord, zCoord)) {
+        if (!worldObj.isBlockIndirectlyGettingPowered(x, y, z) && !worldObj.isBlockGettingPowered(x, y, z)) {
             isActive = false;
             return;
         }
@@ -129,9 +129,9 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
 
         if (stacks.isEmpty()) return;
 
-        int ix = xCoord;
-        int iy = yCoord + 1;
-        int iz = zCoord;
+        int ix = x;
+        int iy = y + 1;
+        int iz = z;
 
         TileEntity outTe = worldObj.getBlockTileEntity(ix, iy, iz) ;
 
