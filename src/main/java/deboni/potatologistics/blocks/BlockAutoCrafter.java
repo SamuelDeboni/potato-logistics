@@ -59,7 +59,7 @@ public class BlockAutoCrafter extends BlockTileEntityRotatable {
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if (!world.isClientSide) {
             TileEntity tile = (TileEntity) world.getBlockTileEntity(x, y, z);
-            Catalyst.displayGui(player, tile, "Crafter");
+            Catalyst.displayGui(player, tile, "Auto Crafter");
         }
         return true;
     }
