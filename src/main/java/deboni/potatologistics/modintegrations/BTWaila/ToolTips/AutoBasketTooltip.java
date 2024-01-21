@@ -1,29 +1,18 @@
 package deboni.potatologistics.modintegrations.BTWaila.ToolTips;
 
-import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.TileEntityAutoBasket;
-import net.minecraft.core.block.entity.TileEntity;
-import toufoumaster.btwaila.BTWaila;
-import toufoumaster.btwaila.IBTWailaCustomBlockTooltip;
-import toufoumaster.btwaila.TooltipGroup;
-import toufoumaster.btwaila.TooltipRegistry;
-import toufoumaster.btwaila.gui.GuiBlockOverlay;
+import toufoumaster.btwaila.gui.components.AdvancedInfoComponent;
+import toufoumaster.btwaila.tooltips.TileTooltip;
 
-public class AutoBasketTooltip implements IBTWailaCustomBlockTooltip {
-    public AutoBasketTooltip() {
+public class AutoBasketTooltip extends TileTooltip<TileEntityAutoBasket> {
+    @Override
+    public void initTooltip() {
+        addClass(TileEntityAutoBasket.class);
     }
-
-    public void addTooltip() {
-        BTWaila.LOGGER.info("Adding tooltips for: " + this.getClass().getSimpleName());
-        TooltipGroup tooltipGroup = new TooltipGroup(PotatoLogisticsMod.MOD_ID, TileEntityAutoBasket.class, this);
-        tooltipGroup.addTooltip(TileEntityAutoBasket.class);
-        TooltipRegistry.tooltipMap.add(tooltipGroup);
-    }
-
-    public void drawAdvancedTooltip(TileEntity tileEntity, GuiBlockOverlay guiBlockOverlay) {
-        TileEntityAutoBasket basket = (TileEntityAutoBasket)tileEntity;
+    @Override
+    public void drawAdvancedTooltip(TileEntityAutoBasket basket, AdvancedInfoComponent advancedInfoComponent) {
         int max = basket.getMaxUnits();
         int current = basket.getNumUnitsInside();
-        guiBlockOverlay.drawStringWithShadow("Stored items: " + current + "/" + max, 0);
+        advancedInfoComponent.drawStringWithShadow("Stored items: " + current + "/" + max, 0);
     }
 }
