@@ -22,6 +22,12 @@
     ],
     "btwaila": [
         "deboni.potatologistics.modintegrations.BTWaila.WailaPlugin"
+    ],
+    "beforeGameStart":[
+      "deboni.potatologistics.PotatoLogisticsMod"
+    ],
+    "beforeClientStart": [
+      "deboni.potatologistics.PotatoLogisticsMod"
     ]
   },
   "mixins": [

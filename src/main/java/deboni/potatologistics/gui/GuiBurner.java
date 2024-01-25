@@ -25,7 +25,7 @@ public class GuiBurner extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float f)
     {
-        int i = mc.renderEngine.getTexture("assets/potatologistics/gui/furnace_burner.png");
+        int i = mc.renderEngine.getTexture("/assets/potatologistics/gui/furnace_burner.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(i);
         int j = (width - xSize) / 2;

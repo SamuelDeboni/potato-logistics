@@ -1,34 +1,27 @@
 package deboni.potatologistics.modintegrations.BTWaila.ToolTips;
 
-import deboni.potatologistics.PotatoLogisticsMod;
-import deboni.potatologistics.blocks.entities.*;
-import net.minecraft.core.block.entity.TileEntity;
+import deboni.potatologistics.blocks.entities.TileEntityCapacitor;
+import deboni.potatologistics.blocks.entities.TileEntityCoil;
+import deboni.potatologistics.blocks.entities.TileEntityEnergyConnector;
+import deboni.potatologistics.blocks.entities.TileEntityMiningDrill;
+import deboni.potatologistics.blocks.entities.TileEntityTreeChopper;
 import sunsetsatellite.catalyst.energy.impl.TileEntityEnergy;
-import toufoumaster.btwaila.BTWaila;
-import toufoumaster.btwaila.IBTWailaCustomBlockTooltip;
-import toufoumaster.btwaila.TooltipGroup;
-import toufoumaster.btwaila.TooltipRegistry;
-import toufoumaster.btwaila.gui.GuiBlockOverlay;
+import toufoumaster.btwaila.gui.components.AdvancedInfoComponent;
+import toufoumaster.btwaila.tooltips.TileTooltip;
 
-public class EntityEnergyTooltip implements IBTWailaCustomBlockTooltip {
+public class EntityEnergyTooltip extends TileTooltip<TileEntityEnergy> {
     @Override
-    public void addTooltip() {
-        BTWaila.LOGGER.info("Adding tooltips for: " + this.getClass().getSimpleName());
-        TooltipGroup tooltipGroup = new TooltipGroup(PotatoLogisticsMod.MOD_ID, TileEntityEnergy.class, this);
-        tooltipGroup.addTooltip(TileEntityCapacitor.class);
-        tooltipGroup.addTooltip(TileEntityCoil.class);
-        tooltipGroup.addTooltip(TileEntityEnergyConnector.class);
-        tooltipGroup.addTooltip(TileEntityMiningDrill.class);
-        tooltipGroup.addTooltip(TileEntityTreeChopper.class);
-        TooltipRegistry.tooltipMap.add(tooltipGroup);
+    public void initTooltip() {
+        addClass(TileEntityCapacitor.class);
+        addClass(TileEntityCoil.class);
+        addClass(TileEntityEnergyConnector.class);
+        addClass(TileEntityMiningDrill.class);
+        addClass(TileEntityTreeChopper.class);
     }
-
     @Override
-    public void drawAdvancedTooltip(TileEntity tileEntity, GuiBlockOverlay guiBlockOverlay) {
-        TileEntityEnergy entityEnergy = (TileEntityEnergy) tileEntity;
+    public void drawAdvancedTooltip(TileEntityEnergy entityEnergy, AdvancedInfoComponent advancedInfoComponent) {
         int capacity = entityEnergy.capacity;
         int current = entityEnergy.energy;
-        guiBlockOverlay.drawStringWithShadow("Stored energy: " + current + "/" + capacity, 0);
-
+        advancedInfoComponent.drawStringWithShadow("Stored energy: " + current + "/" + capacity, 0);
     }
 }

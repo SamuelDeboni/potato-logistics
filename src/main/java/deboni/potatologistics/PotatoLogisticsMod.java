@@ -18,11 +18,13 @@ import org.slf4j.LoggerFactory;
 import sunsetsatellite.catalyst.Catalyst;
 import sunsetsatellite.catalyst.core.util.MpGuiEntry;
 import turniplabs.halplibe.helper.*;
+import turniplabs.halplibe.util.ClientStartEntrypoint;
 import turniplabs.halplibe.util.ConfigHandler;
+import turniplabs.halplibe.util.GameStartEntrypoint;
 
 import java.util.Properties;
 
-public class PotatoLogisticsMod implements ModInitializer {
+public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, ClientStartEntrypoint {
     public static final String MOD_ID = "potatologistics";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final ConfigHandler config;
@@ -242,27 +244,6 @@ public class PotatoLogisticsMod implements ModInitializer {
         itemRedstoneAlloy = ItemHelper.createItem(MOD_ID, new Item("Redstone Alloy", itemNum++), "redstone_alloy", "redstone_alloy.png");
         itemRedstoneIronMix = ItemHelper.createItem(MOD_ID, new Item("Redstone Iron Mix", itemNum++), "redstone_iron_mix", "redstone_iron_mix.png");
 
-        EntityHelper.createSpecialTileEntity(TileEntityPipe.class, new TileEntityRendererPipe(), "pipe.tile");
-
-        EntityHelper.createTileEntity(TileEntityFilter.class, "filter.tile");
-        Catalyst.GUIS.register("Filter", new MpGuiEntry(TileEntityFilter.class, GuiFilter.class, ContainerFilter.class));
-
-        EntityHelper.createTileEntity(TileEntityBurner.class, "furnace_burner.tile");
-        Catalyst.GUIS.register("Coal Burner", new MpGuiEntry(TileEntityBurner.class, GuiBurner.class, ContainerBurner.class));
-
-        EntityHelper.createTileEntity(TileEntityAutoBasket.class, "auto_basket.tile");
-        EntityHelper.createTileEntity(TileEntityTreeChopper.class, "tree_chopper.tile");
-        EntityHelper.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
-
-        EntityHelper.createTileEntity(TileEntityCoil.class, "coil.tile");
-        EntityHelper.createSpecialTileEntity(TileEntityMiningDrill.class, new TileEntityRendererMiningDrill(), "mining_drill.tile");
-        EntityHelper.createSpecialTileEntity(TileEntityEnergyConnector.class, new TileEntityRendererEnergyConnector(), "energy_connector.tile");
-
-        EntityHelper.createTileEntity(TileEntityAutoCrafter.class, "auto_crafter.tile");
-        Catalyst.GUIS.register("Auto Crafter", new MpGuiEntry(TileEntityAutoCrafter.class, GuiAutoCrafter.class, ContainerAutoCrafter.class));
-
-        EntityHelper.createTileEntity(TileEntityCapacitor.class, "capacitor.tile");
-
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 1, new Object[]{Item.clay, Item.dustSugar, Item.dustGlowstone});
         RecipeHelper.Crafting.createShapelessRecipe(itemPotato, 9, new Object[]{blockPotato});
         RecipeHelper.Crafting.createShapelessRecipe(itemWireSpool, 1, new Object[]{itemWireSpool});
@@ -294,5 +275,45 @@ public class PotatoLogisticsMod implements ModInitializer {
         RecipeHelper.Crafting.createRecipe(new ItemStack(blockCoil, 1), new Object[]{"WWW", "W W", "WWW", 'W', itemWireSpool});
 
         RecipeHelper.Smelting.createRecipe(itemRedstoneAlloy, itemRedstoneIronMix);
+    }
+
+    @Override
+    public void beforeGameStart() {
+        EntityHelper.Core.createTileEntity(TileEntityPipe.class, "pipe.tile");
+
+        EntityHelper.Core.createTileEntity(TileEntityFilter.class, "filter.tile");
+        Catalyst.GUIS.register("Filter", new MpGuiEntry(TileEntityFilter.class, GuiFilter.class, ContainerFilter.class));
+
+        EntityHelper.Core.createTileEntity(TileEntityBurner.class, "furnace_burner.tile");
+        Catalyst.GUIS.register("Coal Burner", new MpGuiEntry(TileEntityBurner.class, GuiBurner.class, ContainerBurner.class));
+
+        EntityHelper.Core.createTileEntity(TileEntityAutoBasket.class, "auto_basket.tile");
+        EntityHelper.Core.createTileEntity(TileEntityTreeChopper.class, "tree_chopper.tile");
+        EntityHelper.Core.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
+
+        EntityHelper.Core.createTileEntity(TileEntityCoil.class, "coil.tile");
+        EntityHelper.Core.createTileEntity(TileEntityMiningDrill.class, "mining_drill.tile");
+        EntityHelper.Core.createTileEntity(TileEntityEnergyConnector.class, "energy_connector.tile");
+
+        EntityHelper.Core.createTileEntity(TileEntityAutoCrafter.class, "auto_crafter.tile");
+        Catalyst.GUIS.register("Auto Crafter", new MpGuiEntry(TileEntityAutoCrafter.class, GuiAutoCrafter.class, ContainerAutoCrafter.class));
+
+        EntityHelper.Core.createTileEntity(TileEntityCapacitor.class, "capacitor.tile");
+    }
+    @Override
+    public void beforeClientStart() {
+        EntityHelper.Client.assignTileEntityRenderer(TileEntityPipe.class, new TileEntityRendererPipe());
+        EntityHelper.Client.assignTileEntityRenderer(TileEntityMiningDrill.class, new TileEntityRendererMiningDrill());
+        EntityHelper.Client.assignTileEntityRenderer(TileEntityEnergyConnector.class, new TileEntityRendererEnergyConnector());
+    }
+
+    @Override
+    public void afterGameStart() {
+
+    }
+
+    @Override
+    public void afterClientStart() {
+
     }
 }
