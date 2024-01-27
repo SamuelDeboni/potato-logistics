@@ -230,7 +230,16 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
                     }
 
                     recipe.onCraftResult(this.craftMatrix);
-                    ItemStack craftingResult2 = recipe.getCraftingResult(this.craftMatrix);
+
+                    RecipeEntryCrafting<?, ?> recipe2 = null;
+                    for (RecipeEntryCrafting<?, ?> entry: craftingRecipeEntries) {
+                        if (entry.matches(this.craftMatrix)) {
+                            recipe2 = entry;
+                            break;
+                        }
+                    }
+                    ItemStack craftingResult2 = null;
+                    if (recipe2 != null) craftingResult2 = recipe2.getCraftingResult(this.craftMatrix);
 
                     if (craftingResult2 != null && craftingResult2.itemID == craftingResult.itemID) {
                         craftResult.setInventorySlotContents(0, craftingResult);
