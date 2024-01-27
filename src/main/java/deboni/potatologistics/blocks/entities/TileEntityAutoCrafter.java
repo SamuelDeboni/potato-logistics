@@ -3,18 +3,26 @@ package deboni.potatologistics.blocks.entities;
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
 import deboni.potatologistics.gui.ContainerAutoCrafter;
+import net.minecraft.client.gui.guidebook.crafting.CraftingSection;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.crafting.legacy.CraftingManager;
+import net.minecraft.core.data.registry.Registries;
+import net.minecraft.core.data.registry.recipe.RecipeRegistry;
+import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.Packet140TileEntityData;
 import net.minecraft.core.player.inventory.*;
 
+import java.util.List;
+
 public class TileEntityAutoCrafter extends TileEntity implements IInventory {
     public InventoryCrafting craftMatrix;
     public IInventory craftResult = new InventoryCraftResult();
     public ContainerAutoCrafter dummyContainer;
+
+    private final List<RecipeEntryCrafting<?, ?>> craftingRecipeEntries =  Registries.RECIPES.getAllCraftingRecipes();
 
     public TileEntityAutoCrafter() {
         dummyContainer = new ContainerAutoCrafter(null, this);
@@ -200,7 +208,19 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
         super.tick();
 
         if (this.craftMatrix != null && !worldObj.isClientSide) {
-            ItemStack craftingResult = CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix);
+            RecipeEntryCrafting<?, ?> recipe = null;
+            for (RecipeEntryCrafting<?, ?> entry: craftingRecipeEntries) {
+                if (entry.matches(this.craftMatrix)) {
+                    recipe = entry;
+                    break;
+                }
+            }
+
+            ItemStack craftingResult = null;
+            if (recipe != null)  {
+                craftingResult = recipe.getCraftingResult(craftMatrix);
+            }
+
             if (craftResult.getStackInSlot(0) == null && craftingResult != null) {
                 if (timer > 10) {
                     ItemStack[] itemStack = new ItemStack[9];
@@ -209,8 +229,8 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
                         itemStack[i] = s == null ? null : s.copy();
                     }
 
-                    CraftingManager.getInstance().onCraftResult(this.craftMatrix);
-                    ItemStack craftingResult2 = CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix);
+                    recipe.onCraftResult(this.craftMatrix);
+                    ItemStack craftingResult2 = recipe.getCraftingResult(this.craftMatrix);
 
                     if (craftingResult2 != null && craftingResult2.itemID == craftingResult.itemID) {
                         craftResult.setInventorySlotContents(0, craftingResult);
