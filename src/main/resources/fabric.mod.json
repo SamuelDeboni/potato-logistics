@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "id": "potatologistics",
   "version": "${version}",
+  "icon": "icon.png",
 
   "name": "Potato Logistics",
   "description": "Maybe better than BC",
@@ -35,7 +36,9 @@
   ],
   "depends": {
     "fabricloader": ">=0.13.3",
-    "halplibe": ">=3.1.0"
+    "halplibe": ">=3.1.0",
+    "catalyst-energy": ">=1.0.6",
+    "catalyst-core": ">=1.1.6"
   },
   "suggests": {
   }

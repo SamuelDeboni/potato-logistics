@@ -82,5 +82,8 @@ tile.potatologistics.test_area_maker.desc=Turn the chunk placed into a flat surf
 tile.potatologistics.auto_crafter.name=Auto Crafter
 tile.potatologistics.auto_crafter.desc=No, it does not have a face
 
-tile.potatologistics.lv_capacitor.name=Capacitor
-tile.potatologistics.lv_capacitor.desc=Stores 100000 Eu
+tile.potatologistics.capacitor.name=Capacitor
+tile.potatologistics.capacitor.desc=Stores 100000 Eu
+
+tile.potatologistics.heater.name=Heater
+tile.potatologistics.heater.desc=Heats furnaces with Eu

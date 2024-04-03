@@ -1,9 +1,7 @@
 package deboni.potatologistics.blocks.entities;
 
+import com.mojang.nbt.CompoundTag;
 import deboni.potatologistics.PotatoLogisticsMod;
-import net.minecraft.core.block.Block;
-import net.minecraft.core.block.BlockRedstone;
-import net.minecraft.core.block.BlockRedstoneWire;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.Packet140TileEntityData;
 import sunsetsatellite.catalyst.core.util.Direction;
@@ -11,10 +9,8 @@ import sunsetsatellite.catalyst.energy.impl.TileEntityEnergyConductor;
 
 public class TileEntityCapacitor extends TileEntityEnergyConductor {
 
-    public int prevEnergyLevel = 0;
-
-    public TileEntityCapacitor(int capacity) {
-        setCapacity(capacity);
+    public TileEntityCapacitor() {
+        setCapacity(100000);
         setEnergy(0);
         setTransfer(32);
 
@@ -26,25 +22,39 @@ public class TileEntityCapacitor extends TileEntityEnergyConductor {
         setConnection(Direction.Y_POS, sunsetsatellite.catalyst.core.util.Connection.INPUT);
     }
 
-    public boolean needPower() {
-        int energyDelta = energy - prevEnergyLevel;
-        float energyPercent = (float)energy / (float)capacity;
-
-        return energyPercent < 0.8 || energyDelta < 0;
-    }
-
-
     @Override
     public Packet getDescriptionPacket() {
         return new Packet140TileEntityData(this);
     }
 
+    @Override
+    public void writeToNBT(CompoundTag CompoundTag) {
+        super.writeToNBT(CompoundTag);
+        CompoundTag.putBoolean("needPower", needPower);
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag CompoundTag) {
+        super.readFromNBT(CompoundTag);
+        needPower = CompoundTag.getBoolean("needPower");
+    }
+
+    public boolean needPower = true;
 
     @Override
     public void tick() {
         super.tick();
 
-        prevEnergyLevel = energy;
-        worldObj.markBlockNeedsUpdate(x, y, z);
+        worldObj.notifyBlocksOfNeighborChange(x, y, z, PotatoLogisticsMod.blockCapacitorLv.id);
+        worldObj.markBlockDirty(x, y, z);
+
+        float energyPercent = (float)energy / (float)capacity;
+        if (energyPercent > 0.8 && needPower) {
+            needPower = false;
+        }
+
+        if (energyPercent < 0.2 && !needPower) {
+            needPower = true;
+        }
     }
 }

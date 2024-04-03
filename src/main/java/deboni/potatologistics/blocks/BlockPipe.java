@@ -8,7 +8,7 @@ import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.EntityLiving;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.sound.SoundType;
+import net.minecraft.core.sound.SoundCategory;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
@@ -76,7 +76,7 @@ public class BlockPipe extends BlockTileEntity {
             world.setBlockMetadata(x, y, z, meta);
             world.notifyBlocksOfNeighborChange(x, y, z, this.id);
             world.markBlockNeedsUpdate(x, y, z);
-            world.playSoundEffect(SoundType.WORLD_SOUNDS, (double)x + 0.5, (double)y + 0.5, (double)z + 0.5, "random.click", 0.3f, meta == 0 ? 0.5f : 0.6f);
+            world.playSoundEffect(player, SoundCategory.WORLD_SOUNDS, (double)x + 0.5, (double)y + 0.5, (double)z + 0.5, "random.click", 0.3f, meta == 0 ? 0.5f : 0.6f);
             return true;
         }
         return false;

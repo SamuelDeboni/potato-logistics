@@ -246,6 +246,15 @@ public class Util {
                     ItemStack stack = ac.removeOneResult();
                     if (stack != null) {
                         returnStack = new PipeStack(removeItemFromStack(stack), dir, stackTimer);
+                    } else {
+                        ItemStack extra = ac.extraOutputs.getStackInSlot(0);
+                        if (extra != null) {
+                            ItemStack r = removeItemFromStack(extra);
+                            if (extra.stackSize <= 0) {
+                                ac.extraOutputs.setInventorySlotContents(0, null);
+                            }
+                            returnStack = new PipeStack(r, dir, stackTimer);
+                        }
                     }
                 } else if (inventory.getSizeInventory() > 2){
                     ItemStack stack = inventory.getStackInSlot(2);

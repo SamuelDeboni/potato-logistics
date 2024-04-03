@@ -95,28 +95,28 @@ public class BlockAdvancedDispenser
         } else {
             if (itemstack.itemID == Item.ammoArrow.id || itemstack.itemID == Item.ammoArrowGold.id) {
                 EntityArrow entityarrow = itemstack.itemID == Item.ammoArrow.id ? new EntityArrow(world, d, d1, d2, 0) : new EntityArrowGolden(world, d, d1, d2);
-                entityarrow.setArrowHeading(x1, 0.1f, z1, 1.1f, 6.0f);
+                entityarrow.setHeading(x1, 0.1f, z1, 1.1f, 6.0f);
                 entityarrow.doesArrowBelongToPlayer = true;
                 world.entityJoinedWorld(entityarrow);
                 world.playSoundEffect(1002, x, y, z, 0);
             } else if (itemstack.itemID == Item.ammoChargeExplosive.id) {
                 EntityCannonball entitycannonball = new EntityCannonball(world, d, d1, d2);
-                entitycannonball.setCannonballHeading(x1, 0.1, z1, 1.1f, 6.0f);
+                entitycannonball.setHeading(x1, 0.1, z1, 1.1f, 6.0f);
                 world.entityJoinedWorld(entitycannonball);
                 world.playSoundEffect(1002, x, y, z, 0);
             } else if (itemstack.itemID == Item.eggChicken.id) {
                 EntityEgg entityegg = new EntityEgg(world, d, d1, d2);
-                entityegg.setEggHeading(x1, 0.1, z1, 1.1f, 6.0f);
+                entityegg.setHeading(x1, 0.1, z1, 1.1f, 6.0f);
                 world.entityJoinedWorld(entityegg);
                 world.playSoundEffect(1002, x, y, z, 0);
             } else if (itemstack.itemID == Item.ammoSnowball.id) {
                 EntitySnowball entitysnowball = new EntitySnowball(world, d, d1, d2);
-                entitysnowball.setSnowballHeading(x1, 0.1, z1, 1.1f, 6.0f);
+                entitysnowball.setHeading(x1, 0.1, z1, 1.1f, 6.0f);
                 world.entityJoinedWorld(entitysnowball);
                 world.playSoundEffect(1002, x, y, z, 0);
             } else if (itemstack.itemID == Item.ammoPebble.id) {
                 EntityPebble pebble = new EntityPebble(world, d, d1, d2);
-                pebble.setSnowballHeading(x1, 0.1, z1, 1.1f, 6.0f);
+                pebble.setHeading(x1, 0.1, z1, 1.1f, 6.0f);
                 world.entityJoinedWorld(pebble);
                 world.playSoundEffect(1002, x, y, z, 0);
             } else if (itemstack.itemID == Item.dye.id && itemstack.getMetadata() == 15) {

@@ -4,7 +4,7 @@ import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.player.EntityPlayer;
-import net.minecraft.core.sound.SoundType;
+import net.minecraft.core.sound.SoundCategory;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
 
@@ -30,7 +30,7 @@ public class BlockPotato extends Block {
         if (player.getHeldItem().getItem().id == PotatoLogisticsMod.itemWrench.id) {
             world.setBlockMetadataWithNotify(x, y, z, this.isPowered ? 1 : 0);
 
-            world.playSoundEffect(SoundType.WORLD_SOUNDS, (double) x + 0.5, (double) y + 0.5, (double) z + 0.5, "random.click", 0.3f, isPowered ? 0.5f : 0.6f);
+            world.playSoundEffect(player, SoundCategory.WORLD_SOUNDS, (double) x + 0.5, (double) y + 0.5, (double) z + 0.5, "random.click", 0.3f, isPowered ? 0.5f : 0.6f);
             world.notifyBlocksOfNeighborChange(x, y, z, this.id);
             return true;
         }

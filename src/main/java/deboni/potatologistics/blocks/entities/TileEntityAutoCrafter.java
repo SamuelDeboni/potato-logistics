@@ -5,11 +5,13 @@ import com.mojang.nbt.ListTag;
 import deboni.potatologistics.gui.ContainerAutoCrafter;
 import net.minecraft.client.gui.guidebook.crafting.CraftingSection;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.block.entity.TileEntityFurnace;
 import net.minecraft.core.crafting.legacy.CraftingManager;
 import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.data.registry.recipe.RecipeRegistry;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
 import net.minecraft.core.entity.player.EntityPlayer;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.Packet140TileEntityData;
@@ -19,6 +21,8 @@ import java.util.List;
 
 public class TileEntityAutoCrafter extends TileEntity implements IInventory {
     public InventoryCrafting craftMatrix;
+    public IInventory pattern;
+    public IInventory extraOutputs;
     public IInventory craftResult = new InventoryCraftResult();
     public ContainerAutoCrafter dummyContainer;
 
@@ -27,6 +31,8 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
     public TileEntityAutoCrafter() {
         dummyContainer = new ContainerAutoCrafter(null, this);
         craftMatrix = new InventoryCrafting(dummyContainer, 3, 3);
+        pattern = new InventoryBasic("pattern", 9);
+        extraOutputs = new InventoryBasic("extra outputs", 1);
     }
 
     @Override
@@ -82,6 +88,15 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
             }
         }
         {
+            ListTag nbttaglist = nbttagcompound.getList("Pattern");
+            for (int i = 0; i < nbttaglist.tagCount(); ++i) {
+                CompoundTag nbttagcompound1 = (CompoundTag) nbttaglist.tagAt(i);
+                int j = nbttagcompound1.getByte("Slot") & 0xFF;
+                if (j >= this.pattern.getSizeInventory()) continue;
+                this.pattern.setInventorySlotContents(j, ItemStack.readItemStackFromNbt(nbttagcompound1));
+            }
+        }
+        {
             ListTag nbttaglist = nbttagcompound.getList("CraftResult");
             for (int i = 0; i < nbttaglist.tagCount(); ++i) {
                 CompoundTag nbttagcompound1 = (CompoundTag) nbttaglist.tagAt(i);
@@ -106,6 +121,18 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
                 nbttaglist.addTag(nbttagcompound1);
             }
             nbttagcompound.put("CraftGrid", nbttaglist);
+        }
+        {
+            ListTag nbttaglist = new ListTag();
+            for (int i = 0; i < this.pattern.getSizeInventory(); ++i) {
+                ItemStack stack = this.pattern.getStackInSlot(i);
+                if (stack == null) continue;
+                CompoundTag nbttagcompound1 = new CompoundTag();
+                nbttagcompound1.putByte("Slot", (byte) i);
+                stack.writeToNBT(nbttagcompound1);
+                nbttaglist.addTag(nbttagcompound1);
+            }
+            nbttagcompound.put("Pattern", nbttaglist);
         }
         {
             ListTag nbttaglist = new ListTag();
@@ -171,11 +198,17 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
         if (craftMatrix != null) {
             for (int i = 0; i < 9; i++) {
                 ItemStack stack = craftMatrix.getStackInSlot(i);
-                if (stack == null) continue;
+                ItemStack stackPattern = pattern.getStackInSlot(i);
+                if (stackPattern == null) continue;
 
-                if (stack.itemID == stackToInsert.itemID
+                if (stack == null) {
+                    if (stackPattern.itemID == stackToInsert.itemID && stackPattern.getMetadata() == stackToInsert.getMetadata()) {
+                        slotToInsert = i;
+                        lastSlotCount = 0;
+                    }
+                } else if (stack.itemID == stackToInsert.itemID
                         && stack.getMetadata() == stackToInsert.getMetadata()
-                        && (stack.stackSize < stack.getMaxStackSize() || !stack.isStackable() && stack.stackSize < 2)
+                        && stack.stackSize < stack.getMaxStackSize()
                         && stack.stackSize < lastSlotCount
                 ) {
                     slotToInsert = i;
@@ -184,12 +217,18 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
             }
 
             if (slotToInsert >= 0) {
-                ItemStack stack = craftMatrix.getStackInSlot(slotToInsert);
-                if (stack != null) {
-                    stack.stackSize++;
-                    craftMatrix.setInventorySlotContents(slotToInsert, stack);
+                if (lastSlotCount == 0) {
+                    craftMatrix.setInventorySlotContents(slotToInsert, stackToInsert.copy());
                     this.onInventoryChanged();
                     inserted = true;
+                } else {
+                    ItemStack stack = craftMatrix.getStackInSlot(slotToInsert);
+                    if (stack != null) {
+                        stack.stackSize++;
+                        craftMatrix.setInventorySlotContents(slotToInsert, stack);
+                        this.onInventoryChanged();
+                        inserted = true;
+                    }
                 }
             }
         }
@@ -208,6 +247,26 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
         super.tick();
 
         if (this.craftMatrix != null && !worldObj.isClientSide) {
+            boolean canCraft = true;
+
+            for (int i = 0; i < 9; i++) {
+                ItemStack i0 = craftMatrix.getStackInSlot(i);
+                ItemStack i1 = pattern.getStackInSlot(i);
+                if (i0 != null && i1 == null || i0 == null && i1 != null) {
+                    canCraft = false;
+                    break;
+                }
+
+                if (i0 != null && i1 != null && i0.itemID != i1.itemID) {
+                    canCraft = false;
+                    break;
+                }
+            }
+
+            if (extraOutputs.getStackInSlot(0) != null) {
+                canCraft = false;
+            }
+
             RecipeEntryCrafting<?, ?> recipe = null;
             for (RecipeEntryCrafting<?, ?> entry: craftingRecipeEntries) {
                 if (entry.matches(this.craftMatrix)) {
@@ -221,31 +280,23 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
                 craftingResult = recipe.getCraftingResult(craftMatrix);
             }
 
-            if (craftResult.getStackInSlot(0) == null && craftingResult != null) {
+            if (craftResult.getStackInSlot(0) == null && craftingResult != null && canCraft) {
                 if (timer > 10) {
-                    ItemStack[] itemStack = new ItemStack[9];
-                    for (int i = 0; i < 9; i++)  {
-                        ItemStack s = craftMatrix.getStackInSlot(i);
-                        itemStack[i] = s == null ? null : s.copy();
-                    }
-
                     recipe.onCraftResult(this.craftMatrix);
+                    craftResult.setInventorySlotContents(0, craftingResult);
+                    this.onInventoryChanged();
 
-                    RecipeEntryCrafting<?, ?> recipe2 = null;
-                    for (RecipeEntryCrafting<?, ?> entry: craftingRecipeEntries) {
-                        if (entry.matches(this.craftMatrix)) {
-                            recipe2 = entry;
-                            break;
+                    int bucketCount = 0;
+                    for (int i = 0; i < 9; i++) {
+                        ItemStack s = craftMatrix.getStackInSlot(i);
+                        if (s != null && s.itemID == Item.bucket.id) {
+                            craftMatrix.setInventorySlotContents(i, null);
+                            bucketCount += 1;
                         }
                     }
-                    ItemStack craftingResult2 = null;
-                    if (recipe2 != null) craftingResult2 = recipe2.getCraftingResult(this.craftMatrix);
 
-                    if (craftingResult2 != null && craftingResult2.itemID == craftingResult.itemID) {
-                        craftResult.setInventorySlotContents(0, craftingResult);
-                        this.onInventoryChanged();
-                    } else {
-                        for (int i = 0; i < 9; i++) craftMatrix.setInventorySlotContents(i, itemStack[i]);
+                    if (bucketCount > 0) {
+                        extraOutputs.setInventorySlotContents(0, new ItemStack(Item.bucket, bucketCount));
                     }
 
                     timer = 0;

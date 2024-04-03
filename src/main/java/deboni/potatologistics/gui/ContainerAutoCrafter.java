@@ -30,6 +30,18 @@ public class ContainerAutoCrafter extends Container {
         }
     }
 
+    public static class SlotNoInteract extends Slot {
+
+        public SlotNoInteract(IInventory inventory, int id, int x, int y) {
+            super(inventory, id, x, y);
+        }
+
+        @Override
+        public boolean canPutStackInSlot(ItemStack itemstack) {
+            return false;
+        }
+    }
+
     public ContainerAutoCrafter(InventoryPlayer inventoryplayer, TileEntityAutoCrafter tile) {
         if (inventoryplayer == null) {
             return;
@@ -38,20 +50,26 @@ public class ContainerAutoCrafter extends Container {
         SlotAutoCrafterOut slotCrafting = new SlotAutoCrafterOut(inventoryplayer.player, tile.craftMatrix, tile.craftResult, 0, 124, 35);
         this.addSlot(slotCrafting);
 
-        for (int l = 0; l < 3; ++l) {
-            for (int k1 = 0; k1 < 3; ++k1) {
-                this.addSlot(new Slot(tile.craftMatrix, k1 + l * 3, 30 + k1 * 18, 17 + l * 18));
+        this.addSlot(new SlotNoInteract(tile.extraOutputs, 0, 151, 35));
+
+        for (int yi = 0; yi < 3; ++yi) {
+            for (int xi = 0; xi < 3; ++xi) {
+                this.addSlot(new Slot(tile.pattern, xi + yi * 3, 30 + xi * 18, 17 + yi * 18));
             }
         }
 
-        for (int i1 = 0; i1 < 3; ++i1) {
-            for (int l1 = 0; l1 < 9; ++l1) {
-                this.addSlot(new Slot(inventoryplayer, l1 + i1 * 9 + 9, 8 + l1 * 18, 84 + i1 * 18));
+        for (int i = 0; i < 9; ++i) {
+            this.addSlot(new SlotNoInteract(tile.craftMatrix, i, 8 + i * 18, 81));
+        }
+
+        for (int yi = 0; yi < 3; ++yi) {
+            for (int xi = 0; xi < 9; ++xi) {
+                this.addSlot(new Slot(inventoryplayer, xi + yi * 9 + 9, 8 + xi * 18, 109 + yi * 18));
             }
         }
 
-        for (int j1 = 0; j1 < 9; ++j1) {
-            this.addSlot(new Slot(inventoryplayer, j1, 8 + j1 * 18, 142));
+        for (int i = 0; i < 9; ++i) {
+            this.addSlot(new Slot(inventoryplayer, i, 8 + i * 18, 167));
         }
     }
 

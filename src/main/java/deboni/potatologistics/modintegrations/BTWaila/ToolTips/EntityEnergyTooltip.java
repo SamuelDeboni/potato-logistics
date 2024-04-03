@@ -1,10 +1,6 @@
 package deboni.potatologistics.modintegrations.BTWaila.ToolTips;
 
-import deboni.potatologistics.blocks.entities.TileEntityCapacitor;
-import deboni.potatologistics.blocks.entities.TileEntityCoil;
-import deboni.potatologistics.blocks.entities.TileEntityEnergyConnector;
-import deboni.potatologistics.blocks.entities.TileEntityMiningDrill;
-import deboni.potatologistics.blocks.entities.TileEntityTreeChopper;
+import deboni.potatologistics.blocks.entities.*;
 import sunsetsatellite.catalyst.energy.impl.TileEntityEnergy;
 import toufoumaster.btwaila.gui.components.AdvancedInfoComponent;
 import toufoumaster.btwaila.tooltips.TileTooltip;
@@ -17,6 +13,7 @@ public class EntityEnergyTooltip extends TileTooltip<TileEntityEnergy> {
         addClass(TileEntityEnergyConnector.class);
         addClass(TileEntityMiningDrill.class);
         addClass(TileEntityTreeChopper.class);
+        addClass(TileEntityHeater.class);
     }
     @Override
     public void drawAdvancedTooltip(TileEntityEnergy entityEnergy, AdvancedInfoComponent advancedInfoComponent) {

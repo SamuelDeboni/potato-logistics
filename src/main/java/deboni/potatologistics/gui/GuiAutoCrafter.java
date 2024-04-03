@@ -13,6 +13,8 @@ import org.lwjgl.opengl.GL11;
 public class GuiAutoCrafter extends GuiContainer {
     public GuiAutoCrafter(InventoryPlayer inventoryPlayer, TileEntityAutoCrafter tile) {
         super(new ContainerAutoCrafter(inventoryPlayer, tile));
+
+        this.ySize = 191;
     }
 
 
@@ -30,7 +32,7 @@ public class GuiAutoCrafter extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f) {
-        int i = this.mc.renderEngine.getTexture("/gui/crafting.png");
+        int i = this.mc.renderEngine.getTexture("/assets/potatologistics/gui/crafter.png");
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         this.mc.renderEngine.bindTexture(i);
         int j = (this.width - this.xSize) / 2;
