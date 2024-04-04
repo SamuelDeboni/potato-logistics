@@ -307,18 +307,11 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
 
     @Override
     public void onRecipesReady() {
-        RecipeNamespace namespace = new RecipeNamespace();
-        RecipeGroup<RecipeEntryCrafting<?,?>> workbench = new RecipeGroup<>(new RecipeSymbol(Block.workbench.getDefaultStack()));
-        RecipeGroup<RecipeEntryCrafting<?,?>> furnace = new RecipeGroup<>(new RecipeSymbol(Block.furnaceStoneIdle.getDefaultStack()));
-        namespace.register("workbench", workbench);
-        namespace.register("furnace", furnace);
-        Registries.RECIPES.register(MOD_ID, namespace);
-
         RecipeBuilder.Shapeless(MOD_ID)
                 .addInput(Item.clay)
                 .addInput(Item.dustSugar)
                 .addInput(Item.dustGlowstone)
-                .create("potato", new ItemStack(itemPotato, 1));
+                .create("potato", new ItemStack(itemPotato));
 
         RecipeBuilder.Shapeless(MOD_ID)
                 .addInput(blockPotato)
@@ -326,45 +319,139 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
 
         RecipeBuilder.Shapeless(MOD_ID)
                 .addInput(itemWireSpool)
-                .create("wire spool", new ItemStack(itemWireSpool, 1));
+                .create("wire spool", new ItemStack(itemWireSpool));
 
         RecipeBuilder.Shapeless(MOD_ID)
                 .addInput(Item.ingotIron)
                 .addInput(Item.dustRedstone)
                 .addInput(Item.dustRedstone)
-                .create("Redstone Iron Mix", new ItemStack(itemRedstoneIronMix, 1));
+                .create("redstone iron mix", new ItemStack(itemRedstoneIronMix));
 
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockPotato, 1), new Object[]{"AAA", "AAA", "AAA", 'A', itemPotato});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockPipe, 16), new Object[]{"   ", "ABA", "   ", 'A', Item.ingotIron, 'B', Block.glass});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockDirectionalPipe, 16), new Object[]{"   ", "ABC", "   ", 'A', Item.ingotIron, 'B', Block.glass, 'C', Item.ingotGold});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(itemWrench, 1), new Object[]{" A ", "AA ", "  A", 'A', Item.ingotIron, 'B', Block.glass});
-        RecipeHelper.craftingManager.addRecipe(new ItemStack(blockFilter, 1), true, false,
-                new Object[]{"ABA", "BCB", "ABA", 'A', Block.planksOak, 'B', Item.dustRedstone, 'C', Block.mesh});
+        RecipeBuilder.Shaped(MOD_ID, "AAA", "AAA", "AAA")
+                .addInput('A', itemPotato)
+                .create("potato", new ItemStack(itemPotato));
 
-        RecipeHelper.Crafting.createRecipe(new ItemStack(itemAutoBasket, 1), new Object[]{"AAA", "CBC", "CCC", 'A', Item.leather, 'B', Item.dustRedstone, 'C', Item.wheat});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockBlockCrusher, 1), new Object[]{"ABA", "ECF", "ADA", 'A', Block.cobbleStone, 'B', Block.obsidian, 'C', Item.toolPickaxeDiamond, 'D', Block.pistonBaseSticky, 'E', blockPipe, 'F', Item.dustRedstone});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockBlockPlacer, 1), new Object[]{"ADA", "ACA", "ABA", 'A', Block.cobbleStone, 'B', blockPipe, 'C', Item.dustRedstone, 'D', Block.pistonBase});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockTreeChopper, 1), new Object[]{"AAA", "BCD", "AEA", 'A', Item.ingotIron, 'B', Item.toolAxeDiamond, 'C', blockIronMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockMiningDrill, 1), new Object[]{"ADA", "CBC", "AEA", 'A', Item.ingotSteel, 'B', Item.toolPickaxeDiamond, 'C', blockSteelMachineBlock, 'D', blockPipe, 'E', Item.dustRedstone});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(itemIronGear, 1), new Object[]{" A ", "A A", " A ", 'A', Item.ingotIron});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(itemSteelGear, 1), new Object[]{" A ", "A A", " A ", 'A', Item.ingotSteel});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockIronMachineBlock, 1), new Object[]{"AAA", "BCB", "AAA", 'A', Item.ingotIron, 'B', itemIronGear, 'C', itemRedstoneAlloy});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockSteelMachineBlock, 1), new Object[]{"AAA", "BCB", "AAA", 'A', Item.ingotSteel, 'B', itemSteelGear, 'C', itemRedstoneAlloy});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(itemWireSpool, 4), new Object[]{" A ", "ABA", " A ", 'A', itemRedstoneAlloy, 'B', Item.stick});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(itemEnergyConnector, 4), new Object[]{" A ", "BAB", "BAB", 'A', Item.ingotIron, 'B', Item.brickClay});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockAutoCrafter, 1), new Object[]{"RRR", "ICI", "IGI", 'R', Item.dustRedstone, 'I', Item.ingotIron, 'C', Block.workbench, 'G', itemIronGear});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockFurnaceBurner, 1), new Object[]{"III", "I I", "IFI", 'I', Item.ingotIron, 'F', Block.furnaceStoneIdle});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockStirlingEngine, 1), new Object[]{"IPI", " M ", "IPI", 'I', Item.ingotIron, 'P', Block.pistonBase, 'M', blockIronMachineBlock});
-        RecipeHelper.Crafting.createRecipe(new ItemStack(blockCoil, 1), new Object[]{"WWW", "W W", "WWW", 'W', itemWireSpool});
+        RecipeBuilder.Shaped(MOD_ID, "   ", "ABA", "   ")
+                .addInput('A', Item.ingotIron)
+                .addInput('B', Block.glass)
+                .create("pipe", new ItemStack(blockPipe, 16));
+
+        RecipeBuilder.Shaped(MOD_ID, "   ", "ABC", "   ")
+                .addInput('A', Item.ingotIron)
+                .addInput('B', Block.glass)
+                .addInput('C', Item.ingotGold)
+                .create("directional pipe", new ItemStack(blockDirectionalPipe, 16));
+
+        RecipeBuilder.Shaped(MOD_ID, " A ", "AA ", "  A")
+                .addInput('A', Item.ingotIron)
+                .create("wrench", new ItemStack(itemWrench));
+
+        RecipeBuilder.Shaped(MOD_ID, "ABA", "BCB", "ABA")
+                .addInput('A', "minecraft:planks")
+                .addInput('B', Item.dustRedstone)
+                .addInput('C', Block.mesh)
+                .create("filter", new ItemStack(blockFilter));
+
+        RecipeBuilder.Shaped(MOD_ID, "AAA", "CBC", "CCC")
+                .addInput('A', Item.leather)
+                .addInput('B', Item.dustRedstone)
+                .addInput('C', Item.wheat)
+                .create("auto basket", new ItemStack(blockAutoBasket));
+
+        RecipeBuilder.Shaped(MOD_ID,"ABA", "ECF", "ADA")
+                .addInput('A', "minecraft:cobblestones")
+                .addInput('B', Block.obsidian)
+                .addInput('C', Item.toolPickaxeDiamond)
+                .addInput('D', Block.pistonBaseSticky)
+                .addInput('E', blockPipe)
+                .addInput('F', Item.dustRedstone)
+                .create("block crusher", new ItemStack(blockBlockCrusher));
+
+        RecipeBuilder.Shaped(MOD_ID, "ADA", "ACA", "ABA")
+                .addInput('A', "minecraft:cobblestones")
+                .addInput('B', blockPipe)
+                .addInput('C', Item.dustRedstone)
+                .addInput('D', Block.pistonBase)
+                .create("block placer", new ItemStack(blockBlockPlacer));
+
+        RecipeBuilder.Shaped(MOD_ID, "AAA", "BCD", "AEA")
+                .addInput('A', Item.ingotIron)
+                .addInput('B', Item.toolAxeDiamond)
+                .addInput('C', blockIronMachineBlock)
+                .addInput('D', blockPipe)
+                .addInput('E', Item.dustRedstone)
+                .create("tree chopper", new ItemStack(blockTreeChopper));
+
+        RecipeBuilder.Shaped(MOD_ID, "ADA", "CBC", "AEA")
+                .addInput('A', Item.ingotSteel)
+                .addInput('B', Item.toolPickaxeDiamond)
+                .addInput('C', blockSteelMachineBlock)
+                .addInput('D', blockPipe)
+                .addInput('E', Item.dustRedstone)
+                .create("mining drill", new ItemStack(blockMiningDrill));
+
+        RecipeBuilder.Shaped(MOD_ID, " A ", "A A", " A ")
+                .addInput('A', Item.ingotIron)
+                .create("iron gear", new ItemStack(itemIronGear));
+
+        RecipeBuilder.Shaped(MOD_ID, " A ", "A A", " A ")
+                .addInput('A', Item.ingotSteel)
+                .create("steel gear", new ItemStack(itemSteelGear));
+
+        RecipeBuilder.Shaped(MOD_ID, "AAA", "BCB", "AAA")
+                .addInput('A', Item.ingotIron)
+                .addInput('B', itemIronGear)
+                .addInput('C', itemRedstoneAlloy)
+                .create("iron machine block", new ItemStack(blockIronMachineBlock));
+
+        RecipeBuilder.Shaped(MOD_ID, "AAA", "BCB", "AAA")
+                .addInput('A', Item.ingotSteel)
+                .addInput('B', itemSteelGear)
+                .addInput('C', itemRedstoneAlloy)
+                .create("steel machine block", new ItemStack(blockSteelMachineBlock));
+
+        RecipeBuilder.Shaped(MOD_ID, " A ", "ABA", " A ")
+                .addInput('A', itemRedstoneAlloy)
+                .addInput('B', Item.stick)
+                .create("wire spool", new ItemStack(itemWireSpool, 4));
+
+        RecipeBuilder.Shaped(MOD_ID, " A ", "BAB", "BAB")
+                .addInput('A', Item.ingotIron)
+                .addInput('B', Item.brickClay)
+                .create("energy connector", new ItemStack(itemEnergyConnector, 4));
+
+        RecipeBuilder.Shaped(MOD_ID, "RRR", "ICI", "IGI")
+                .addInput('R', Item.dustRedstone)
+                .addInput('I', Item.ingotIron)
+                .addInput('C', Block.workbench)
+                .addInput('G', itemIronGear)
+                .create("crafter", new ItemStack(blockAutoCrafter));
+
+        RecipeBuilder.Shaped(MOD_ID, "III", "I I", "IFI")
+                .addInput('I', Item.ingotIron)
+                .addInput('F', Block.furnaceStoneIdle)
+                .create("furnace burner", new ItemStack(blockFurnaceBurner));
+
+        RecipeBuilder.Shaped(MOD_ID, "IPI", "M ", "IPI")
+                .addInput('I', Item.ingotIron)
+                .addInput('P', Block.pistonBase)
+                .addInput('M', blockIronMachineBlock)
+                .create("stirling engine", new ItemStack(blockStirlingEngine));
+
+        RecipeBuilder.Shaped(MOD_ID, "WWW", "W W", "WWW")
+                .addInput('W', itemWireSpool)
+                .create("coil", new ItemStack(blockCoil));
 
         RecipeBuilder.Shaped(MOD_ID, "IAI", "ACA", "IMI")
                 .addInput('I', Item.ingotIron)
                 .addInput('A', itemRedstoneAlloy)
                 .addInput('C', blockCoil)
                 .addInput('M', blockIronMachineBlock)
-                .create("heater", new ItemStack(blockHeater, 1));
+                .create("heater", new ItemStack(blockHeater));
 
-        RecipeBuilder.Furnace(MOD_ID).setInput(itemRedstoneAlloy).create("Redstone Alloy", new ItemStack(itemRedstoneAlloy, 1));
+        RecipeBuilder.Furnace(MOD_ID)
+                .setInput(itemRedstoneAlloy)
+                .create("Redstone Alloy", new ItemStack(itemRedstoneAlloy));
     }
 
     @Override

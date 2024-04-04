@@ -29,6 +29,9 @@
     ],
     "beforeClientStart": [
       "deboni.potatologistics.PotatoLogisticsMod"
+    ],
+    "recipesReady": [
+      "deboni.potatologistics.PotatoLogisticsMod"
     ]
   },
   "mixins": [
