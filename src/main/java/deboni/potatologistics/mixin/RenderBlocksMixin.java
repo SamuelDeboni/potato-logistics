@@ -183,7 +183,7 @@ public abstract class RenderBlocksMixin {
         if (te instanceof TileEntityStirlingEngine) {
             TileEntityStirlingEngine engine = (TileEntityStirlingEngine) te;
             if (engine.temperature > 0) {
-                float t = (float) (engine.temperature - engine.minTemperature) / (float) (engine.maxTemperature - engine.minTemperature);
+                float t = (float)engine.temperature / (float)engine.maxTemperature;
                 heatColor[1] = Math.min((1 - t) + t * 0.4f, 1);
                 heatColor[2] = Math.min((1 - t) + t * 0.2f, 1);
             }

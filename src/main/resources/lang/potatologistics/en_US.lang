@@ -10,13 +10,13 @@ item.potatologistics.auto_basket.desc=Automate item collection
 tile.potatologistics.auto_basket.name=Auto Basket
 tile.potatologistics.auto_basket.desc=Automate item collection
 
-item.potatologistics.energy_connector.name=Energy Connector
+item.potatologistics.energy_connector.name=LV Energy Connector
 item.potatologistics.energy_connector.desc=Connect energy to your machines
 
 tile.potatologistics.energy_connector.name=Energy Connector
 tile.potatologistics.energy_connector.desc=Connect energy to your machines
 
-item.potatologistics.wire_spool.name=Wire Spool
+item.potatologistics.wire_spool.name=LV Wire Spool
 item.potatologistics.wire_spool.desc=Use to connect two connectors
 
 item.potatologistics.redstone_alloy.name=Redstone Alloy
@@ -70,10 +70,13 @@ tile.potatologistics.furnace_burner.desc=Burn fuel to generate heat
 tile.potatologistics.furnace_burner_on.name=Furnace Burner
 tile.potatologistics.furnace_burner_on.desc=Burn fuel to generate heat
 
-tile.potatologistics.stirling_engine.name=Stirling Engine
-tile.potatologistics.stirling_engine.desc=Transform heat from bellow into kinetic energy above
+tile.potatologistics.stirling_engine_lv.name=LV Stirling Engine
+tile.potatologistics.stirling_engine_lv.desc=Transform heat from bellow into kinetic energy above
 
-tile.potatologistics.coil.name=Coil
+tile.potatologistics.stirling_engine_mv.name=MV Stirling Engine
+tile.potatologistics.stirling_engine_mv.desc=Transform heat from bellow into kinetic energy above
+
+tile.potatologistics.coil.name=LV Coil
 tile.potatologistics.coil.desc=Transform kinetic energy bellow into electric energy
 
 tile.potatologistics.test_area_maker.name=Test Area Maker
@@ -82,7 +85,7 @@ tile.potatologistics.test_area_maker.desc=Turn the chunk placed into a flat surf
 tile.potatologistics.auto_crafter.name=Auto Crafter
 tile.potatologistics.auto_crafter.desc=No, it does not have a face
 
-tile.potatologistics.capacitor.name=Capacitor
+tile.potatologistics.capacitor.name=LV Capacitor
 tile.potatologistics.capacitor.desc=Stores 100000 Eu
 
 tile.potatologistics.heater.name=Heater

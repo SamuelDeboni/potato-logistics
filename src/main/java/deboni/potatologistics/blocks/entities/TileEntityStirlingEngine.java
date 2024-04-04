@@ -10,14 +10,13 @@ public class TileEntityStirlingEngine extends TileEntity {
     public int temperature;
     public int targetTemperature;
     public int maxTemperature = 800;
-    public int minTemperature = 64;
     public int maxEnergy = 16;
     private final int serverTickRate = 10;
     private int ticksSinceLastPacket = 0;
 
     public int consumeEnergy() {
-        if (temperature > minTemperature) {
-            return (maxEnergy * (temperature - minTemperature)) / (maxTemperature - minTemperature);
+        if (temperature > 0) {
+            return (int)((float)maxEnergy * (float)temperature / (float)maxTemperature);
         }
         return 0;
     }

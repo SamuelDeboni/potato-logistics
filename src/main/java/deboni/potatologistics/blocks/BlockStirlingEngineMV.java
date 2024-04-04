@@ -13,7 +13,7 @@ public class BlockStirlingEngineMV extends BlockTileEntity {
     @Override
     protected TileEntity getNewBlockEntity() {
         TileEntityStirlingEngine tile = new TileEntityStirlingEngine();
-        tile.maxEnergy = 32;
+        tile.maxEnergy = 64;
         tile.maxTemperature = 1600;
         return tile;
     }

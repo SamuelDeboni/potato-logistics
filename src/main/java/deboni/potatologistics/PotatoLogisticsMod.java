@@ -208,7 +208,7 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .setHardness(2.0f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .setBlockModel(new BlockModelRenderBlocks(154))
-                .build(new BlockStirlingEngine("stirling_engine", blockNum++, Material.metal));
+                .build(new BlockStirlingEngine("stirling_engine_lv", blockNum++, Material.metal));
 
         blockCoil = new BlockBuilder(MOD_ID)
                 .setTopTexture("coil_block_top.png")
@@ -249,7 +249,7 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .setHardness(2.0f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .setBlockModel(new BlockModelRenderBlocks(154))
-                .build(new BlockStirlingEngineMV("stirling_engine", blockNum++, Material.metal));
+                .build(new BlockStirlingEngineMV("stirling_engine_mv", blockNum++, Material.metal));
 
         int itemNum = config.getInt("starting_item_id");
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
@@ -440,13 +440,13 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput('I', Item.ingotIron)
                 .addInput('P', Block.pistonBase)
                 .addInput('M', blockIronMachineBlock)
-                .create("stirling engine", new ItemStack(blockStirlingEngine));
+                .create("lv stirling engine", new ItemStack(blockStirlingEngine));
 
         RecipeBuilder.Shaped(MOD_ID, "IPI", " M ", "IPI")
                 .addInput('I', Item.ingotGold)
                 .addInput('P', Block.pistonBase)
                 .addInput('M', blockSteelMachineBlock)
-                .create("stirling engine mv", new ItemStack(blockStirlingEngineMV));
+                .create("mv stirling engine", new ItemStack(blockStirlingEngineMV));
 
         RecipeBuilder.Shaped(MOD_ID, "WWW", "W W", "WWW")
                 .addInput('W', itemWireSpool)
