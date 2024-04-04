@@ -25,7 +25,7 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
     public boolean isPowered;
     public TileEntityBurner(){
         contents = new ItemStack[1];
-        maxBurnTemperature = 10000;
+        maxBurnTemperature = 1200;
     }
 
     public TileEntityBurner(int maxBurnTemperature){
@@ -44,7 +44,7 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
             isPowered = worldObj.isBlockIndirectlyGettingPowered(x, y, z) || worldObj.isBlockGettingPowered(x, y, z);
 
             if (this.currentBurnTime <= 0 && !isPowered) {
-                this.maxBurnTime = this.currentBurnTime = this.getBurnTimeFromItem(this.contents[0]) / 5;
+                this.maxBurnTime = this.currentBurnTime = this.getBurnTimeFromItem(this.contents[0]);
                 if (this.currentBurnTime > 0) {
                     currentFuel = this.contents[0];
                     updated = true;
@@ -140,6 +140,7 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
         }
         this.currentBurnTime = CompoundTag.getInteger("BurnTime");
         this.maxBurnTime = CompoundTag.getInteger("MaxBurnTime");
+        this.maxBurnTemperature = CompoundTag.getInteger("MaxBurnTemperature");
         currentFuel = ItemStack.readItemStackFromNbt(CompoundTag.getCompound("CurrentFuel"));
     }
 
@@ -167,6 +168,7 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
         CompoundTag.putCompound("CurrentFuel",fuel);
         CompoundTag.putInt("BurnTime", (short)this.currentBurnTime);
         CompoundTag.putInt("MaxBurnTime", (short)this.maxBurnTime);
+        CompoundTag.putInt("MaxBurnTemperature", (short)this.maxBurnTemperature);
     }
 
     public int getInventoryStackLimit()

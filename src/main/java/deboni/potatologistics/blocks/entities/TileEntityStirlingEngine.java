@@ -9,8 +9,8 @@ import net.minecraft.core.net.packet.Packet140TileEntityData;
 public class TileEntityStirlingEngine extends TileEntity {
     public int temperature;
     public int targetTemperature;
-    public int maxTemperature = 1000;
-    public int minTemperature = 200;
+    public int maxTemperature = 800;
+    public int minTemperature = 64;
     public int maxEnergy = 16;
     private final int serverTickRate = 10;
     private int ticksSinceLastPacket = 0;
@@ -52,12 +52,16 @@ public class TileEntityStirlingEngine extends TileEntity {
     public void writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         nbttagcompound.putInt("temperature", temperature);
+        nbttagcompound.putInt("maxTemperature", maxTemperature);
+        nbttagcompound.putInt("maxEnergy", maxEnergy);
     }
 
     @Override
     public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
         temperature = nbttagcompound.getInteger("temperature");
+        maxTemperature = nbttagcompound.getInteger("maxTemperature");
+        maxEnergy = nbttagcompound.getInteger("maxEnergy");
     }
     @Override
     public Packet getDescriptionPacket() {

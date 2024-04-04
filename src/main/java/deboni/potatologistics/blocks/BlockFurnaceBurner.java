@@ -93,6 +93,8 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
 
     @Override
     protected TileEntity getNewBlockEntity() {
-        return new TileEntityBurner(1000);
+        TileEntityBurner tile = new TileEntityBurner(1200);
+        tile.maxBurnTemperature = 1200;
+        return tile;
     }
 }

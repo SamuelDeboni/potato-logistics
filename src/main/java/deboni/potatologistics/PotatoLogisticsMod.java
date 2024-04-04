@@ -10,11 +10,6 @@ import net.minecraft.client.render.block.model.BlockModelRenderBlocks;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
-import net.minecraft.core.data.registry.Registries;
-import net.minecraft.core.data.registry.recipe.RecipeGroup;
-import net.minecraft.core.data.registry.recipe.RecipeNamespace;
-import net.minecraft.core.data.registry.recipe.RecipeSymbol;
-import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemPlaceable;
 import net.minecraft.core.item.ItemStack;
@@ -76,8 +71,8 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
     public static Block blockCoil;
     public static Block blockAutoCrafter;
     public static Block blockCapacitorLv;
-
     public static Block blockHeater;
+    public static Block blockStirlingEngineMV;
 
     @Override
     public void onInitialize() {
@@ -247,6 +242,15 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockHeater("heater", blockNum++, Material.metal));
 
+        blockStirlingEngineMV = new BlockBuilder(MOD_ID)
+                .setBottomTexture("stirling_engine_mv_bottom.png")
+                .setTopTexture("stirling_engine_mv_top.png")
+                .setSideTextures("stirling_engine_mv_sides.png")
+                .setHardness(2.0f)
+                .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+                .setBlockModel(new BlockModelRenderBlocks(154))
+                .build(new BlockStirlingEngineMV("stirling_engine", blockNum++, Material.metal));
+
         int itemNum = config.getInt("starting_item_id");
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
         itemWrench = ItemHelper.createItem(MOD_ID, new Item("Wrench", itemNum++), "wrench", "wrench.png");
@@ -398,13 +402,13 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput('A', Item.ingotSteel)
                 .create("steel gear", new ItemStack(itemSteelGear));
 
-        RecipeBuilder.Shaped(MOD_ID, "AAA", "BCB", "AAA")
+        RecipeBuilder.Shaped(MOD_ID, "AAA", "CBC", "AAA")
                 .addInput('A', Item.ingotIron)
                 .addInput('B', itemIronGear)
                 .addInput('C', itemRedstoneAlloy)
                 .create("iron machine block", new ItemStack(blockIronMachineBlock));
 
-        RecipeBuilder.Shaped(MOD_ID, "AAA", "BCB", "AAA")
+        RecipeBuilder.Shaped(MOD_ID, "AAA", "CBC", "AAA")
                 .addInput('A', Item.ingotSteel)
                 .addInput('B', itemSteelGear)
                 .addInput('C', itemRedstoneAlloy)
@@ -432,11 +436,17 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput('F', Block.furnaceStoneIdle)
                 .create("furnace burner", new ItemStack(blockFurnaceBurner));
 
-        RecipeBuilder.Shaped(MOD_ID, "IPI", "M ", "IPI")
+        RecipeBuilder.Shaped(MOD_ID, "IPI", " M ", "IPI")
                 .addInput('I', Item.ingotIron)
                 .addInput('P', Block.pistonBase)
                 .addInput('M', blockIronMachineBlock)
                 .create("stirling engine", new ItemStack(blockStirlingEngine));
+
+        RecipeBuilder.Shaped(MOD_ID, "IPI", " M ", "IPI")
+                .addInput('I', Item.ingotGold)
+                .addInput('P', Block.pistonBase)
+                .addInput('M', blockSteelMachineBlock)
+                .create("stirling engine mv", new ItemStack(blockStirlingEngineMV));
 
         RecipeBuilder.Shaped(MOD_ID, "WWW", "W W", "WWW")
                 .addInput('W', itemWireSpool)
@@ -450,8 +460,8 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .create("heater", new ItemStack(blockHeater));
 
         RecipeBuilder.Furnace(MOD_ID)
-                .setInput(itemRedstoneAlloy)
-                .create("Redstone Alloy", new ItemStack(itemRedstoneAlloy));
+                .setInput(itemRedstoneIronMix)
+                .create("redstone alloy", new ItemStack(itemRedstoneAlloy));
     }
 
     @Override
