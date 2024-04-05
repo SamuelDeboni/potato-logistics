@@ -38,6 +38,11 @@ public class BlockPipe extends BlockTileEntity {
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
         super.onNeighborBlockChange(world, x, y, z, blockId);
+
+        TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
+        if (te != null) {
+            te.calcVisualConnections();
+        }
     }
 
     @Override
@@ -53,6 +58,10 @@ public class BlockPipe extends BlockTileEntity {
             }
         }
         super.onBlockPlaced(world, x, y, z, side, entity, sideHeight);
+        TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
+        if (te != null) {
+            te.calcVisualConnections();
+        }
     }
 
     @Override
@@ -66,6 +75,7 @@ public class BlockPipe extends BlockTileEntity {
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
+        TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
         ItemStack heldItem = player.getHeldItem();
         if (heldItem != null && heldItem.itemID == PotatoLogisticsMod.itemWrench.id) {
             int meta = world.getBlockMetadata(x, y, z);
@@ -77,8 +87,11 @@ public class BlockPipe extends BlockTileEntity {
             world.notifyBlocksOfNeighborChange(x, y, z, this.id);
             world.markBlockNeedsUpdate(x, y, z);
             world.playSoundEffect(player, SoundCategory.WORLD_SOUNDS, (double)x + 0.5, (double)y + 0.5, (double)z + 0.5, "random.click", 0.3f, meta == 0 ? 0.5f : 0.6f);
+
+            if (te != null) te.calcVisualConnections();
             return true;
         }
+        if (te != null) te.calcVisualConnections();
         return false;
     }
 

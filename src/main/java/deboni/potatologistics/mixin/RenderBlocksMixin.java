@@ -421,6 +421,8 @@ public abstract class RenderBlocksMixin {
                 {0.70f, 0.30f, 0.30f, 1.00f, 0.70f, 0.70f},
         };
 
+        TileEntityPipe pipe = (TileEntityPipe) world.getBlockTileEntity(x, y, z);
+
         for (int i = 0; i < offsets.length; i++) {
             float[] coord = coords[i];
 
@@ -428,6 +430,16 @@ public abstract class RenderBlocksMixin {
                 coord = coordsOpen[i];
             }
 
+            if ((pipe.visualConnections & (1 << i)) != 0) {
+                block.setBlockBounds(coord[0], coord[1], coord[2], coord[3], coord[4], coord[5]);
+                if ((pipe.visualColor & (1 << i)) != 0) {
+                    renderblocks.renderStandardBlock(block, x, y, z, 1, 1, 1);
+                } else {
+                    renderblocks.renderStandardBlock(block, x, y, z, r, g, b);
+                }
+            }
+
+            /*
             int blockBreakerDirId = 0;
             Block blockN = blockAccess.getBlock(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
             int blockNMeta = blockAccess.getBlockMetadata(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
@@ -456,6 +468,7 @@ public abstract class RenderBlocksMixin {
                     renderblocks.renderStandardBlock(block, x, y, z, r, g, b);
                 }
             }
+             */
         }
 
         block.setBlockBounds(0.25f, 0.25f, 0.25f, 0.75f, 0.75f, 0.75f);

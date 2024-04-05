@@ -3,8 +3,11 @@ package deboni.potatologistics.blocks.entities;
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
 import deboni.potatologistics.PipeStack;
+import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.Util;
+import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockChest;
+import net.minecraft.core.block.BlockRotatable;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityChest;
 import net.minecraft.core.item.ItemStack;
@@ -27,6 +30,9 @@ public class TileEntityPipe extends TileEntity {
     private int timer = 0;
     public int timerLen = 4;
     public int stackLimit = 4;
+
+    public int visualConnections = 0;
+    public int visualColor = 0;
 
     private static final int[][] offsets = {
             { 0, -1,  0},
@@ -100,6 +106,9 @@ public class TileEntityPipe extends TileEntity {
             CompoundTag nbttagcompound1 = (CompoundTag)nbttaglist.tagAt(i);
             this.stacks.add(PipeStack.readPipeStackFromNbt(nbttagcompound1));
         }
+
+        visualConnections = nbttagcompound.getInteger("visualConnections");
+        visualColor = nbttagcompound.getInteger("visualColor");
     }
 
     @Override
@@ -113,13 +122,64 @@ public class TileEntityPipe extends TileEntity {
             nbttaglist.addTag(nbttagcompound1);
         }
         nbttagcompound.put("Items", nbttaglist);
+        nbttagcompound.putInt("visualConnections", visualConnections);
+        nbttagcompound.putInt("visualColor", visualColor);
     }
+
+    public void calcVisualConnections() {
+        int meta = worldObj.getBlockMetadata(x, y, z);
+        int type = meta & 0x03;
+        Direction pipeDirection = Direction.getDirectionById(meta >> 3).getOpposite();
+
+        boolean isDirectional = (meta & (1 << 2)) != 0;
+        visualConnections = 0;
+        visualColor = 0;
+        for (int i = 0; i < offsets.length; i++) {
+            int blockBreakerDirId = 0;
+            Block blockN = worldObj.getBlock(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            int blockNMeta = worldObj.getBlockMetadata(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            if (blockN instanceof BlockRotatable) {
+                blockBreakerDirId = BlockRotatable.getOrientation(blockNMeta);
+            }
+
+            int nid = worldObj.getBlockId(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            TileEntity te = worldObj.getBlockTileEntity(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            if(te instanceof TileEntityPipe
+                    || type != 0 && te instanceof IInventory
+                    || Direction.getDirectionById(i) == Direction.UP && nid == PotatoLogisticsMod.blockAutoBasket.id
+                    || nid == PotatoLogisticsMod.blockBlockCrusher.id && blockBreakerDirId == i
+            ) {
+                if (te instanceof TileEntityPipe) {
+                    TileEntityPipe pipe = (TileEntityPipe) te;
+                    if (isDirectional && pipe.isDirectional()) {
+                        if (pipeDirection.getId() == i || pipe.isPointingTo(x, y, z)) {
+                            visualConnections |= 1 << i;
+                        }
+                    } else {
+                        visualConnections |= 1 << i;
+                    }
+                } else {
+                    visualConnections |= 1 << i;
+                    visualColor |= 1 << 1;
+                }
+            }
+        }
+    }
+
+    int sleepTimer = 0;
 
     @Override
     public void tick() {
+        if (sleepTimer > 0) {
+            sleepTimer--;
+            return;
+        }
+
         super.tick();
 
-        if (!stacks.isEmpty()) worldObj.markBlockNeedsUpdate(this.x, this.y, this.z);
+        //calcVisualConnections();
+
+        //if (!stacks.isEmpty()) worldObj.markBlockNeedsUpdate(this.x, this.y, this.z);
 
         int meta = worldObj.getBlockMetadata(this.x, this.y, this.z);
 
@@ -262,6 +322,11 @@ public class TileEntityPipe extends TileEntity {
             } else {
                 stack.timer--;
             }
+        }
+
+        if (stacks.isEmpty() && timer == 0) {
+            sleepTimer = 20;
+            if (visualConnections == 0) calcVisualConnections();
         }
     }
     @Override
