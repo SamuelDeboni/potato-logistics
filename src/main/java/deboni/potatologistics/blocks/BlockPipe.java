@@ -12,6 +12,8 @@ import net.minecraft.core.sound.SoundCategory;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
+import java.util.Random;
+
 public class BlockPipe extends BlockTileEntity {
     public boolean isDirectional;
     public BlockPipe(String key, int id, Material material, Boolean isDirectional) {
@@ -38,11 +40,6 @@ public class BlockPipe extends BlockTileEntity {
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
         super.onNeighborBlockChange(world, x, y, z, blockId);
-
-        TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
-        if (te != null) {
-            te.calcVisualConnections();
-        }
     }
 
     @Override
@@ -52,12 +49,9 @@ public class BlockPipe extends BlockTileEntity {
                 int meta = side.getDirection().getId() << 3;
                 meta |= (1 << 2);
 
-                world.setBlockMetadata(x, y, z, meta);
-                world.notifyBlocksOfNeighborChange(x, y, z, this.id);
-                world.markBlockNeedsUpdate(x, y, z);
+                world.setBlockMetadataWithNotify(x, y, z, meta);
             }
         }
-        super.onBlockPlaced(world, x, y, z, side, entity, sideHeight);
         TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
         if (te != null) {
             te.calcVisualConnections();

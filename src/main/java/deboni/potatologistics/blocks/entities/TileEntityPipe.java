@@ -135,6 +135,9 @@ public class TileEntityPipe extends TileEntity {
         visualConnections = 0;
         visualColor = 0;
         for (int i = 0; i < offsets.length; i++) {
+            TileEntity te = worldObj.getBlockTileEntity(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            if (te == null) continue;
+
             int blockBreakerDirId = 0;
             Block blockN = worldObj.getBlock(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
             int blockNMeta = worldObj.getBlockMetadata(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
@@ -143,7 +146,6 @@ public class TileEntityPipe extends TileEntity {
             }
 
             int nid = worldObj.getBlockId(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
-            TileEntity te = worldObj.getBlockTileEntity(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
             if(te instanceof TileEntityPipe
                     || type != 0 && te instanceof IInventory
                     || Direction.getDirectionById(i) == Direction.UP && nid == PotatoLogisticsMod.blockAutoBasket.id
@@ -204,6 +206,10 @@ public class TileEntityPipe extends TileEntity {
         }
 
         timer--;
+
+        if (timer <= 0) {
+            calcVisualConnections();
+        }
 
         for (int stackIndex = 0; stackIndex < stacks.size(); stackIndex++) {
             PipeStack stack = stacks.get(stackIndex);
@@ -326,7 +332,6 @@ public class TileEntityPipe extends TileEntity {
 
         if (stacks.isEmpty() && timer == 0) {
             sleepTimer = 20;
-            if (visualConnections == 0) calcVisualConnections();
         }
     }
     @Override
