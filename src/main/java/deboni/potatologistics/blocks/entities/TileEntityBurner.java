@@ -176,10 +176,8 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
         return 64;
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
-    {
-        if(worldObj.getBlockTileEntity(x, y, z) != this)
-        {
+    public boolean canInteractWith(EntityPlayer entityplayer) {
+        if(worldObj.getBlockTileEntity(x, y, z) != this) {
             return false;
         }
         return entityplayer.distanceToSqr((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D) <= 64D;
@@ -191,7 +189,7 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
     }
 
     private int getBurnTimeFromItem(ItemStack itemStack) {
-        return itemStack == null ? 0 : LookupFuelFurnace.instance.getFuelYield(itemStack.getItem().id);
+        return itemStack == null ? 0 : LookupFuelFurnace.instance.getFuelYield(itemStack.getItem().id) / 2;
     }
 
     private int getEnergyYieldForItem(ItemStack itemStack) {

@@ -2,22 +2,17 @@ package deboni.potatologistics.mixin;
 
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.BlockAutoBasket;
+import deboni.potatologistics.blocks.entities.TileEntityCapacitor;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import deboni.potatologistics.blocks.entities.TileEntityStirlingEngine;
 import deboni.potatologistics.blocks.entities.TileEntityTreeChopper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.hud.HotbarComponent;
 import net.minecraft.client.render.RenderBlocks;
-import net.minecraft.client.render.RenderEngine;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.block.color.BlockColor;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
 import net.minecraft.client.render.block.model.BlockModelDispatcher;
 import net.minecraft.client.render.block.model.BlockModelRenderBlocks;
 import net.minecraft.core.block.Block;
-import net.minecraft.core.block.BlockRotatable;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
@@ -30,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import sunsetsatellite.catalyst.core.util.RenderBlockSimple;
 
 
 @Mixin(
@@ -84,6 +78,9 @@ public abstract class RenderBlocksMixin {
         if (renderType == 154) {
             cir.setReturnValue(renderBlockStirlingEngine(thisAs, this.blockAccess, x, y, z, block, world));
         }
+        if (renderType == 155) {
+            cir.setReturnValue(renderBlockCapacitor(thisAs, block, x, y, z, this.blockAccess));
+        }
     }
 
     @Inject(method = "renderBlockOnInventory(Lnet/minecraft/core/block/Block;IFF)V", at = @At("TAIL"))
@@ -94,6 +91,9 @@ public abstract class RenderBlocksMixin {
         }
         if (renderType == 154){
             renderBlockStirlingEngineInventory(block, metadata, brightness);
+        }
+        if (renderType == 155) {
+            renderBlockCapacitorOnInventory(block, metadata, brightness);
         }
     }
 
@@ -166,6 +166,97 @@ public abstract class RenderBlocksMixin {
         block.setBlockBounds(0, 0.0f, 0, 1, 1, 1);
     }
 
+    @Unique
+    private boolean renderBlockCapacitor(RenderBlocks renderblocks, Block block, int x, int y, int z, WorldSource worldSource){
+        float onepix = 0.0625f;
+        float twopix = onepix*2;
+
+        float r = 1.0f;
+        float g = 1.0f;
+        float b = 1.0f;
+
+        TileEntity te = world.getBlockTileEntity(x, y, z);
+        if (te instanceof TileEntityCapacitor) {
+            TileEntityCapacitor cap = (TileEntityCapacitor) te;
+            float energyPercent = (float) cap.energy / cap.capacity;
+            r = energyPercent + 0.5f;
+            g = energyPercent + 0.5f;
+            b = energyPercent + 0.5f;
+        }
+
+        block.setBlockBounds(onepix, onepix, onepix, 1-onepix, 1 - onepix, 1-onepix);
+        renderblocks.renderStandardBlock(block, x, y, z, r, g, b);
+
+        for (float zf = 0.0f; zf < 1; zf += 1.0f - twopix) {
+            for (float xf = 0.0f; xf < 1; xf += 1.0f - twopix) {
+                block.setBlockBounds(xf, 0, zf, xf + twopix, 1, zf + twopix);
+                renderblocks.renderStandardBlock(block, x, y, z, 1, 1, 1);
+            }
+        }
+
+        for (float zf = 0.0f; zf < 1; zf += 1.0f - twopix) {
+            for (float xf = 0.0f; xf < 1; xf += 1.0f - twopix) {
+                block.setBlockBounds(twopix, xf, zf, 1-twopix, xf + twopix, zf + twopix);
+                renderblocks.renderStandardBlock(block, x, y, z, 1, 1, 1);
+            }
+        }
+
+        for (float zf = 0.0f; zf < 1; zf += 1.0f - twopix) {
+            for (float xf = 0.0f; xf < 1; xf += 1.0f - twopix) {
+                block.setBlockBounds(zf, xf, twopix, zf+twopix, xf + twopix, 1-twopix);
+                renderblocks.renderStandardBlock(block, x, y, z, 1, 1, 1);
+            }
+        }
+
+        block.setBlockBounds(5 * onepix, 5*onepix, 0, 11*onepix, 11*onepix, 1);
+        renderblocks.renderStandardBlock(block, x, y, z, 1, 1, 1);
+        block.setBlockBounds(5 * onepix, 0, 5*onepix, 11*onepix, 1, 11*onepix);
+        renderblocks.renderStandardBlock(block, x, y, z, 1, 1, 1);
+        block.setBlockBounds(0, 5 * onepix, 5*onepix, 1, 11*onepix, 11*onepix);
+        renderblocks.renderStandardBlock(block, x, y, z, 1, 1, 1);
+
+        block.setBlockBounds(0, 0, 0, 1, 1, 1);
+        return true;
+    }
+
+    @Unique
+    private void renderBlockCapacitorOnInventory(Block block, int metadata, float brightness){
+        float onepix = 0.0625f;
+        float twopix = onepix*2;
+
+        block.setBlockBounds(onepix, onepix, onepix, 1-onepix, 1 - onepix, 1-onepix);
+        renderBlockInvNormal(block,metadata, brightness);
+
+        for (float zf = 0.0f; zf < 1; zf += 1.0f - twopix) {
+            for (float xf = 0.0f; xf < 1; xf += 1.0f - twopix) {
+                block.setBlockBounds(xf, 0, zf, xf + twopix, 1, zf + twopix);
+                renderBlockInvNormal(block,metadata, brightness);
+            }
+        }
+
+        for (float zf = 0.0f; zf < 1; zf += 1.0f - twopix) {
+            for (float xf = 0.0f; xf < 1; xf += 1.0f - twopix) {
+                block.setBlockBounds(twopix, xf, zf, 1-twopix, xf + twopix, zf + twopix);
+                renderBlockInvNormal(block,metadata, brightness);
+            }
+        }
+
+        for (float zf = 0.0f; zf < 1; zf += 1.0f - twopix) {
+            for (float xf = 0.0f; xf < 1; xf += 1.0f - twopix) {
+                block.setBlockBounds(zf, xf, twopix, zf+twopix, xf + twopix, 1-twopix);
+                renderBlockInvNormal(block,metadata, brightness);
+            }
+        }
+
+        block.setBlockBounds(5 * onepix, 5*onepix, 0, 11*onepix, 11*onepix, 1);
+        renderBlockInvNormal(block,metadata, brightness);
+        block.setBlockBounds(5 * onepix, 0, 5*onepix, 11*onepix, 1, 11*onepix);
+        renderBlockInvNormal(block,metadata, brightness);
+        block.setBlockBounds(0, 5 * onepix, 5*onepix, 1, 11*onepix, 11*onepix);
+        renderBlockInvNormal(block,metadata, brightness);
+
+        block.setBlockBounds(0, 0, 0, 1, 1, 1);
+    }
 
     @Unique
     private static boolean renderBlockStirlingEngine(RenderBlocks renderblocks, WorldSource blockAccess, int x, int y, int z, Block block, World world) {

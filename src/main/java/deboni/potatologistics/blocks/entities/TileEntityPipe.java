@@ -89,11 +89,11 @@ public class TileEntityPipe extends TileEntity {
         return Direction.getDirectionById(meta >> 3);
     }
     public boolean isPointingTo(int x, int y, int z) {
-        int meta = worldObj.getBlockMetadata(x, y, z);
+        int meta = worldObj.getBlockMetadata(this.x, this.y, this.z);
         Direction dir = Direction.getDirectionById(meta >> 3);
-        boolean sameX = dir.getOffsetX() == x - x;
-        boolean sameY = dir.getOffsetY() == y - y;
-        boolean sameZ = dir.getOffsetZ() == z - z;
+        boolean sameX = dir.getOffsetX() == this.x - x;
+        boolean sameY = dir.getOffsetY() == this.y - y;
+        boolean sameZ = dir.getOffsetZ() == this.z - z;
         return sameX && sameY && sameZ;
     }
 
@@ -154,7 +154,10 @@ public class TileEntityPipe extends TileEntity {
                 if (te instanceof TileEntityPipe) {
                     TileEntityPipe pipe = (TileEntityPipe) te;
                     if (isDirectional && pipe.isDirectional()) {
-                        if (pipeDirection.getId() == i || pipe.isPointingTo(x, y, z)) {
+                        if (pipeDirection.getId() == i) {
+                            visualConnections |= 1 << i;
+                        }
+                        if (pipe.isPointingTo(this.x, this.y, this.z)) {
                             visualConnections |= 1 << i;
                         }
                     } else {
@@ -162,7 +165,7 @@ public class TileEntityPipe extends TileEntity {
                     }
                 } else {
                     visualConnections |= 1 << i;
-                    visualColor |= 1 << 1;
+                    visualColor |= 1 << i;
                 }
             }
         }

@@ -352,9 +352,10 @@ public class Util {
                 hasInserted = true;
             } else {
                 int maxStackSize = furnaceStack.getMaxStackSize();
-                if (pipes.length > 0) {
-                    maxStackSize = Math.min(maxStackSize, 8);
-                }
+                //if (pipes.length > 0) {
+                //    maxStackSize = Math.min(maxStackSize, 8);
+                //}
+                maxStackSize = Math.min(maxStackSize, 8);
 
                 if (furnaceStack.canStackWith(stack) && furnaceStack.stackSize < maxStackSize) {
                     furnaceStack.stackSize++;

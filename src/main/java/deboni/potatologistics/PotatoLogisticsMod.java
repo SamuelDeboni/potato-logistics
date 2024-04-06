@@ -11,6 +11,7 @@ import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemMap;
 import net.minecraft.core.item.ItemPlaceable;
 import net.minecraft.core.item.ItemStack;
 import org.slf4j.Logger;
@@ -231,7 +232,10 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .setTextures("capacitor_out.png")
                 .setTopTexture("capacitor_in.png")
                 .setHardness(1.5f)
+                .setResistance(5)
+                .setLuminance(1)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+                .setBlockModel(new BlockModelRenderBlocks(155))
                 .build(new BlockCapacitor("capacitor", blockNum++, Material.metal));
 
         blockHeater = new BlockBuilder(MOD_ID)
@@ -458,6 +462,12 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput('C', blockCoil)
                 .addInput('M', blockIronMachineBlock)
                 .create("heater", new ItemStack(blockHeater));
+
+        RecipeBuilder.Shaped(MOD_ID, "SAS", "AOA", "SAS")
+                .addInput('S', Item.ingotIron)
+                .addInput('A', Block.blockOlivine)
+                .addInput('O', Block.blockRedstone)
+                .create("lv capacitor", new ItemStack(blockCapacitorLv));
 
         RecipeBuilder.Furnace(MOD_ID)
                 .setInput(itemRedstoneIronMix)

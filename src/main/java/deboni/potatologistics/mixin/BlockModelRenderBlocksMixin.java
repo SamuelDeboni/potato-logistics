@@ -14,7 +14,7 @@ public class BlockModelRenderBlocksMixin {
 
     @Inject(method = "shouldItemRender3d()Z", at = @At("HEAD"), cancellable = true)
     private void shouldRender3d(CallbackInfoReturnable<Boolean> cir){
-        if (renderType == 150 || renderType == 151 || renderType == 152 || renderType == 154){
+        if (renderType == 150 || renderType == 151 || renderType == 152 || renderType == 154 || renderType == 155){
             cir.setReturnValue(true);
         }
     }
