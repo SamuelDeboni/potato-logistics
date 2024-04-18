@@ -124,7 +124,7 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
         blockBlockPlacer = new BlockBuilder(MOD_ID)
                 .setSideTextures("block_placer_side.png")
                 .setTopTexture("block_placer_front.png")
-                .setBottomTexture("block_crusher_back.png")
+                .setBottomTexture("block_placer_back.png")
                 .setHardness(1.5f)
                 .setTags(BlockTags.MINEABLE_BY_PICKAXE)
                 .build(new BlockBlockPlacer("block_placer", blockNum++, Material.stone));

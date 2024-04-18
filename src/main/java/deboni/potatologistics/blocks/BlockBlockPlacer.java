@@ -1,6 +1,7 @@
 package deboni.potatologistics.blocks;
 
 import deboni.potatologistics.PipeStack;
+import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.Util;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.core.block.Block;
@@ -23,30 +24,8 @@ public class BlockBlockPlacer extends BlockRotatable {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
-        if (blockId > 0 && Block.blocksList[blockId].canProvidePower()) {
-            boolean flag = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
-            if (flag) {
-                world.scheduleBlockUpdate(x, y, z, this.id, this.tickRate());
-            }
-        }
+        this.checkIfAction(world, x, y, z);
     }
-
-    /*
-    @Override
-    public int getBlockTextureFromSideAndMetadata(Side side, int j) {
-        int orientation = BlockPistonBase.getOrientation(j);
-        if (orientation > 5) {
-            return this.atlasIndices[0];
-        }
-        if (side.getId() == orientation) {
-            if (BlockPistonBase.isPowered(j) || this.minX > 0.0 || this.minY > 0.0 || this.minZ > 0.0 || this.maxX < 1.0 || this.maxY < 1.0 || this.maxZ < 1.0) {
-                return BlockPistonBase.texCoordToIndex(14, 6);
-            }
-            return this.atlasIndices[0];
-        }
-        return side.getId() != PistonDirections.orientationMap[orientation] ? BlockPistonBase.texCoordToIndex(12, 6) : BlockPistonBase.texCoordToIndex(13, 6);
-    }
-     */
 
     @Override
     public void onBlockPlaced(World world, int x, int y, int z, Side side, EntityLiving entity, double sideHeight) {
@@ -62,39 +41,98 @@ public class BlockBlockPlacer extends BlockRotatable {
         this.setDefaultDirection(world, i, j, k);
     }
 
-    @Override
-    public void updateTick(World world, int x, int y, int z, Random rand) {
-        if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z)) {
-            int meta = world.getBlockMetadata(x, y, z);
-            Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta)).getOpposite();
-            if (dir != Direction.UP && dir != Direction.DOWN) dir = dir.getOpposite();
+    public static boolean isPowered(int data) {
+        return (data & 8) != 0;
+    }
 
-            int ix = x - dir.getOffsetX();
-            int iy = y - dir.getOffsetY();
-            int iz = z - dir.getOffsetZ();
+    private void checkIfAction(World world, int x, int y, int z) {
+        int meta = world.getBlockMetadata(x, y, z);
+        Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta & 7));
+        boolean hasNeighborSignal = this.getNeighborSignal(world, x, y, z, dir.getId());
 
-            TileEntity inTe = world.getBlockTileEntity(ix, iy, iz) ;
-
-            int tx = x + dir.getOffsetX();
-            int ty = y + dir.getOffsetY();
-            int tz = z + dir.getOffsetZ();
-
-            Block block = world.getBlock(tx, ty, tz);
-            if (block != null) return;
-
-            ItemStack blockToPlace = null;
-
-            if (inTe instanceof IInventory) {
-                PipeStack pipeStack = Util.getItemFromInventory(world, ix, iy, iz, dir, 2);
-                if (pipeStack != null) blockToPlace = pipeStack.stack;
-            } else if (inTe instanceof TileEntityPipe) {
-                // TODO
-            }
-
-            if (blockToPlace == null || blockToPlace.itemID >= Block.blocksList.length) return;
-
-            world.playSoundEffect(2000, tx, ty, tz, blockToPlace.itemID);
-            boolean placed = world.setBlockWithNotify(tx, ty, tz, blockToPlace.itemID);
+        if (hasNeighborSignal) {
+            if (!isPowered(meta)) world.triggerEvent(x, y, z, 0, dir.getId());
+            meta = dir.getId();
+            meta |= 8;
+        } else {
+            meta = dir.getId();
         }
+        world.setBlockMetadata(x, y, z, meta);
+    }
+
+    @Override
+    public int getBlockTextureFromSideAndMetadata(Side side, int data) {
+        return super.getBlockTextureFromSideAndMetadata(side, data & 7);
+    }
+
+    private boolean getNeighborSignal(World world, int x, int y, int z, int direction) {
+        if (direction != 0 && world.isBlockIndirectlyProvidingPowerTo(x, y - 1, z, 0)) {
+            return true;
+        }
+        if (direction != 1 && world.isBlockIndirectlyProvidingPowerTo(x, y + 1, z, 1)) {
+            return true;
+        }
+        if (direction != 2 && world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2)) {
+            return true;
+        }
+        if (direction != 3 && world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3)) {
+            return true;
+        }
+        if (direction != 5 && world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5)) {
+            return true;
+        }
+        if (direction != 4 && world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x, y, z, 0)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x, y + 2, z, 1)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x, y + 1, z - 1, 2)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x, y + 1, z + 1, 3)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x - 1, y + 1, z, 4)) {
+            return true;
+        }
+        return world.isBlockIndirectlyProvidingPowerTo(x + 1, y + 1, z, 5);
+    }
+
+    @Override
+    public void triggerEvent(World world, int x, int y, int z, int index, int meta) {
+        meta = world.getBlockMetadata(x, y, z);
+        Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta)).getOpposite();
+        if (dir != Direction.UP && dir != Direction.DOWN) dir = dir.getOpposite();
+
+        int ix = x - dir.getOffsetX();
+        int iy = y - dir.getOffsetY();
+        int iz = z - dir.getOffsetZ();
+
+        TileEntity inTe = world.getBlockTileEntity(ix, iy, iz) ;
+
+        int tx = x + dir.getOffsetX();
+        int ty = y + dir.getOffsetY();
+        int tz = z + dir.getOffsetZ();
+
+        Block block = world.getBlock(tx, ty, tz);
+        if (block != null) return;
+
+        ItemStack blockToPlace = null;
+
+        if (inTe instanceof IInventory) {
+            PipeStack pipeStack = Util.getItemFromInventory(world, ix, iy, iz, dir, 2);
+            if (pipeStack != null) blockToPlace = pipeStack.stack;
+        } else if (inTe instanceof TileEntityPipe) {
+            // TODO
+        }
+
+        if (blockToPlace == null || blockToPlace.itemID >= Block.blocksList.length) return;
+
+        world.playSoundEffect(2000, tx, ty, tz, blockToPlace.itemID);
+        boolean placed = world.setBlockWithNotify(tx, ty, tz, blockToPlace.itemID);
     }
 }

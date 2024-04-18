@@ -210,6 +210,11 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
     }
 
     @Override
+    public int getActiveItemSlotForSide(Direction direction, ItemStack itemStack) {
+        return 0;
+    }
+
+    @Override
     public Connection getItemIOForSide(Direction direction) {
         return Connection.BOTH;
     }

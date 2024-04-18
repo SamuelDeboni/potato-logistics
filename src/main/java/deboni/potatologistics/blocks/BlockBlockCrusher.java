@@ -30,12 +30,7 @@ public class BlockBlockCrusher extends BlockRotatable {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
-        if (blockId > 0 && Block.blocksList[blockId].canProvidePower()) {
-            boolean flag = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
-            if (flag) {
-                world.scheduleBlockUpdate(x, y, z, this.id, this.tickRate());
-            }
-        }
+        this.checkIfAction(world, x, y, z);
     }
 
     @Override
@@ -65,68 +60,126 @@ public class BlockBlockCrusher extends BlockRotatable {
         return _result;
     }
 
+    public static boolean isPowered(int data) {
+        return (data & 8) != 0;
+    }
+
+    private void checkIfAction(World world, int x, int y, int z) {
+        int meta = world.getBlockMetadata(x, y, z);
+        Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta & 7));
+        boolean hasNeighborSignal = this.getNeighborSignal(world, x, y, z, dir.getId());
+
+        if (hasNeighborSignal) {
+            if (!isPowered(meta)) world.triggerEvent(x, y, z, 0, dir.getId());
+            meta = dir.getId();
+            meta |= 8;
+        } else {
+            meta = dir.getId();
+        }
+        world.setBlockMetadata(x, y, z, meta);
+    }
+
     @Override
-    public void updateTick(World world, int x, int y, int z, Random rand) {
-        if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z)) {
-            int meta = world.getBlockMetadata(x, y, z);
-            Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta)).getOpposite();
-            if (dir != Direction.UP && dir != Direction.DOWN) dir = dir.getOpposite();
+    public int getBlockTextureFromSideAndMetadata(Side side, int data) {
+        return super.getBlockTextureFromSideAndMetadata(side, data & 7);
+    }
 
-            int ix = x - dir.getOffsetX();
-            int iy = y - dir.getOffsetY();
-            int iz = z - dir.getOffsetZ();
+    private boolean getNeighborSignal(World world, int x, int y, int z, int direction) {
+        if (direction != 0 && world.isBlockIndirectlyProvidingPowerTo(x, y - 1, z, 0)) {
+            return true;
+        }
+        if (direction != 1 && world.isBlockIndirectlyProvidingPowerTo(x, y + 1, z, 1)) {
+            return true;
+        }
+        if (direction != 2 && world.isBlockIndirectlyProvidingPowerTo(x, y, z - 1, 2)) {
+            return true;
+        }
+        if (direction != 3 && world.isBlockIndirectlyProvidingPowerTo(x, y, z + 1, 3)) {
+            return true;
+        }
+        if (direction != 5 && world.isBlockIndirectlyProvidingPowerTo(x + 1, y, z, 5)) {
+            return true;
+        }
+        if (direction != 4 && world.isBlockIndirectlyProvidingPowerTo(x - 1, y, z, 4)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x, y, z, 0)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x, y + 2, z, 1)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x, y + 1, z - 1, 2)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x, y + 1, z + 1, 3)) {
+            return true;
+        }
+        if (world.isBlockIndirectlyProvidingPowerTo(x - 1, y + 1, z, 4)) {
+            return true;
+        }
+        return world.isBlockIndirectlyProvidingPowerTo(x + 1, y + 1, z, 5);
+    }
 
-            TileEntity outTe = world.getBlockTileEntity(ix, iy, iz) ;
+    @Override
+    public void triggerEvent(World world, int x, int y, int z, int index, int meta) {
+        Direction dir = Direction.getDirectionById(BlockRotatable.getOrientation(meta));
+        if (dir == Direction.UP || dir == Direction.DOWN) dir = dir.getOpposite();
 
-            int tx = x + dir.getOffsetX();
-            int ty = y + dir.getOffsetY();
-            int tz = z + dir.getOffsetZ();
+        int ix = x - dir.getOffsetX();
+        int iy = y - dir.getOffsetY();
+        int iz = z - dir.getOffsetZ();
 
-            Block block = world.getBlock(tx, ty, tz);
-            if (block == null) return;
+        TileEntity outTe = world.getBlockTileEntity(ix, iy, iz) ;
 
-            int tmeta = world.getBlockMetadata(tx, ty, tz);
-            TileEntity te = world.getBlockTileEntity(tx, ty ,tz);
+        int tx = x + dir.getOffsetX();
+        int ty = y + dir.getOffsetY();
+        int tz = z + dir.getOffsetZ();
 
-            boolean breakBlock = false;
-            ItemStack[] breakResult = crushResults.get(block);
-            if (breakResult != null){
-                breakResult = cloneStackArray(breakResult);
-                breakBlock = true;
-            } else if (block.getHardness() >= 0){
-                breakResult = block.getBreakResult(world, EnumDropCause.PROPER_TOOL, tx, ty, tz, tmeta, te);
-                breakBlock = true;
-            }
+        Block block = world.getBlock(tx, ty, tz);
+        if (block == null) return;
 
-            if (breakResult != null && breakResult.length > 0) {
-                if (outTe instanceof IInventory) {
-                    IInventory inventory;
-                    if (outTe instanceof TileEntityChest) {
-                        inventory = BlockChest.getInventory(world, ix, iy, iz);
-                    } else {
-                        inventory = (IInventory) outTe;
-                    }
-                    if (inventory != null) {
-                        for (ItemStack stack : breakResult) {
-                            boolean hasInserted = Util.insertOnInventory(inventory, stack, dir, new TileEntityPipe[0]);
-                            if (!hasInserted) return;
-                        }
-                    }
-                } else if (outTe instanceof TileEntityPipe) {
-                    TileEntityPipe pipe = (TileEntityPipe) outTe;
-                    if (breakResult.length > 1) return;
-                    boolean hasAdded = pipe.addToStack(breakResult[0], dir);
-                    if (!hasAdded) return;
+        int tmeta = world.getBlockMetadata(tx, ty, tz);
+        TileEntity te = world.getBlockTileEntity(tx, ty ,tz);
+
+        boolean breakBlock = false;
+        ItemStack[] breakResult = crushResults.get(block);
+        if (breakResult != null){
+            breakResult = cloneStackArray(breakResult);
+            breakBlock = true;
+        } else if (block.getHardness() >= 0){
+            breakResult = block.getBreakResult(world, EnumDropCause.PROPER_TOOL, tx, ty, tz, tmeta, te);
+            breakBlock = true;
+        }
+
+        if (breakResult != null && breakResult.length > 0) {
+            if (outTe instanceof IInventory) {
+                IInventory inventory;
+                if (outTe instanceof TileEntityChest) {
+                    inventory = BlockChest.getInventory(world, ix, iy, iz);
                 } else {
+                    inventory = (IInventory) outTe;
+                }
+                if (inventory != null) {
                     for (ItemStack stack : breakResult) {
-                        world.dropItem(ix, iy, iz, stack);
+                        boolean hasInserted = Util.insertOnInventory(inventory, stack, dir, new TileEntityPipe[0]);
+                        if (!hasInserted) return;
                     }
                 }
+            } else if (outTe instanceof TileEntityPipe) {
+                TileEntityPipe pipe = (TileEntityPipe) outTe;
+                if (breakResult.length > 1) return;
+                boolean hasAdded = pipe.addToStack(breakResult[0], dir);
+                if (!hasAdded) return;
+            } else {
+                for (ItemStack stack : breakResult) {
+                    world.dropItem(ix, iy, iz, stack);
+                }
             }
-            if (breakBlock){
-                world.playSoundEffect(2001, tx, ty, tz, block.id);
-                world.setBlockWithNotify(tx, ty, tz, 0);
-            }
+        }
+        if (breakBlock){
+            world.playSoundEffect(2001, tx, ty, tz, block.id);
+            world.setBlockWithNotify(tx, ty, tz, 0);
         }
     }
 }
