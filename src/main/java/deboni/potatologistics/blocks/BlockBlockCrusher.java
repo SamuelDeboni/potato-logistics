@@ -22,6 +22,10 @@ public class BlockBlockCrusher extends BlockRotatable {
     public static HashMap<Block, ItemStack[]> crushResults = new HashMap<>();
     static {
         crushResults.put(Block.cobbleStone, new ItemStack[]{new ItemStack(Block.gravel)});
+        crushResults.put(Block.cobbleBasalt, new ItemStack[]{new ItemStack(Block.gravel)});
+        crushResults.put(Block.cobbleGranite, new ItemStack[]{new ItemStack(Block.gravel)});
+        crushResults.put(Block.cobbleLimestone, new ItemStack[]{new ItemStack(Block.gravel)});
+        crushResults.put(Block.cobbleStoneMossy, new ItemStack[]{new ItemStack(Block.gravel)});
         crushResults.put(Block.gravel, new ItemStack[]{new ItemStack(Block.sand)});
     }
     public BlockBlockCrusher(String key, int id, Material material) {
