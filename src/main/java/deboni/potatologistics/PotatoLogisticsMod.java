@@ -11,7 +11,6 @@ import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.item.Item;
-import net.minecraft.core.item.ItemMap;
 import net.minecraft.core.item.ItemPlaceable;
 import net.minecraft.core.item.ItemStack;
 import org.slf4j.Logger;
@@ -364,7 +363,7 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput('A', Item.leather)
                 .addInput('B', Item.dustRedstone)
                 .addInput('C', Item.wheat)
-                .create("auto basket", new ItemStack(blockAutoBasket));
+                .create("auto basket", new ItemStack(itemAutoBasket));
 
         RecipeBuilder.Shaped(MOD_ID,"ABA", "ECF", "ADA")
                 .addInput('A', "minecraft:cobblestones")
@@ -468,6 +467,12 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput('A', Block.blockOlivine)
                 .addInput('O', Block.blockRedstone)
                 .create("lv capacitor", new ItemStack(blockCapacitorLv));
+
+        RecipeBuilder.Shaped(MOD_ID, "III", "I)I", "IRI")
+                .addInput('I', Item.ingotIron)
+                .addInput(')', Item.toolBow)
+                .addInput('R', Item.dustRedstone)
+                .create("advanced dispenser", new ItemStack(blockAdvancedDispenser));
 
         RecipeBuilder.Furnace(MOD_ID)
                 .setInput(itemRedstoneIronMix)
