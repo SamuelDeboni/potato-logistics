@@ -10,6 +10,12 @@ import net.minecraft.client.render.block.model.BlockModelRenderBlocks;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
+import net.minecraft.core.data.registry.Registries;
+import net.minecraft.core.data.registry.recipe.RecipeGroup;
+import net.minecraft.core.data.registry.recipe.RecipeNamespace;
+import net.minecraft.core.data.registry.recipe.RecipeSymbol;
+import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
+import net.minecraft.core.data.registry.recipe.entry.RecipeEntryFurnace;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemPlaceable;
 import net.minecraft.core.item.ItemStack;
@@ -389,12 +395,13 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput('E', Item.dustRedstone)
                 .create("tree chopper", new ItemStack(blockTreeChopper));
 
-        RecipeBuilder.Shaped(MOD_ID, "ADA", "CBC", "AEA")
+        RecipeBuilder.Shaped(MOD_ID, "ADA", "BCF", "AEA")
                 .addInput('A', Item.ingotSteel)
                 .addInput('B', Item.toolPickaxeDiamond)
                 .addInput('C', blockSteelMachineBlock)
                 .addInput('D', blockPipe)
                 .addInput('E', Item.dustRedstone)
+                .addInput('F', Item.toolShovelDiamond)
                 .create("mining drill", new ItemStack(blockMiningDrill));
 
         RecipeBuilder.Shaped(MOD_ID, " A ", "A A", " A ")
@@ -479,8 +486,19 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .create("redstone alloy", new ItemStack(itemRedstoneAlloy));
     }
 
+    public static RecipeNamespace POTATO_LOGISTICS = new RecipeNamespace();
+
+    public static RecipeGroup<RecipeEntryCrafting<?,?>> WORKBENCH = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.workbench)));
+    public static RecipeGroup<RecipeEntryFurnace> FURNACE = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.furnaceStoneActive)));
     @Override
     public void initNamespaces() {
         LOGGER.info("init namespaces");
+        POTATO_LOGISTICS = new RecipeNamespace();
+        WORKBENCH = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.workbench)));
+        FURNACE = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.furnaceStoneActive)));
+
+        POTATO_LOGISTICS.register("workbench", WORKBENCH);
+        POTATO_LOGISTICS.register("furnace", FURNACE);
+        Registries.RECIPES.register(MOD_ID, POTATO_LOGISTICS);
     }
 }

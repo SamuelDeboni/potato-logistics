@@ -43,22 +43,24 @@ public class TileEntityCapacitor extends TileEntityEnergyConductor {
     public void tick() {
         super.tick();
 
-        boolean needPower = worldObj.getBlockMetadata(x, y, z) == 0;
-        worldObj.markBlocksDirty(x,y,z,x,y,z);
-        worldObj.notifyBlocksOfNeighborChange(x, y, z, needPower ? 15 : 0);
+        if (!worldObj.isClientSide) {
+            boolean needPower = worldObj.getBlockMetadata(x, y, z) == 0;
+            worldObj.markBlocksDirty(x, y, z, x, y, z);
+            worldObj.notifyBlocksOfNeighborChange(x, y, z, needPower ? 15 : 0);
 
-        float energyPercent = (float)energy / (float)capacity;
-        if (energyPercent > 0.8 && needPower) {
-            needPower = false;
-            worldObj.markBlocksDirty(x,y,z,x,y,z);
-            worldObj.setBlockMetadataWithNotify(x, y, z, 1);
-            BlockCapacitor.notifyNeighbors(worldObj, x, y, z, PotatoLogisticsMod.blockCapacitorLv.id);
-        }
+            float energyPercent = (float) energy / (float) capacity;
+            if (energyPercent > 0.8 && needPower) {
+                needPower = false;
+                worldObj.markBlocksDirty(x, y, z, x, y, z);
+                worldObj.setBlockMetadataWithNotify(x, y, z, 1);
+                BlockCapacitor.notifyNeighbors(worldObj, x, y, z, PotatoLogisticsMod.blockCapacitorLv.id);
+            }
 
-        if (energyPercent < 0.2 && !needPower) {
-            worldObj.markBlocksDirty(x,y,z,x,y,z);
-            worldObj.setBlockMetadataWithNotify(x, y, z, 0);
-            BlockCapacitor.notifyNeighbors(worldObj, x, y, z, PotatoLogisticsMod.blockCapacitorLv.id);
+            if (energyPercent < 0.2 && !needPower) {
+                worldObj.markBlocksDirty(x, y, z, x, y, z);
+                worldObj.setBlockMetadataWithNotify(x, y, z, 0);
+                BlockCapacitor.notifyNeighbors(worldObj, x, y, z, PotatoLogisticsMod.blockCapacitorLv.id);
+            }
         }
     }
 }
