@@ -40,6 +40,10 @@ public class BlockPipe extends BlockTileEntity {
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
         super.onNeighborBlockChange(world, x, y, z, blockId);
+        TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
+        if (te != null) {
+            te.calcVisualConnections();
+        }
     }
 
     @Override

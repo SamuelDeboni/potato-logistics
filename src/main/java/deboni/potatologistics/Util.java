@@ -17,6 +17,7 @@ import sunsetsatellite.catalyst.core.util.IItemIO;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Map;
 
 public class Util {
     public static double[] crossProduct(double[] v0, double[] v1) {
@@ -171,6 +172,16 @@ public class Util {
     }
 
     public static PipeStack getItemFromInventory(World world, int x, int y, int z, Direction dir, int stackTimer) {
+        PipeStack result = null;
+        try {
+            result = getItemFromInventoryNoCatch(world, x, y, z, dir, stackTimer);
+        } catch (Exception e) {
+            PotatoLogisticsMod.LOGGER.error(e.getMessage());
+        }
+        return result;
+    }
+
+    public static PipeStack getItemFromInventoryNoCatch(World world, int x, int y, int z, Direction dir, int stackTimer) {
         PipeStack returnStack = null;
 
         TileEntity te = world.getBlockTileEntity(x, y, z);
@@ -270,6 +281,118 @@ public class Util {
             if (stack != null) {
                 returnStack = new PipeStack(stack, dir, stackTimer);
             }
+        }
+
+        return returnStack;
+    }
+
+    public static PipeStack peekItemFromInventory(World world, int x, int y, int z, Direction dir, int stackTimer) {
+        PipeStack result = null;
+        try {
+            result = peekItemFromInventoryNoCatch(world, x, y, z, dir, stackTimer);
+        } catch (Exception e) {
+            PotatoLogisticsMod.LOGGER.error(e.getMessage());
+        }
+        return result;
+    }
+
+    public static PipeStack peekItemFromInventoryNoCatch(World world, int x, int y, int z, Direction dir, int stackTimer) {
+        PipeStack returnStack = null;
+        TileEntity te = world.getBlockTileEntity(x, y, z);
+        if (te instanceof IInventory) {
+            IInventory inventory = (IInventory) te;
+            String inventoryName = inventory.getInvName();
+
+            boolean isFromIronChests = inventoryName.equals("Iron Chest")
+                    || inventoryName.equals("Gold Chest")
+                    || inventoryName.equals("Diamond Chest")
+                    || inventoryName.equals("Steel Chest")
+                    || inventoryName.equals("Big Chest");
+
+            if (te instanceof IItemIO && !isFromIronChests) {
+                sunsetsatellite.catalyst.core.util.Direction sdir = sunsetsatellite.catalyst.core.util.Direction.getDirectionFromSide(dir.getId()).getOpposite();
+                IItemIO itemIo = (IItemIO) te;
+
+                Connection con = itemIo.getItemIOForSide(sdir);
+                if (con == Connection.OUTPUT || con == Connection.BOTH) {
+                    int index = itemIo.getActiveItemSlotForSide(sdir);
+
+                    ItemStack stack = inventory.getStackInSlot(index);
+                    if (stack != null) {
+                        returnStack = new PipeStack(stack.copy(), dir, stackTimer);
+                    }
+                }
+            } else {
+                if (inventoryName.equals("Chest")) {
+                    inventory = BlockChest.getInventory(world, x, y ,z);
+                }
+
+                if (inventoryName.equals("Chest")
+                        || inventoryName.equals("Trap")
+                        || inventoryName.equals("Filter")
+                        || inventoryName.equals("Large Chest")
+                        || isFromIronChests
+                ) {
+                    int inventorySize = inventory.getSizeInventory();
+                    ItemStack stack = null;
+                    int j = 0;
+
+                    if (!inventoryName.equals("Filter")) {
+                        while (stack == null && j < inventorySize) stack = inventory.getStackInSlot(j++);
+                        if (stack != null && stack.stackSize <= 1) {
+                            returnStack = null;
+                        }
+                    } else {
+                        while (stack == null && j < inventorySize) {
+                            stack = inventory.getStackInSlot(j++);
+                            if (stack != null && stack.stackSize++ <= 1) {
+                                returnStack = null;
+                            }
+                        }
+                    }
+
+                    if (stack != null && j > 0) {
+                        returnStack = new PipeStack(stack.copy(), dir, stackTimer);
+                        return returnStack;
+                    }
+                } else if (inventoryName.equals("Trommel")) {
+                    int inventorySize = 4;
+                    ItemStack stack = null;
+                    int j = 0;
+                    while (stack == null && j < inventorySize) stack = inventory.getStackInSlot(j++);
+
+                    if (stack != null && j > 0) {
+                        returnStack = new PipeStack(stack, dir, stackTimer);
+                        return returnStack;
+                    }
+                } else if (inventoryName.equals("Auto Crafter")) {
+                    TileEntityAutoCrafter ac = (TileEntityAutoCrafter) te;
+                    ItemStack stack = ac.craftResult.getStackInSlot(0).copy();
+                    if (stack != null) {
+                        returnStack = new PipeStack(stack, dir, stackTimer);
+                    } else {
+                        ItemStack extra = ac.extraOutputs.getStackInSlot(0).copy();
+                        if (extra != null) {
+                            returnStack = new PipeStack(extra, dir, stackTimer);
+                        }
+                    }
+                } else if (inventory.getSizeInventory() > 2){
+                    ItemStack stack = inventory.getStackInSlot(2).copy();
+                    if (stack != null) {
+                        returnStack = new PipeStack(stack, dir, stackTimer);
+                    }
+                }
+            }
+        } else if (te instanceof TileEntityAutoBasket && dir == Direction.UP) {
+            TileEntityAutoBasket.BasketEntry firstKey = null;
+            for (Map.Entry<TileEntityAutoBasket.BasketEntry, Integer> entry : ((TileEntityAutoBasket) te).contents.entrySet()) {
+                firstKey = entry.getKey();
+                break;
+            }
+            if (firstKey == null) return null;
+
+            ItemStack stack = new ItemStack(firstKey.getItem(), 1, firstKey.metadata);
+            returnStack = new PipeStack(stack, dir, stackTimer);
         }
 
         return returnStack;

@@ -342,7 +342,7 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
 
         RecipeBuilder.Shaped(MOD_ID, "AAA", "AAA", "AAA")
                 .addInput('A', itemPotato)
-                .create("potato", new ItemStack(itemPotato));
+                .create("potato", new ItemStack(blockPotato));
 
         RecipeBuilder.Shaped(MOD_ID, "   ", "ABA", "   ")
                 .addInput('A', Item.ingotIron)

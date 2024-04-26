@@ -7,6 +7,7 @@ import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.sound.SoundCategory;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
+import net.minecraft.core.item.ItemStack;
 
 import java.util.Random;
 
@@ -27,7 +28,8 @@ public class BlockPotato extends Block {
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         this.isPowered = !this.isPowered;
 
-        if (player.getHeldItem().getItem().id == PotatoLogisticsMod.itemWrench.id) {
+        ItemStack held = player.getHeldItem();
+        if (held != null && held.getItem().id == PotatoLogisticsMod.itemWrench.id) {
             world.setBlockMetadataWithNotify(x, y, z, this.isPowered ? 1 : 0);
 
             world.playSoundEffect(player, SoundCategory.WORLD_SOUNDS, (double) x + 0.5, (double) y + 0.5, (double) z + 0.5, "random.click", 0.3f, isPowered ? 0.5f : 0.6f);

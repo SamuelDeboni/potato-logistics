@@ -120,6 +120,10 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
 
         //PotatoLogisticsMod.LOGGER.info("Energy is: " + this.energy + " blocks to break count: " + blocksToBreak.size());
 
+        if (worldObj.isClientSide) {
+            return;
+        }
+
         if (!worldObj.isBlockIndirectlyGettingPowered(x, y, z) && !worldObj.isBlockGettingPowered(x, y, z)) {
             isActive = false;
             return;

@@ -18,8 +18,8 @@ import java.util.*;
 
 public class TileEntityAutoBasket extends TileEntity {
 
-    private int numUnitsInside = 0;
-    private final Map<TileEntityAutoBasket.BasketEntry, Integer> contents = new HashMap<>();
+    public int numUnitsInside = 0;
+    public final Map<TileEntityAutoBasket.BasketEntry, Integer> contents = new HashMap<>();
 
     public void dropAllItems() {
         Random rand = new Random();
@@ -199,7 +199,7 @@ public class TileEntityAutoBasket extends TileEntity {
 
 
 
-    private static final class BasketEntry {
+    public static final class BasketEntry {
         public final int id;
         public final int metadata;
         public final CompoundTag tag;

@@ -150,6 +150,7 @@ public class TileEntityPipe extends TileEntity {
                     || type != 0 && te instanceof IInventory
                     || Direction.getDirectionById(i) == Direction.UP && nid == PotatoLogisticsMod.blockAutoBasket.id
                     || nid == PotatoLogisticsMod.blockBlockCrusher.id && blockBreakerDirId == i
+                    || nid == PotatoLogisticsMod.blockBlockPlacer.id && blockBreakerDirId == i
             ) {
                 if (te instanceof TileEntityPipe) {
                     TileEntityPipe pipe = (TileEntityPipe) te;
