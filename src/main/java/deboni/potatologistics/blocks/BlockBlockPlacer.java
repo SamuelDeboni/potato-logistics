@@ -113,7 +113,7 @@ public class BlockBlockPlacer extends BlockRotatable {
         int iy = y - dir.getOffsetY();
         int iz = z - dir.getOffsetZ();
 
-        TileEntity inTe = world.getBlockTileEntity(ix, iy, iz) ;
+        TileEntity inTe = Util.getBlockTileEntity(world, ix, iy, iz) ;
 
         int tx = x + dir.getOffsetX();
         int ty = y + dir.getOffsetY();

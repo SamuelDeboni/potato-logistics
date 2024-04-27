@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.TileEntityEnergyConnector;
 import net.minecraft.core.block.Block;
@@ -29,7 +30,7 @@ public class BlockEnergyConnector extends BlockTileEntity {
     @Override
     public void onBlockPlaced(World world, int x, int y, int z, Side side, EntityLiving entity, double sideHeight) {
         world.setBlockMetadataWithNotify(x, y, z, side.getId());
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
         if (te instanceof TileEntityEnergyConnector) {
             ((TileEntityEnergyConnector) te).updateMachineConnections(side.getOpposite().getDirection());
         }
@@ -66,7 +67,7 @@ public class BlockEnergyConnector extends BlockTileEntity {
             world.setBlockWithNotify(x, y, z, 0);
             world.dropItem(x, y, z, new ItemStack(PotatoLogisticsMod.itemEnergyConnector));
         } else {
-            ((TileEntityEnergyConnector) world.getBlockTileEntity(x, y, z)).updateMachineConnections(side.getOpposite().getDirection());
+            ((TileEntityEnergyConnector) Util.getBlockTileEntity(world, x, y, z)).updateMachineConnections(side.getOpposite().getDirection());
         }
     }
 
@@ -77,7 +78,7 @@ public class BlockEnergyConnector extends BlockTileEntity {
 
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
-        TileEntityEnergyConnector ec = (TileEntityEnergyConnector) world.getBlockTileEntity(x, y, z);
+        TileEntityEnergyConnector ec = (TileEntityEnergyConnector) Util.getBlockTileEntity(world, x, y, z);
         ItemStack drops = ec.getBreakDrops();
         if (drops != null) world.dropItem(x, y, z, drops);
         super.onBlockRemoved(world, x, y, z, data);

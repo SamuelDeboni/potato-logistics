@@ -100,7 +100,7 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
 
         ItemStack[] breakResult;
         int energyRequired = 128;
-        TileEntity blockTe = worldObj.getBlockTileEntity(b[0], b[1], b[2]);
+        TileEntity blockTe = Util.getBlockTileEntity(worldObj, b[0], b[1], b[2]);
         breakResult = block.getBreakResult(worldObj, EnumDropCause.PROPER_TOOL, b[0], b[1], b[2], worldObj.getBlockMetadata(b[0], b[1], b[2]), blockTe);
 
         if (energy < energyRequired) return;
@@ -137,9 +137,9 @@ public class TileEntityMiningDrill extends TileEntityEnergyConductor {
         int iy = y + 1;
         int iz = z;
 
-        TileEntity outTe = worldObj.getBlockTileEntity(ix, iy, iz) ;
+        TileEntity outTe = Util.getBlockTileEntity(worldObj, ix, iy, iz) ;
 
-        if (outTe instanceof IInventory) {
+        if (!worldObj.isClientSide && outTe instanceof IInventory) {
             IInventory inventory;
             if (outTe instanceof TileEntityChest) {
                 inventory = BlockChest.getInventory(worldObj, ix, iy, iz);

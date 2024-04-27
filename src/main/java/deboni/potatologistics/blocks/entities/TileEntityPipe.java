@@ -135,7 +135,7 @@ public class TileEntityPipe extends TileEntity {
         visualConnections = 0;
         visualColor = 0;
         for (int i = 0; i < offsets.length; i++) {
-            TileEntity te = worldObj.getBlockTileEntity(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            TileEntity te = Util.getBlockTileEntity(worldObj, x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
             if (te == null) continue;
 
             int blockBreakerDirId = 0;
@@ -241,7 +241,7 @@ public class TileEntityPipe extends TileEntity {
                     int z2 = z + offsets[i][2];
                     int nid = worldObj.getBlockId(x2, y2, z2);
 
-                    TileEntity te = worldObj.getBlockTileEntity(x2, y2, z2);
+                    TileEntity te = Util.getBlockTileEntity(worldObj, x2, y2, z2);
 
 
                     if (te instanceof IInventory) {

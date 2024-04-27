@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.blocks.entities.TileEntityFilter;
 import net.minecraft.core.block.BlockTileEntity;
 import net.minecraft.core.block.entity.TileEntity;
@@ -28,7 +29,7 @@ public class BlockFilter extends BlockTileEntity {
     }
 
     public static void dropFilterContent(World world, int x, int y, int z) {
-        TileEntityFilter tileEntityFilter = (TileEntityFilter) world.getBlockTileEntity(x, y, z);
+        TileEntityFilter tileEntityFilter = (TileEntityFilter) Util.getBlockTileEntity(world, x, y, z);
         if (tileEntityFilter == null) {
             System.out.println("Can't drop chest items because tile entity is null at x: " + x + " y:" + y + " z: " + z);
             return;
@@ -47,7 +48,7 @@ public class BlockFilter extends BlockTileEntity {
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if (!world.isClientSide) {
-            TileEntity inventory = world.getBlockTileEntity(x, y, z);
+            TileEntity inventory = Util.getBlockTileEntity(world, x, y, z);
             Catalyst.displayGui(player, inventory, "Filter");
         }
         return true;

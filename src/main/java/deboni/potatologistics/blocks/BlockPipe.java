@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.core.block.BlockTileEntity;
@@ -40,7 +41,7 @@ public class BlockPipe extends BlockTileEntity {
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
         super.onNeighborBlockChange(world, x, y, z, blockId);
-        TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
+        TileEntityPipe te = (TileEntityPipe)Util.getBlockTileEntity(world, x, y, z);
         if (te != null) {
             te.calcVisualConnections();
         }
@@ -56,7 +57,7 @@ public class BlockPipe extends BlockTileEntity {
                 world.setBlockMetadataWithNotify(x, y, z, meta);
             }
         }
-        TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
+        TileEntityPipe te = (TileEntityPipe)Util.getBlockTileEntity(world, x, y, z);
         if (te != null) {
             te.calcVisualConnections();
         }
@@ -64,7 +65,7 @@ public class BlockPipe extends BlockTileEntity {
 
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
-        TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
+        TileEntityPipe te = (TileEntityPipe)Util.getBlockTileEntity(world, x, y, z);
         if (te != null) {
             te.dropItems();
         }
@@ -73,7 +74,7 @@ public class BlockPipe extends BlockTileEntity {
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
-        TileEntityPipe te = (TileEntityPipe)world.getBlockTileEntity(x, y, z);
+        TileEntityPipe te = (TileEntityPipe)Util.getBlockTileEntity(world, x, y, z);
         ItemStack heldItem = player.getHeldItem();
         if (heldItem != null && heldItem.itemID == PotatoLogisticsMod.itemWrench.id) {
             int meta = world.getBlockMetadata(x, y, z);

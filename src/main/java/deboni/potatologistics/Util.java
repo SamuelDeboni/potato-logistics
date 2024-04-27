@@ -3,8 +3,11 @@ package deboni.potatologistics;
 import deboni.potatologistics.blocks.entities.TileEntityAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityAutoCrafter;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
+import deboni.potatologistics.Util;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockChest;
+import net.minecraft.core.block.BlockTileEntity;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
@@ -184,7 +187,7 @@ public class Util {
     public static PipeStack getItemFromInventoryNoCatch(World world, int x, int y, int z, Direction dir, int stackTimer) {
         PipeStack returnStack = null;
 
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
         if (te instanceof IInventory) {
             IInventory inventory = (IInventory) te;
             String inventoryName = inventory.getInvName();
@@ -298,7 +301,7 @@ public class Util {
 
     public static PipeStack peekItemFromInventoryNoCatch(World world, int x, int y, int z, Direction dir, int stackTimer) {
         PipeStack returnStack = null;
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
         if (te instanceof IInventory) {
             IInventory inventory = (IInventory) te;
             String inventoryName = inventory.getInvName();
@@ -399,6 +402,16 @@ public class Util {
     }
 
     public static boolean insertOnInventory(IInventory inventory, ItemStack stack, Direction direction, TileEntityPipe[] pipes) {
+        boolean result = false;
+        try {
+            result = insertOnInventoryNoCatch(inventory, stack, direction, pipes);
+        } catch (Exception e) {
+            PotatoLogisticsMod.LOGGER.error(e.getMessage());
+        }
+        return result;
+    }
+
+    public static boolean insertOnInventoryNoCatch(IInventory inventory, ItemStack stack, Direction direction, TileEntityPipe[] pipes) {
         boolean hasInserted = false;
         if (inventory == null || pipes == null){
             System.out.println(Arrays.toString(new NullPointerException("Null Pointer in insertOnInventory!!").getStackTrace()));
@@ -496,5 +509,13 @@ public class Util {
         newStack.stackSize = 1;
         stack.stackSize--;
         return newStack;
+    }
+
+    public static TileEntity getBlockTileEntity(World world, int x, int y, int z) {
+        Block block = Block.blocksList[world.getBlockId(x, y, z)];
+        if (block == null || !(block instanceof BlockTileEntity)) {
+            return null;
+        }
+        return world.getBlockTileEntity(x, y, z);
     }
 }

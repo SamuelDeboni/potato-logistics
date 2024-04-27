@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.TileEntityBurner;
 import net.minecraft.core.block.Block;
@@ -26,7 +27,7 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if(!world.isClientSide)
         {
-            TileEntityBurner tile = (TileEntityBurner) world.getBlockTileEntity(x, y, z);
+            TileEntityBurner tile = (TileEntityBurner) Util.getBlockTileEntity(world, x, y, z);
             if(tile != null) {
                 Catalyst.displayGui(player, tile, tile.getInvName());
             }
@@ -39,7 +40,7 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
         int blockId = world.getBlockId(x,y,z);
         if (blockId == PotatoLogisticsMod.blockFurnaceBurner.id || blockId == PotatoLogisticsMod.blockFurnaceBurnerOn.id) {return;}
-        TileEntityBurner tileEntityBurner = (TileEntityBurner)world.getBlockTileEntity(x, y, z);
+        TileEntityBurner tileEntityBurner = (TileEntityBurner)Util.getBlockTileEntity(world, x, y, z);
         for (int l = 0; l < tileEntityBurner.getSizeInventory(); ++l) {
             ItemStack itemstack = tileEntityBurner.getStackInSlot(l);
             if (itemstack == null) continue;
@@ -67,7 +68,7 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
         int targetId = isOn ? PotatoLogisticsMod.blockFurnaceBurnerOn.id : PotatoLogisticsMod.blockFurnaceBurner.id;
         if (targetId != world.getBlockId(x, y, z)) {
             int meta = world.getBlockMetadata(x, y, z);
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+            TileEntity te = Util.getBlockTileEntity(world, x, y, z);
 
             world.setBlockWithNotify(x, y, z, targetId);
             world.setBlockMetadataWithNotify(x, y, z, meta);

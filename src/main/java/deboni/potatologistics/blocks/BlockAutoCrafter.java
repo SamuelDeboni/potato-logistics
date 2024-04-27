@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.TileEntityAutoCrafter;
 import deboni.potatologistics.blocks.entities.TileEntityBurner;
@@ -58,7 +59,7 @@ public class BlockAutoCrafter extends BlockTileEntityRotatable {
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if (!world.isClientSide) {
-            TileEntity tile = (TileEntity) world.getBlockTileEntity(x, y, z);
+            TileEntity tile = (TileEntity) Util.getBlockTileEntity(world, x, y, z);
             Catalyst.displayGui(player, tile, "Auto Crafter");
         }
         return true;
@@ -69,7 +70,7 @@ public class BlockAutoCrafter extends BlockTileEntityRotatable {
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
         int blockId = world.getBlockId(x,y,z);
         if (blockId == PotatoLogisticsMod.blockFurnaceBurner.id || blockId == PotatoLogisticsMod.blockFurnaceBurnerOn.id) {return;}
-        TileEntityAutoCrafter tileEntityCrafter = (TileEntityAutoCrafter) world.getBlockTileEntity(x, y, z);
+        TileEntityAutoCrafter tileEntityCrafter = (TileEntityAutoCrafter) Util.getBlockTileEntity(world, x, y, z);
         for (int l = 0; l < tileEntityCrafter.getSizeInventory(); ++l) {
             ItemStack itemstack = tileEntityCrafter.getStackInSlot(l);
             if (itemstack == null) continue;

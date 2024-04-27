@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.blocks.entities.TileEntityMiningDrill;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockTileEntity;
@@ -34,7 +35,7 @@ public class BlockMiningDrill extends BlockTileEntity {
 
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
         if (te instanceof TileEntityMiningDrill) {
             ((TileEntityMiningDrill) te).dropItems();
         }

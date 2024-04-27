@@ -2,6 +2,8 @@ package deboni.potatologistics.blocks;
 
 import java.util.Random;
 
+import deboni.potatologistics.Util;
+
 import net.minecraft.core.block.*;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityDispenser;
@@ -69,7 +71,7 @@ public class BlockAdvancedDispenser
         if (world.isClientSide) {
             return true;
         }
-        TileEntityDispenser tileentitydispenser = (TileEntityDispenser)world.getBlockTileEntity(x, y, z);
+        TileEntityDispenser tileentitydispenser = (TileEntityDispenser)Util.getBlockTileEntity(world, x, y, z);
         player.displayGUIDispenser(tileentitydispenser);
         return true;
     }
@@ -85,7 +87,7 @@ public class BlockAdvancedDispenser
         } else {
             x1 = l == 5 ? 1 : -1;
         }
-        TileEntityDispenser tileentitydispenser = (TileEntityDispenser)world.getBlockTileEntity(x, y, z);
+        TileEntityDispenser tileentitydispenser = (TileEntityDispenser)Util.getBlockTileEntity(world, x, y, z);
         ItemStack itemstack = tileentitydispenser.getRandomStackFromInventory();
         double d = (double)x + (double)x1 * 0.6 + 0.5;
         double d1 = (double)y + 0.5;
@@ -269,8 +271,8 @@ public class BlockAdvancedDispenser
 
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
-        if (world.getBlockTileEntity(x, y, z) != null) {
-            TileEntityDispenser tileentitydispenser = (TileEntityDispenser)world.getBlockTileEntity(x, y, z);
+        if (Util.getBlockTileEntity(world, x, y, z) != null) {
+            TileEntityDispenser tileentitydispenser = (TileEntityDispenser)Util.getBlockTileEntity(world, x, y, z);
             for (int l = 0; l < tileentitydispenser.getSizeInventory(); ++l) {
                 ItemStack itemstack = tileentitydispenser.getStackInSlot(l);
                 if (itemstack == null) continue;
