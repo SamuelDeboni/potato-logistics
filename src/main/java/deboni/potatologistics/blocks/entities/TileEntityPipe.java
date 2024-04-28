@@ -164,9 +164,9 @@ public class TileEntityPipe extends TileEntity {
                     } else {
                         visualConnections |= 1 << i;
                     }
+                    visualColor |= 1 << i;
                 } else {
                     visualConnections |= 1 << i;
-                    visualColor |= 1 << i;
                 }
             }
         }
@@ -243,9 +243,7 @@ public class TileEntityPipe extends TileEntity {
 
                     TileEntity te = Util.getBlockTileEntity(worldObj, x2, y2, z2);
 
-
                     if (te instanceof IInventory) {
-
                         IInventory inventory = (IInventory) te;
                         String inventoryName = inventory.getInvName();
                         boolean isFromIronChests = Objects.equals(inventoryName, "Iron Chest")
@@ -265,7 +263,6 @@ public class TileEntityPipe extends TileEntity {
                                 ioDirections.add(sdir);
                             }
                         } else {
-
                             if (inventory instanceof TileEntityChest) {
                                 inventory = BlockChest.getInventory(worldObj, x2, y2 ,z2);
                             }
@@ -275,7 +272,7 @@ public class TileEntityPipe extends TileEntity {
                                 inventoriesDirection.add(Direction.getDirectionById(i));
                             }
                         }
-                    }else if (te instanceof TileEntityPipe && stack.direction != Direction.getDirectionById(i)) {
+                    } else if (te instanceof TileEntityPipe && stack.direction != Direction.getDirectionById(i)) {
                         TileEntityPipe pipe = (TileEntityPipe) te;
                         if (pipe.stacks.size() < pipe.stackLimit && (!isDirectional || pipeDirection.getId() == i)) {
                             pipes.add(pipe);
