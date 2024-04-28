@@ -6,6 +6,7 @@ import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.block.entity.TileEntityFlag;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
@@ -171,6 +172,17 @@ public class Util {
     }
 
     public static PipeStack getItemFromInventory(World world, int x, int y, int z, Direction dir, int stackTimer) {
+        PipeStack result = null;
+        try {
+            result = getItemFromInventoryNoCatch(world, x, y, z, dir, stackTimer);
+        } catch(Exception e) {
+            PotatoLogisticsMod.LOGGER.error(e.getMessage());
+        }
+
+        return result ;
+    }
+
+    public static PipeStack getItemFromInventoryNoCatch(World world, int x, int y, int z, Direction dir, int stackTimer) {
         PipeStack returnStack = null;
 
         TileEntity te = world.getBlockTileEntity(x, y, z);
@@ -256,6 +268,13 @@ public class Util {
                             returnStack = new PipeStack(r, dir, stackTimer);
                         }
                     }
+                } else if (te instanceof TileEntityFlag){
+                    ItemStack stack = inventory.getStackInSlot(36);
+                    if (stack != null) {
+                        returnStack = new PipeStack(removeItemFromStack(stack), dir, stackTimer);
+                        if (stack.stackSize <= 0) stack = null;
+                        inventory.setInventorySlotContents(36, stack);
+                    }
                 } else if (inventory.getSizeInventory() > 2){
                     ItemStack stack = inventory.getStackInSlot(2);
                     if (stack != null) {
@@ -277,12 +296,12 @@ public class Util {
 
     public static boolean insertOnInventory(IInventory inventory, ItemStack stack, Direction direction, TileEntityPipe[] pipes) {
         boolean hasInserted = false;
-        if (inventory == null || pipes == null){
+        if (inventory == null || pipes == null) {
             System.out.println(Arrays.toString(new NullPointerException("Null Pointer in insertOnInventory!!").getStackTrace()));
             StringBuilder builder = new StringBuilder("Error something is null when it shouldn't be!! | Inventory: ")
-                    .append(inventory == null? "null" : inventory.getInvName())
+                    .append(inventory == null ? "null" : inventory.getInvName())
                     .append(" | Pipes: ")
-                    .append(pipes == null? "null" : pipes.length);
+                    .append(pipes == null ? "null" : pipes.length);
             System.out.println(builder);
             PotatoLogisticsMod.LOGGER.info(builder.toString());
             return false;
@@ -329,6 +348,24 @@ public class Util {
                     }
 
                     j++;
+                }
+            }
+        } else if (inventory instanceof TileEntityFlag) {
+            // Does nothing
+            hasInserted = false;
+
+            int targetSlot = 36;
+            ItemStack flagStack = inventory.getStackInSlot(targetSlot);
+
+            if (flagStack == null) {
+                inventory.setInventorySlotContents(targetSlot, stack);
+                hasInserted = true;
+            } else {
+                int maxStackSize = flagStack.getMaxStackSize();
+                if (flagStack.canStackWith(stack) && flagStack.stackSize < maxStackSize) {
+                    flagStack.stackSize++;
+                    inventory.setInventorySlotContents(targetSlot, flagStack);
+                    hasInserted = true;
                 }
             }
         } else {
