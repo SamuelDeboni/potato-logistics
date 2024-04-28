@@ -134,7 +134,7 @@ public class BlockBlockCrusher extends BlockRotatable {
         int iy = y - dir.getOffsetY();
         int iz = z - dir.getOffsetZ();
 
-        TileEntity outTe = world.getBlockTileEntity(ix, iy, iz) ;
+        TileEntity outTe = Util.getBlockTileEntity(world, ix, iy, iz) ;
 
         int tx = x + dir.getOffsetX();
         int ty = y + dir.getOffsetY();
@@ -144,7 +144,7 @@ public class BlockBlockCrusher extends BlockRotatable {
         if (block == null) return;
 
         int tmeta = world.getBlockMetadata(tx, ty, tz);
-        TileEntity te = world.getBlockTileEntity(tx, ty ,tz);
+        TileEntity te = Util.getBlockTileEntity(world, tx, ty ,tz);
 
         boolean breakBlock = false;
         ItemStack[] breakResult = crushResults.get(block);
@@ -156,7 +156,7 @@ public class BlockBlockCrusher extends BlockRotatable {
             breakBlock = true;
         }
 
-        if (breakResult != null && breakResult.length > 0) {
+        if (!world.isClientSide && breakResult != null && breakResult.length > 0) {
             if (outTe instanceof IInventory) {
                 IInventory inventory;
                 if (outTe instanceof TileEntityChest) {

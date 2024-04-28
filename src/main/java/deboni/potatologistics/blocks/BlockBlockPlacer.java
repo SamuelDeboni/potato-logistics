@@ -9,6 +9,7 @@ import net.minecraft.core.block.BlockRotatable;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.EntityLiving;
+import net.minecraft.core.item.ItemPlaceable;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
@@ -112,7 +113,7 @@ public class BlockBlockPlacer extends BlockRotatable {
         int iy = y - dir.getOffsetY();
         int iz = z - dir.getOffsetZ();
 
-        TileEntity inTe = world.getBlockTileEntity(ix, iy, iz) ;
+        TileEntity inTe = Util.getBlockTileEntity(world, ix, iy, iz) ;
 
         int tx = x + dir.getOffsetX();
         int ty = y + dir.getOffsetY();
@@ -124,13 +125,36 @@ public class BlockBlockPlacer extends BlockRotatable {
         ItemStack blockToPlace = null;
 
         if (inTe instanceof IInventory) {
-            PipeStack pipeStack = Util.getItemFromInventory(world, ix, iy, iz, dir, 2);
-            if (pipeStack != null) blockToPlace = pipeStack.stack;
+            PipeStack pipeStack = Util.peekItemFromInventory(world, ix, iy, iz, dir, 2);
+            if (pipeStack != null && pipeStack.stack.itemID < Block.blocksList.length) {
+                blockToPlace = Util.getItemFromInventory(world, ix, iy, iz, dir, 2).stack;
+            } else if (pipeStack != null && pipeStack.stack.getItem() instanceof ItemPlaceable) {
+                ItemPlaceable placable = (ItemPlaceable) Util.getItemFromInventory(world, ix, iy, iz, dir, 2).stack.getItem();
+                blockToPlace = new ItemStack(placable.blockToPlace);
+            }
         } else if (inTe instanceof TileEntityPipe) {
-            // TODO
+            TileEntityPipe pipe = (TileEntityPipe) inTe;
+            if (pipe.stacks.size() > 0) {
+                PipeStack pipeStack = pipe.stacks.get(0);
+                boolean placeable = false;
+                if (pipeStack != null && pipeStack.stack.itemID < Block.blocksList.length) {
+                    blockToPlace = pipeStack.stack.copy();
+                    placeable = true;
+                } else if (pipeStack != null && pipeStack.stack.getItem() instanceof ItemPlaceable) {
+                    ItemPlaceable placable = (ItemPlaceable) pipeStack.stack.getItem();
+                    blockToPlace = new ItemStack(placable.blockToPlace);
+                    placeable = true;
+                }
+                if (placeable) {
+                    pipeStack.stack.stackSize -= 1;
+                    if (pipeStack.stack.stackSize <= 0) {
+                        pipe.stacks.remove(pipeStack);
+                    }
+                }
+            }
         }
 
-        if (blockToPlace == null || blockToPlace.itemID >= Block.blocksList.length) return;
+        if (blockToPlace == null) return;
 
         world.playSoundEffect(2000, tx, ty, tz, blockToPlace.itemID);
         boolean placed = world.setBlockWithNotify(tx, ty, tz, blockToPlace.itemID);

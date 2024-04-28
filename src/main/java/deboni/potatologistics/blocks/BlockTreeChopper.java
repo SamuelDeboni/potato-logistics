@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.blocks.entities.TileEntityTreeChopper;
 import net.minecraft.core.block.*;
 import net.minecraft.core.block.entity.TileEntity;
@@ -74,7 +75,7 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
 
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
         if (te instanceof TileEntityTreeChopper) {
             ((TileEntityTreeChopper) te).dropItems();
         }
@@ -89,7 +90,7 @@ public class BlockTreeChopper extends BlockTileEntityRotatable {
     @Override
     public void updateTick(World world, int x, int y, int z, Random rand) {
         if (world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockGettingPowered(x, y, z)) {
-            TileEntityTreeChopper te = (TileEntityTreeChopper) world.getBlockTileEntity(x, y, z);
+            TileEntityTreeChopper te = (TileEntityTreeChopper) Util.getBlockTileEntity(world, x, y, z);
             te.blocksToBreak.clear();
         }
     }

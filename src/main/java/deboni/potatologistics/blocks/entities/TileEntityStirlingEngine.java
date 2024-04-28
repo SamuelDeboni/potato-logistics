@@ -1,6 +1,7 @@
 package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.net.packet.Packet;
@@ -24,7 +25,7 @@ public class TileEntityStirlingEngine extends TileEntity {
     @Override
     public void tick() {
         ticksSinceLastPacket++;
-        TileEntity te = worldObj.getBlockTileEntity(x, y-1, z);
+        TileEntity te = Util.getBlockTileEntity(worldObj, x, y-1, z);
         if (te instanceof TileEntityBurner) {
             TileEntityBurner burner = (TileEntityBurner) te;
             targetTemperature = Math.min(burner.consumeFuel(), maxTemperature);

@@ -2,6 +2,7 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.BlockFurnace;
 import net.minecraft.core.block.entity.TileEntity;
@@ -69,7 +70,7 @@ public class TileEntityHeater extends TileEntityEnergyConductor {
     public void tick() {
         super.tick();
 
-        TileEntity tileTop = worldObj.getBlockTileEntity(x, y + 1, z);
+        TileEntity tileTop = Util.getBlockTileEntity(worldObj, x, y + 1, z);
         boolean isBlast = tileTop instanceof TileEntityBlastFurnace;
 
         if (tileTop instanceof TileEntityFurnace) {

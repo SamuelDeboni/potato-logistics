@@ -2,6 +2,7 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.ItemStack;
@@ -79,7 +80,7 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
     }
 
     public boolean addConnection(int xi, int yi, int zi)  {
-        TileEntity te = worldObj.getBlockTileEntity(xi, yi, zi);
+        TileEntity te = Util.getBlockTileEntity(worldObj, xi, yi, zi);
 
         if (!(te instanceof TileEntityEnergyConnector)) return false;
 
@@ -124,7 +125,7 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
 
         ArrayList<Connection> connectionsCopy = (ArrayList<Connection>) connections.clone();
         for (Connection c: connectionsCopy) {
-            TileEntity te = worldObj.getBlockTileEntity(c.x, c.y, c.z);
+            TileEntity te = Util.getBlockTileEntity(worldObj, c.x, c.y, c.z);
             if (te instanceof TileEntityEnergyConnector) {
                 ((TileEntityEnergyConnector) te).removeConnection(x, y, z);
             }
@@ -166,7 +167,7 @@ public class TileEntityEnergyConnector extends TileEntityEnergyConductor {
         }
 
         for (Connection connection: connections) {
-            TileEntity te = worldObj.getBlockTileEntity(connection.x, connection.y, connection.z);
+            TileEntity te = Util.getBlockTileEntity(worldObj, connection.x, connection.y, connection.z);
             if (te instanceof TileEntityEnergyConductor) {
                 TileEntityEnergyConnector connector = (TileEntityEnergyConnector) te;
                 if (this.energy > this.capacity / 2 && connector.energy < connector.capacity && this.energy > connector.energy) {

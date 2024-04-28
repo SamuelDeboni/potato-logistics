@@ -135,7 +135,7 @@ public class TileEntityPipe extends TileEntity {
         visualConnections = 0;
         visualColor = 0;
         for (int i = 0; i < offsets.length; i++) {
-            TileEntity te = worldObj.getBlockTileEntity(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
+            TileEntity te = Util.getBlockTileEntity(worldObj, x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
             if (te == null) continue;
 
             int blockBreakerDirId = 0;
@@ -150,6 +150,7 @@ public class TileEntityPipe extends TileEntity {
                     || type != 0 && te instanceof IInventory
                     || Direction.getDirectionById(i) == Direction.UP && nid == PotatoLogisticsMod.blockAutoBasket.id
                     || nid == PotatoLogisticsMod.blockBlockCrusher.id && blockBreakerDirId == i
+                    || nid == PotatoLogisticsMod.blockBlockPlacer.id && blockBreakerDirId == i
             ) {
                 if (te instanceof TileEntityPipe) {
                     TileEntityPipe pipe = (TileEntityPipe) te;
@@ -240,7 +241,7 @@ public class TileEntityPipe extends TileEntity {
                     int z2 = z + offsets[i][2];
                     int nid = worldObj.getBlockId(x2, y2, z2);
 
-                    TileEntity te = worldObj.getBlockTileEntity(x2, y2, z2);
+                    TileEntity te = Util.getBlockTileEntity(worldObj, x2, y2, z2);
 
                     if (te instanceof IInventory) {
                         IInventory inventory = (IInventory) te;

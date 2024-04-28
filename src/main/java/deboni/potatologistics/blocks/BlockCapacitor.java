@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.TileEntityCapacitor;
 import net.minecraft.client.util.helper.Colors;
@@ -81,7 +82,7 @@ public class BlockCapacitor extends BlockTileEntity {
         color.setRGBA(50, 255, 0, 255);
 
         int rate = 0;
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
         if (te instanceof TileEntityCapacitor) {
             TileEntityCapacitor c = (TileEntityCapacitor) te;
             rate = (int)(((float)c.energy / c.capacity) * 4);

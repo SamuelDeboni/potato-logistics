@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.entities.TileEntityAutoBasket;
 import net.minecraft.core.block.BlockTileEntity;
@@ -23,7 +24,7 @@ public class BlockAutoBasket extends BlockTileEntity {
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer entityplayer) {
-        TileEntityAutoBasket te = (TileEntityAutoBasket)world.getBlockTileEntity(x, y, z);
+        TileEntityAutoBasket te = (TileEntityAutoBasket)Util.getBlockTileEntity(world, x, y, z);
         if (te.getNumUnitsInside() > 0) {
             te.givePlayerAllItems(world, entityplayer);
             return true;
@@ -38,7 +39,7 @@ public class BlockAutoBasket extends BlockTileEntity {
 
 
     public int getFillLevel(World world, int x, int y, int z) {
-        TileEntityAutoBasket te = (TileEntityAutoBasket)world.getBlockTileEntity(x, y, z);
+        TileEntityAutoBasket te = (TileEntityAutoBasket)Util.getBlockTileEntity(world, x, y, z);
         float fill = (float)te.getNumUnitsInside() / (float)te.getMaxUnits();
         return (int)Math.ceil(10.0f * fill);
     }
@@ -50,7 +51,7 @@ public class BlockAutoBasket extends BlockTileEntity {
 
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
-        TileEntityAutoBasket te = (TileEntityAutoBasket)world.getBlockTileEntity(x, y, z);
+        TileEntityAutoBasket te = (TileEntityAutoBasket)Util.getBlockTileEntity(world, x, y, z);
         world.removeBlockTileEntity(x, y, z);
         if (world.isClientSide) {
             return;

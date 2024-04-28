@@ -2,6 +2,7 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
+import deboni.potatologistics.Util;
 import deboni.potatologistics.gui.ContainerAutoCrafter;
 import net.minecraft.client.gui.guidebook.crafting.CraftingSection;
 import net.minecraft.core.block.entity.TileEntity;
@@ -156,7 +157,7 @@ public class TileEntityAutoCrafter extends TileEntity implements IInventory {
 
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer) {
-        if (this.worldObj.getBlockTileEntity(this.x, this.y, this.z) != this) {
+        if (Util.getBlockTileEntity(worldObj, this.x, this.y, this.z) != this) {
             return false;
         }
         return entityPlayer.distanceToSqr((double) this.x + 0.5, (double) this.y + 0.5, (double) this.z + 0.5) <= 64.0;

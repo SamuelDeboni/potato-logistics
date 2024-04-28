@@ -1,5 +1,6 @@
 package deboni.potatologistics.mixin;
 
+import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.blocks.BlockAutoBasket;
 import deboni.potatologistics.blocks.entities.TileEntityCapacitor;
@@ -175,7 +176,7 @@ public abstract class RenderBlocksMixin {
         float g = 1.0f;
         float b = 1.0f;
 
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
         if (te instanceof TileEntityCapacitor) {
             TileEntityCapacitor cap = (TileEntityCapacitor) te;
             float energyPercent = (float) cap.energy / cap.capacity;
@@ -270,7 +271,7 @@ public abstract class RenderBlocksMixin {
         heatColor[1] = 1;
         heatColor[2] = 1;
 
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
         if (te instanceof TileEntityStirlingEngine) {
             TileEntityStirlingEngine engine = (TileEntityStirlingEngine) te;
             if (engine.temperature > 0) {
@@ -413,7 +414,7 @@ public abstract class RenderBlocksMixin {
         float halfPixelSize = pixelSize * 0.5f;
 
         float offset = pixelSize * 3;
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
         if (te instanceof TileEntityTreeChopper && ((TileEntityTreeChopper)te).isActive) {
             offset = pixelSize * 7;
         }
@@ -512,7 +513,7 @@ public abstract class RenderBlocksMixin {
                 {0.70f, 0.30f, 0.30f, 1.00f, 0.70f, 0.70f},
         };
 
-        TileEntityPipe pipe = (TileEntityPipe) world.getBlockTileEntity(x, y, z);
+        TileEntityPipe pipe = (TileEntityPipe) Util.getBlockTileEntity(world, x, y, z);
 
         for (int i = 0; i < offsets.length; i++) {
             float[] coord = coords[i];

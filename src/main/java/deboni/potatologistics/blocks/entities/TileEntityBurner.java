@@ -3,6 +3,7 @@ package deboni.potatologistics.blocks.entities;
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
 import deboni.potatologistics.blocks.BlockFurnaceBurner;
+import deboni.potatologistics.Util;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.crafting.LookupFuelFurnace;
@@ -177,7 +178,7 @@ public class TileEntityBurner extends TileEntity implements IInventory, IItemIO 
     }
 
     public boolean canInteractWith(EntityPlayer entityplayer) {
-        if(worldObj.getBlockTileEntity(x, y, z) != this) {
+        if(Util.getBlockTileEntity(worldObj, x, y, z) != this) {
             return false;
         }
         return entityplayer.distanceToSqr((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D) <= 64D;

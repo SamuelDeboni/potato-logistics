@@ -1,6 +1,7 @@
 package deboni.potatologistics.blocks.entities;
 
 import deboni.potatologistics.PotatoLogisticsMod;
+import deboni.potatologistics.Util;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.Packet140TileEntityData;
@@ -23,7 +24,7 @@ public class TileEntityCoil extends TileEntityEnergyConductor {
     @Override
     public void tick() {
         super.tick();
-        TileEntity te = worldObj.getBlockTileEntity(x, y - 1, z);
+        TileEntity te = Util.getBlockTileEntity(worldObj, x, y - 1, z);
         if (te instanceof TileEntityStirlingEngine) {
             TileEntityStirlingEngine engine = (TileEntityStirlingEngine) te;
             int energyProduced = engine.consumeEnergy();

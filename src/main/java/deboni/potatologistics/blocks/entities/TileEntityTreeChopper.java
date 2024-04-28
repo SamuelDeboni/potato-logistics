@@ -157,8 +157,9 @@ public class TileEntityTreeChopper extends TileEntityEnergyConductor {
         int iy = y - dir.getOffsetY();
         int iz = z - dir.getOffsetZ();
 
-        TileEntity outTe = worldObj.getBlockTileEntity(ix, iy, iz) ;
+        TileEntity outTe = Util.getBlockTileEntity(worldObj, ix, iy, iz) ;
 
+        if (worldObj.isClientSide) return;
         if (outTe instanceof IInventory) {
             IInventory inventory;
             if (outTe instanceof TileEntityChest) {
