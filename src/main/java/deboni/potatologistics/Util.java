@@ -550,7 +550,7 @@ public class Util {
 
     public static TileEntity getBlockTileEntity(World world, int x, int y, int z) {
         Block block = Block.blocksList[world.getBlockId(x, y, z)];
-        if (block == null || !(block instanceof BlockTileEntity)) {
+        if (!(block instanceof BlockTileEntity)) {
             return null;
         }
         return world.getBlockTileEntity(x, y, z);

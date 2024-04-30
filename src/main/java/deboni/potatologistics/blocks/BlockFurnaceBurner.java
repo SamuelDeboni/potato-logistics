@@ -40,7 +40,8 @@ public class BlockFurnaceBurner extends BlockTileEntityRotatable {
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
         int blockId = world.getBlockId(x,y,z);
         if (blockId == PotatoLogisticsMod.blockFurnaceBurner.id || blockId == PotatoLogisticsMod.blockFurnaceBurnerOn.id) {return;}
-        TileEntityBurner tileEntityBurner = (TileEntityBurner)Util.getBlockTileEntity(world, x, y, z);
+        TileEntityBurner tileEntityBurner = (TileEntityBurner) world.getBlockTileEntity(x, y, z);
+
         for (int l = 0; l < tileEntityBurner.getSizeInventory(); ++l) {
             ItemStack itemstack = tileEntityBurner.getStackInSlot(l);
             if (itemstack == null) continue;

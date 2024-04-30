@@ -35,7 +35,7 @@ public class BlockMiningDrill extends BlockTileEntity {
 
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
-        TileEntity te = Util.getBlockTileEntity(world, x, y, z);
+        TileEntity te = world.getBlockTileEntity(x, y, z);
         if (te instanceof TileEntityMiningDrill) {
             ((TileEntityMiningDrill) te).dropItems();
         }

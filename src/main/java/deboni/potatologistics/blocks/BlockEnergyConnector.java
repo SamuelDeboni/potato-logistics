@@ -78,7 +78,7 @@ public class BlockEnergyConnector extends BlockTileEntity {
 
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
-        TileEntityEnergyConnector ec = (TileEntityEnergyConnector) Util.getBlockTileEntity(world, x, y, z);
+        TileEntityEnergyConnector ec = (TileEntityEnergyConnector) world.getBlockTileEntity(x, y, z);
         ItemStack drops = ec.getBreakDrops();
         if (drops != null) world.dropItem(x, y, z, drops);
         super.onBlockRemoved(world, x, y, z, data);
