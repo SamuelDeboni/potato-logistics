@@ -1,5 +1,6 @@
 package deboni.potatologistics.blocks;
 
+import deboni.potatologistics.PotatoLogisticsMod;
 import deboni.potatologistics.Util;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import net.minecraft.core.block.*;
@@ -9,6 +10,7 @@ import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.piston.BlockPistonBase;
 import net.minecraft.core.entity.EntityLiving;
 import net.minecraft.core.enums.EnumDropCause;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.IInventory;
 import net.minecraft.core.util.helper.Direction;
@@ -27,6 +29,7 @@ public class BlockBlockCrusher extends BlockRotatable {
         crushResults.put(Block.cobbleLimestone, new ItemStack[]{new ItemStack(Block.gravel)});
         crushResults.put(Block.cobbleStoneMossy, new ItemStack[]{new ItemStack(Block.gravel)});
         crushResults.put(Block.gravel, new ItemStack[]{new ItemStack(Block.sand)});
+        crushResults.put(Block.dirt, new ItemStack[]{new ItemStack(Item.ammoPebble), new ItemStack(Item.ammoPebble)});
     }
     public BlockBlockCrusher(String key, int id, Material material) {
         super(key, id, material);
@@ -54,14 +57,6 @@ public class BlockBlockCrusher extends BlockRotatable {
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
         super.onBlockRemoved(world, x, y, z, data);
-    }
-    public static ItemStack[] cloneStackArray(ItemStack[] stacks){
-        ItemStack[] _result = new ItemStack[stacks.length];
-        for (int i = 0; i < _result.length; i++) {
-            ItemStack stack = stacks[i];
-            _result[i] = new ItemStack(stack.itemID,  stack.stackSize, stack.getMetadata());
-        }
-        return _result;
     }
 
     public static boolean isPowered(int data) {
@@ -149,7 +144,7 @@ public class BlockBlockCrusher extends BlockRotatable {
         boolean breakBlock = false;
         ItemStack[] breakResult = crushResults.get(block);
         if (breakResult != null){
-            breakResult = cloneStackArray(breakResult);
+            breakResult = Util.cloneStackArray(breakResult);
             breakBlock = true;
         } else if (block.getHardness() >= 0){
             breakResult = block.getBreakResult(world, EnumDropCause.PROPER_TOOL, tx, ty, tz, tmeta, te);

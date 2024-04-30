@@ -187,6 +187,15 @@ public class Util {
         return result;
     }
 
+    public static ItemStack[] cloneStackArray(ItemStack[] stacks){
+        ItemStack[] _result = new ItemStack[stacks.length];
+        for (int i = 0; i < _result.length; i++) {
+            ItemStack stack = stacks[i];
+            _result[i] = new ItemStack(stack.itemID,  stack.stackSize, stack.getMetadata());
+        }
+        return _result;
+    }
+
     public static PipeStack getItemFromInventoryNoCatch(World world, int x, int y, int z, Direction dir, int stackTimer) {
         PipeStack returnStack = null;
 

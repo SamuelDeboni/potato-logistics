@@ -3,11 +3,14 @@ package deboni.potatologistics;
 import deboni.potatologistics.blocks.*;
 import deboni.potatologistics.blocks.entities.*;
 import deboni.potatologistics.gui.*;
+import deboni.potatologistics.items.ItemCrushingHammer;
 import deboni.potatologistics.items.ItemWireSpool;
 import deboni.potatologistics.items.Potato;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.render.block.model.BlockModelRenderBlocks;
+import net.minecraft.core.WeightedRandomLootObject;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockSand;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.data.registry.Registries;
@@ -19,6 +22,8 @@ import net.minecraft.core.data.registry.recipe.entry.RecipeEntryFurnace;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemPlaceable;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.item.material.ToolMaterial;
+import net.minecraft.core.sound.BlockSounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sunsetsatellite.catalyst.Catalyst;
@@ -29,6 +34,7 @@ import turniplabs.halplibe.util.ConfigHandler;
 import turniplabs.halplibe.util.GameStartEntrypoint;
 import turniplabs.halplibe.util.RecipeEntrypoint;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, ClientStartEntrypoint, RecipeEntrypoint {
@@ -50,8 +56,14 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
     public static Item itemSteelGear;
     public static Item itemEnergyConnector;
     public static Item itemWireSpool;
-    public static  Item itemRedstoneAlloy;
-    public static  Item itemRedstoneIronMix;
+    public static Item itemRedstoneAlloy;
+    public static Item itemRedstoneIronMix;
+
+    public static Item toolWoodHammer;
+    public static Item toolStoneHammer;
+    public static Item toolIronHammer;
+    public static Item toolDiamondHammer;
+    public static Item toolSteelHammer;
 
     public static Block blockPotato;
     public static Block blockPipe;
@@ -79,6 +91,8 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
     public static Block blockCapacitorLv;
     public static Block blockHeater;
     public static Block blockStirlingEngineMV;
+    public static Block blockDust;
+
 
     @Override
     public void onInitialize() {
@@ -260,18 +274,33 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .setBlockModel(new BlockModelRenderBlocks(154))
                 .build(new BlockStirlingEngineMV("stirling_engine_mv", blockNum++, Material.metal));
 
-        int itemNum = config.getInt("starting_item_id");
-        itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true), "potato", "potato.png");
-        itemWrench = ItemHelper.createItem(MOD_ID, new Item("Wrench", itemNum++), "wrench", "wrench.png");
-        itemWrench.setMaxStackSize(1);
-        itemAutoBasket = ItemHelper.createItem(MOD_ID, new ItemPlaceable("Auto Basket", itemNum++, blockAutoBasket), "auto_basket", "auto_basket.png");
+        blockDust = new BlockBuilder(MOD_ID)
+                .setTextures("dust.png")
+                .setHardness(1.0f)
+                .setTags(BlockTags.MINEABLE_BY_SHOVEL)
+                .setBlockSound(BlockSounds.SAND)
+                .build(new BlockSand("dust", blockNum++));
 
-        itemIronGear = ItemHelper.createItem(MOD_ID, new Item("Iron Gear", itemNum++), "iron_gear", "iron_gear.png");
-        itemSteelGear = ItemHelper.createItem(MOD_ID, new Item("Steel Gear", itemNum++), "steel_gear", "steel_gear.png");
-        itemEnergyConnector = ItemHelper.createItem(MOD_ID, new ItemPlaceable("Energy Connector", itemNum++, blockEnergyConnector), "energy_connector", "energy_connector.png");
-        itemWireSpool = ItemHelper.createItem(MOD_ID, new ItemWireSpool("Wire Spool", itemNum++), "wire_spool", "wire_spool.png");
-        itemRedstoneAlloy = ItemHelper.createItem(MOD_ID, new Item("Redstone Alloy", itemNum++), "redstone_alloy", "redstone_alloy.png");
-        itemRedstoneIronMix = ItemHelper.createItem(MOD_ID, new Item("Redstone Iron Mix", itemNum++), "redstone_iron_mix", "redstone_iron_mix.png");
+        BlockBlockCrusher.crushResults.put(Block.sand, new ItemStack[]{new ItemStack(blockDust)});
+
+        int itemNum = config.getInt("starting_item_id");
+        itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true).setKey("potato"), "potato.png");
+        itemWrench = ItemHelper.createItem(MOD_ID, new Item("Wrench", itemNum++).setKey("wrench"), "wrench.png");
+        itemWrench.setMaxStackSize(1);
+        itemAutoBasket = ItemHelper.createItem(MOD_ID, new ItemPlaceable("Auto Basket", itemNum++, blockAutoBasket).setKey("auto_basket"), "auto_basket.png");
+
+        itemIronGear = ItemHelper.createItem(MOD_ID, new Item("Iron Gear", itemNum++).setKey("iron_gear"), "iron_gear.png");
+        itemSteelGear = ItemHelper.createItem(MOD_ID, new Item("Steel Gear", itemNum++).setKey("steel_gear"), "steel_gear.png");
+        itemEnergyConnector = ItemHelper.createItem(MOD_ID, new ItemPlaceable("Energy Connector", itemNum++, blockEnergyConnector).setKey("energy_connector"), "energy_connector.png");
+        itemWireSpool = ItemHelper.createItem(MOD_ID, new ItemWireSpool("Wire Spool", itemNum++).setKey("wire_spool"), "wire_spool.png");
+        itemRedstoneAlloy = ItemHelper.createItem(MOD_ID, new Item("Redstone Alloy", itemNum++).setKey("redstone_alloy"), "redstone_alloy.png");
+        itemRedstoneIronMix = ItemHelper.createItem(MOD_ID, new Item("Redstone Iron Mix", itemNum++).setKey("redstone_iron_mix"), "redstone_iron_mix.png");
+
+        toolWoodHammer = ItemHelper.createItem(MOD_ID, new ItemCrushingHammer("Wood Crushing Hammer", itemNum++, ToolMaterial.wood).setKey("wood_crushing_hammer"), "wood_hammer.png");
+        toolStoneHammer = ItemHelper.createItem(MOD_ID, new ItemCrushingHammer("Stone Crushing Hammer", itemNum++, ToolMaterial.stone).setKey("stone_crushing_hammer"), "stone_hammer.png");
+        toolIronHammer = ItemHelper.createItem(MOD_ID, new ItemCrushingHammer("Iron Crushing Hammer", itemNum++, ToolMaterial.iron).setKey("iron_crushing_hammer"), "iron_hammer.png");
+        toolDiamondHammer = ItemHelper.createItem(MOD_ID, new ItemCrushingHammer("Diamond Crushing Hammer", itemNum++, ToolMaterial.diamond).setKey("diamond_crushing_hammer"), "diamond_hammer.png");
+        toolSteelHammer = ItemHelper.createItem(MOD_ID, new ItemCrushingHammer("Steel Crushing Hammer", itemNum++, ToolMaterial.steel).setKey("steel_crushing_hammer"), "steel_hammer.png");
 
 
         EntityHelper.Core.createTileEntity(TileEntityPipe.class, "pipe.tile");
@@ -374,7 +403,7 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
         RecipeBuilder.Shaped(MOD_ID,"ABA", "ECF", "ADA")
                 .addInput('A', "minecraft:cobblestones")
                 .addInput('B', Block.obsidian)
-                .addInput('C', Item.toolPickaxeDiamond)
+                .addInput('C', toolDiamondHammer)
                 .addInput('D', Block.pistonBaseSticky)
                 .addInput('E', blockPipe)
                 .addInput('F', Item.dustRedstone)
@@ -481,24 +510,99 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput('R', Item.dustRedstone)
                 .create("advanced dispenser", new ItemStack(blockAdvancedDispenser));
 
+        RecipeBuilder.Shaped(MOD_ID, "MMM", "MS ", " S ")
+                .addInput('M', "minecraft:planks")
+                .addInput('S', Item.stick)
+                .create("wood crushing hammer", new ItemStack(toolWoodHammer));
+
+        RecipeBuilder.Shaped(MOD_ID, "MMM", "MS ", " S ")
+                .addInput('M', "minecraft:cobblestones")
+                .addInput('S', Item.stick)
+                .create("stone crushing hammer", new ItemStack(toolStoneHammer));
+
+        RecipeBuilder.Shaped(MOD_ID, "MMM", "MS ", " S ")
+                .addInput('M', Item.ingotIron)
+                .addInput('S', Item.stick)
+                .create("iron crushing hammer", new ItemStack(toolIronHammer));
+
+        RecipeBuilder.Shaped(MOD_ID, "MMM", "MS ", " S ")
+                .addInput('M', Item.diamond)
+                .addInput('S', Item.stick)
+                .create("diamond crushing hammer", new ItemStack(toolDiamondHammer));
+
+        RecipeBuilder.Shaped(MOD_ID, "MMM", "MS ", " S ")
+                .addInput('M', Item.ingotSteel)
+                .addInput('S', Item.stick)
+                .create("steel crushing hammer", new ItemStack(toolSteelHammer));
+
         RecipeBuilder.Furnace(MOD_ID)
                 .setInput(itemRedstoneIronMix)
                 .create("redstone alloy", new ItemStack(itemRedstoneAlloy));
+
+        // === Recipes for skyblock ===
+        RecipeBuilder.Shaped(MOD_ID, "AAA", "AAA", "AAA")
+                .addInput('A', Item.chainlink)
+                .create("Iron Mesh", new ItemStack(Block.mesh, 1));
+
+        RecipeBuilder.Shapeless(MOD_ID)
+                .addInput(Block.sand)
+                .addInput(Item.bone)
+                .create("Soul Sand", new ItemStack(Block.soulsand));
+
+        Registries.ITEM_GROUPS.register(MOD_ID+":saplings", Arrays.asList(new ItemStack[]{
+                new ItemStack(Block.saplingOak),
+                new ItemStack(Block.saplingBirch),
+                new ItemStack(Block.saplingCacao),
+                new ItemStack(Block.saplingCherry),
+                new ItemStack(Block.saplingEucalyptus),
+                new ItemStack(Block.saplingOakRetro),
+                new ItemStack(Block.saplingPine),
+        }));
+
+        RecipeBuilder.Shaped(MOD_ID, "PS", "SP")
+                .addInput('S', MOD_ID+":saplings")
+                .addInput('P', Item.ammoPebble)
+                .create("Dirt", new ItemStack(Block.dirt, 2));
+
+        RecipeBuilder.Trommel(MOD_ID)
+                .setInput(blockDust)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.diamond), 1), 1)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.dustRedstone), 4, 8), 10)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.clay), 1, 2), 79)
+                .create("dust");
+
+        RecipeBuilder.Trommel(MOD_ID)
+                .setInput("minecraft:leaves")
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Block.saplingPine), 1), 1.0)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Block.saplingBirch), 1), 1.0)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Block.saplingCacao), 1), 0.1)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Block.saplingCherry), 1), 0.1)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Block.saplingOak), 1), 1.0)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Block.saplingEucalyptus), 1), 1.0)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Block.saplingOakRetro), 1), 0.01)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Block.saplingShrub), 1), 1.0)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.seedsWheat), 1), 100.0)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.seedsPumpkin), 1), 10.0)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.sugarcane), 1), 10.0)
+                .create("leaves");
     }
 
     public static RecipeNamespace POTATO_LOGISTICS = new RecipeNamespace();
 
     public static RecipeGroup<RecipeEntryCrafting<?,?>> WORKBENCH = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.workbench)));
     public static RecipeGroup<RecipeEntryFurnace> FURNACE = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.furnaceStoneActive)));
+    public static RecipeGroup<RecipeEntryFurnace> TROMMEL = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.trommelActive)));
     @Override
     public void initNamespaces() {
         LOGGER.info("init namespaces");
         POTATO_LOGISTICS = new RecipeNamespace();
         WORKBENCH = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.workbench)));
         FURNACE = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.furnaceStoneActive)));
+        TROMMEL = new RecipeGroup<>(new RecipeSymbol(new ItemStack(Block.trommelActive)));
 
         POTATO_LOGISTICS.register("workbench", WORKBENCH);
         POTATO_LOGISTICS.register("furnace", FURNACE);
+        POTATO_LOGISTICS.register("trommel", TROMMEL);
         Registries.RECIPES.register(MOD_ID, POTATO_LOGISTICS);
     }
 }
