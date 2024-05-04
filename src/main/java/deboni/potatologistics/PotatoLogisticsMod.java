@@ -20,6 +20,7 @@ import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryFurnace;
 import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemFood;
 import net.minecraft.core.item.ItemPlaceable;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.material.ToolMaterial;
@@ -51,7 +52,7 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
     public static Item itemPotato;
     public static Item itemWrench;
 
-    public static Item itemAutoBasket;
+    public static Item itemPotatoKnish;
     public static Item itemIronGear;
     public static Item itemSteelGear;
     public static Item itemEnergyConnector;
@@ -69,7 +70,7 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
     public static Block blockPipe;
     public static Block blockDirectionalPipe;
     public static Block blockFilter;
-    public static Block blockAutoBasket;
+    public static Block blockChute;
     public static Block blockBlockCrusher;
     public static Block blockBlockPlacer;
     public static Block blockTreeChopper;
@@ -123,14 +124,15 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .setTags(BlockTags.MINEABLE_BY_AXE)
                 .build(new BlockFilter("filter", blockNum++, Material.wood));
 
-        blockAutoBasket = new BlockBuilder(MOD_ID)
+        blockChute = new BlockBuilder(MOD_ID)
                 .setTopTexture(4, 9)
                 .setBottomTexture("auto_basket_bottom.png")
+                .setTopTexture("auto_basket_bottom.png")
                 .setSideTextures("auto_basket_sides.png")
                 .setLightOpacity(0)
                 .setHardness(0.1f)
                 .setBlockModel(new BlockModelRenderBlocks(150))
-                .build(new BlockAutoBasket("auto_basket", blockNum++, Material.cloth));
+                .build(new BlockChute("chute", blockNum++, Material.cloth));
 
         blockBlockCrusher = new BlockBuilder(MOD_ID)
                 .setSideTextures("block_crusher_side.png")
@@ -287,7 +289,8 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
         itemPotato = ItemHelper.createItem(MOD_ID, new Potato("Potato", itemNum++, 5, true).setKey("potato"), "potato.png");
         itemWrench = ItemHelper.createItem(MOD_ID, new Item("Wrench", itemNum++).setKey("wrench"), "wrench.png");
         itemWrench.setMaxStackSize(1);
-        itemAutoBasket = ItemHelper.createItem(MOD_ID, new ItemPlaceable("Auto Basket", itemNum++, blockAutoBasket).setKey("auto_basket"), "auto_basket.png");
+
+        itemPotatoKnish = ItemHelper.createItem(MOD_ID, new ItemFood("Potato Knish", itemNum++, 20, true).setKey("potato_knish"), "potato_knish.png");
 
         itemIronGear = ItemHelper.createItem(MOD_ID, new Item("Iron Gear", itemNum++).setKey("iron_gear"), "iron_gear.png");
         itemSteelGear = ItemHelper.createItem(MOD_ID, new Item("Steel Gear", itemNum++).setKey("steel_gear"), "steel_gear.png");
@@ -311,7 +314,7 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
         EntityHelper.Core.createTileEntity(TileEntityBurner.class, "furnace_burner.tile");
         Catalyst.GUIS.register("Coal Burner", new MpGuiEntry(TileEntityBurner.class, GuiBurner.class, ContainerBurner.class));
 
-        EntityHelper.Core.createTileEntity(TileEntityAutoBasket.class, "auto_basket.tile");
+        EntityHelper.Core.createTileEntity(TileEntityChute.class, "auto_basket.tile");
         EntityHelper.Core.createTileEntity(TileEntityTreeChopper.class, "tree_chopper.tile");
         EntityHelper.Core.createTileEntity(TileEntityStirlingEngine.class, "stirling_engine.tile");
 
@@ -394,17 +397,16 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput('C', Block.mesh)
                 .create("filter", new ItemStack(blockFilter));
 
-        RecipeBuilder.Shaped(MOD_ID, "AAA", "CBC", "CCC")
-                .addInput('A', Item.leather)
-                .addInput('B', Item.dustRedstone)
-                .addInput('C', Item.wheat)
-                .create("auto basket", new ItemStack(itemAutoBasket));
+        RecipeBuilder.Shaped(MOD_ID, "A A", "ACA", " A ")
+                .addInput('A', "minecraft:stones")
+                .addInput('C', "minecraft:chests")
+                .create("chute", new ItemStack(blockChute));
 
         RecipeBuilder.Shaped(MOD_ID,"ABA", "ECF", "ADA")
                 .addInput('A', "minecraft:cobblestones")
                 .addInput('B', Block.obsidian)
                 .addInput('C', toolDiamondHammer)
-                .addInput('D', Block.pistonBaseSticky)
+                .addInput('D', Block.pistonBase)
                 .addInput('E', blockPipe)
                 .addInput('F', Item.dustRedstone)
                 .create("block crusher", new ItemStack(blockBlockCrusher));
@@ -549,6 +551,12 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addInput(Item.bone)
                 .create("Soul Sand", new ItemStack(Block.soulsand));
 
+        RecipeBuilder.Shapeless(MOD_ID)
+                .addInput(Item.bucketWater)
+                .addInput(Block.blockNetherCoal)
+                .create("Obsidian", new ItemStack(Block.obsidian));
+
+
         Registries.ITEM_GROUPS.register(MOD_ID+":saplings", Arrays.asList(new ItemStack[]{
                 new ItemStack(Block.saplingOak),
                 new ItemStack(Block.saplingBirch),
@@ -566,9 +574,9 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
 
         RecipeBuilder.Trommel(MOD_ID)
                 .setInput(blockDust)
-                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.diamond), 1), 1)
-                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.dustRedstone), 4, 8), 10)
-                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.clay), 1, 2), 79)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.diamond), 1), 5)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.dustRedstone), 4, 8), 25)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(Item.clay), 1, 2), 50)
                 .create("dust");
 
         RecipeBuilder.Trommel(MOD_ID)
@@ -585,6 +593,11 @@ public class PotatoLogisticsMod implements ModInitializer, GameStartEntrypoint, 
                 .addEntry(new WeightedRandomLootObject(new ItemStack(Item.seedsPumpkin), 1), 10.0)
                 .addEntry(new WeightedRandomLootObject(new ItemStack(Item.sugarcane), 1), 10.0)
                 .create("leaves");
+
+        RecipeBuilder.Trommel(MOD_ID)
+                .setInput(blockPotato)
+                .addEntry(new WeightedRandomLootObject(new ItemStack(itemPotatoKnish), 1), 1.0)
+                .create("potato block");
     }
 
     public static RecipeNamespace POTATO_LOGISTICS = new RecipeNamespace();

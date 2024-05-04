@@ -1,9 +1,8 @@
 package deboni.potatologistics;
 
-import deboni.potatologistics.blocks.entities.TileEntityAutoBasket;
+import deboni.potatologistics.blocks.entities.TileEntityChute;
 import deboni.potatologistics.blocks.entities.TileEntityAutoCrafter;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
-import deboni.potatologistics.Util;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockChest;
@@ -298,8 +297,8 @@ public class Util {
                     }
                 }
             }
-        } else if (te instanceof TileEntityAutoBasket && dir == Direction.UP) {
-            ItemStack stack = ((TileEntityAutoBasket)te).removeOneItem();
+        } else if (te instanceof TileEntityChute && dir == Direction.UP) {
+            ItemStack stack = ((TileEntityChute)te).removeOneItem();
             if (stack != null) {
                 returnStack = new PipeStack(stack, dir, stackTimer);
             }
@@ -405,9 +404,9 @@ public class Util {
                     }
                 }
             }
-        } else if (te instanceof TileEntityAutoBasket && dir == Direction.UP) {
-            TileEntityAutoBasket.BasketEntry firstKey = null;
-            for (Map.Entry<TileEntityAutoBasket.BasketEntry, Integer> entry : ((TileEntityAutoBasket) te).contents.entrySet()) {
+        } else if (te instanceof TileEntityChute && dir == Direction.UP) {
+            TileEntityChute.ChuteEntry firstKey = null;
+            for (Map.Entry<TileEntityChute.ChuteEntry, Integer> entry : ((TileEntityChute) te).contents.entrySet()) {
                 firstKey = entry.getKey();
                 break;
             }

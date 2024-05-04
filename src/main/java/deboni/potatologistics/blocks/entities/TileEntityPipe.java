@@ -148,7 +148,7 @@ public class TileEntityPipe extends TileEntity {
             int nid = worldObj.getBlockId(x + offsets[i][0], y + offsets[i][1], z +offsets[i][2]);
             if(te instanceof TileEntityPipe
                     || type != 0 && te instanceof IInventory
-                    || Direction.getDirectionById(i) == Direction.UP && nid == PotatoLogisticsMod.blockAutoBasket.id
+                    || Direction.getDirectionById(i) == Direction.UP && nid == PotatoLogisticsMod.blockChute.id
                     || nid == PotatoLogisticsMod.blockBlockCrusher.id && blockBreakerDirId == i
                     || nid == PotatoLogisticsMod.blockBlockPlacer.id && blockBreakerDirId == i
             ) {

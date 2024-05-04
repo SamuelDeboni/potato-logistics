@@ -2,7 +2,7 @@ package deboni.potatologistics.mixin;
 
 import deboni.potatologistics.Util;
 import deboni.potatologistics.PotatoLogisticsMod;
-import deboni.potatologistics.blocks.BlockAutoBasket;
+import deboni.potatologistics.blocks.BlockChute;
 import deboni.potatologistics.blocks.entities.TileEntityCapacitor;
 import deboni.potatologistics.blocks.entities.TileEntityPipe;
 import deboni.potatologistics.blocks.entities.TileEntityStirlingEngine;
@@ -65,7 +65,7 @@ public abstract class RenderBlocksMixin {
     )
     void renderBlockByRenderType(Block block, int renderType, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         if (renderType == 150){
-            cir.setReturnValue(renderBlockAutoBasket(thisAs, block, x, y, z));
+            cir.setReturnValue(renderBlockChute(thisAs, block, x, y, z));
         }
         if (renderType == 151) {
             cir.setReturnValue(renderPipe(thisAs, this.blockAccess, x, y, z, block, world));
@@ -87,7 +87,10 @@ public abstract class RenderBlocksMixin {
     @Inject(method = "renderBlockOnInventory(Lnet/minecraft/core/block/Block;IFF)V", at = @At("TAIL"))
     private void renderBlockOnInventory(Block block, int metadata, float brightness, float alpha, CallbackInfo ci){
         int renderType = ((BlockModelRenderBlocks) BlockModelDispatcher.getInstance().getDispatch(block)).renderType;
-        if (renderType == 150 || renderType == 151 || renderType == 152){
+        if (renderType == 150) {
+            renderBlockChuteOnInventory(block, metadata, brightness);
+        }
+        if (renderType == 151 || renderType == 152){
             renderBlockInvNormal(block, metadata, brightness);
         }
         if (renderType == 154){
@@ -303,27 +306,61 @@ public abstract class RenderBlocksMixin {
     }
 
     @Unique
-    private boolean renderBlockAutoBasket(RenderBlocks renderblocks, Block block, int x, int y, int z) {
+    private void renderBlockChuteOnInventory(Block block, int metadata, float brightness) {
         float onepix = 0.0625f;
+        float fourPix = onepix * 4;
+        float twoPix = onepix * 2;
+
         float basketHeight = 1.0f;
-        block.setBlockBounds(0.0625f, 0.0f, 0.0625f, 0.9375f, 0.0625f, 0.9375f);
-        renderblocks.renderStandardBlock(block, x, y, z);
-        block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0625f);
-        renderblocks.renderStandardBlock(block, x, y, z);
-        block.setBlockBounds(0.0f, 0.0f, 0.9375f, 1.0f, 1.0f, 1.0f);
-        renderblocks.renderStandardBlock(block, x, y, z);
-        block.setBlockBounds(0.0f, 0.0f, 0.0625f, 0.0625f, 1.0f, 0.9375f);
-        renderblocks.renderStandardBlock(block, x, y, z);
-        block.setBlockBounds(0.9375f, 0.0f, 0.0625f, 1.0f, 1.0f, 0.9375f);
-        renderblocks.renderStandardBlock(block, x, y, z);
+        block.setBlockBounds(onepix, fourPix, onepix, 0.9375f, fourPix + onepix, 0.9375f);
+        renderBlockInvNormal(block, metadata, brightness);
+
+        block.setBlockBounds(0.0f, fourPix, 0.0f, 1.0f, 1.0f, onepix);
+        renderBlockInvNormal(block, metadata, brightness);
+
+        block.setBlockBounds(0.0f, fourPix, 0.9375f, 1.0f, 1.0f, 1.0f);
+        renderBlockInvNormal(block, metadata, brightness);
+
+        block.setBlockBounds(0.0f, fourPix, onepix, onepix, 1.0f, 0.9375f);
+        renderBlockInvNormal(block, metadata, brightness);
+
+        block.setBlockBounds(0.9375f, fourPix, onepix, 1.0f, 1.0f, 0.9375f);
+        renderBlockInvNormal(block, metadata, brightness);
+
+        block.setBlockBounds(twoPix, 0, twoPix, 1.0f - twoPix, fourPix, 1.0f-twoPix);
+        renderBlockInvNormal(block, metadata, brightness);
+
         block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-        int height = ((BlockAutoBasket)block).getFillLevel(this.world, x, y, z);
+    }
+
+
+    @Unique
+    private boolean renderBlockChute(RenderBlocks renderblocks, Block block, int x, int y, int z) {
+        float onepix = 0.0625f;
+        float fourPix = onepix * 4;
+        float twoPix = onepix * 2;
+
+        float basketHeight = 1.0f;
+        block.setBlockBounds(onepix, fourPix, onepix, 0.9375f, fourPix + onepix, 0.9375f);
+        renderblocks.renderStandardBlock(block, x, y, z);
+        block.setBlockBounds(0.0f, fourPix, 0.0f, 1.0f, 1.0f, onepix);
+        renderblocks.renderStandardBlock(block, x, y, z);
+        block.setBlockBounds(0.0f, fourPix, 0.9375f, 1.0f, 1.0f, 1.0f);
+        renderblocks.renderStandardBlock(block, x, y, z);
+        block.setBlockBounds(0.0f, fourPix, onepix, onepix, 1.0f, 0.9375f);
+        renderblocks.renderStandardBlock(block, x, y, z);
+        block.setBlockBounds(0.9375f, fourPix, onepix, 1.0f, 1.0f, 0.9375f);
+        renderblocks.renderStandardBlock(block, x, y, z);
+
+        block.setBlockBounds(twoPix, 0, twoPix, 1.0f - twoPix, fourPix, 1.0f-twoPix);
+        renderblocks.renderStandardBlock(block, x, y, z);
+
+        int height = ((BlockChute)block).getFillLevel(this.world, x, y, z);
         if (height > 0) {
-            renderblocks.renderTopFace(block, x, (float)(y - 1) + 0.0625f + 0.0625f * (float)height, z, Block.texCoordToIndex(5, 8));
+            renderblocks.renderTopFace(block, x, (float)(y) + fourPix + onepix * 0.5 * (float)height, z, Block.texCoordToIndex(5, 8));
         }
         block.setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
         return true;
-
     }
 
     @Unique

@@ -1,111 +1,111 @@
 item.potatologistics.potato.name=Potato
-item.potatologistics.potato.desc=Not an evil AI
+item.potatologistics.potato.desc=Won't kill you in your sleep (: .
 
 item.potatologistics.wrench.name=Wrench
-item.potatologistics.wrench.desc=You can change pipes
+item.potatologistics.wrench.desc=Doesn't give you a plumbing license.
 
 item.potatologistics.wood_crushing_hammer.name = Wood Crushing Hammer
-item.potatologistics.wood_crushing_hammer.desc = Try crushing sand
+item.potatologistics.wood_crushing_hammer.desc = Try crushing sand!
 
 item.potatologistics.stone_crushing_hammer.name = Stone Crushing Hammer
-item.potatologistics.stone_crushing_hammer.desc = Try crushing sand
+item.potatologistics.stone_crushing_hammer.desc = Try crushing sand!
 
 item.potatologistics.iron_crushing_hammer.name = Iron Crushing Hammer
-item.potatologistics.iron_crushing_hammer.desc = Try crushing sand
+item.potatologistics.iron_crushing_hammer.desc = Try crushing sand!
 
 item.potatologistics.diamond_crushing_hammer.name = Diamond Crushing Hammer
-item.potatologistics.diamond_crushing_hammer.desc = Try crushing sand
+item.potatologistics.diamond_crushing_hammer.desc = Try crushing sand! Expensive!
 
 item.potatologistics.steel_crushing_hammer.name = Steel Crushing Hammer
-item.potatologistics.steel_crushing_hammer.desc = Try crushing sand
+item.potatologistics.steel_crushing_hammer.desc = Try crushing sand!
 
-item.potatologistics.auto_basket.name=Auto Basket
-item.potatologistics.auto_basket.desc=Automate item collection
+item.potatologistics.potato_knish.name=Potato Knish
+item.potatologistics.potato_knish.desc=To be Trusted
 
-tile.potatologistics.auto_basket.name=Auto Basket
-tile.potatologistics.auto_basket.desc=Automate item collection
+tile.potatologistics.chute.name=Chute
+tile.potatologistics.chute.desc=Automates item collection, gives life meaning.
 
 item.potatologistics.energy_connector.name=LV Energy Connector
-item.potatologistics.energy_connector.desc=Connect energy to your machines
+item.potatologistics.energy_connector.desc=Provides energy to your machines
 
 tile.potatologistics.energy_connector.name=Energy Connector
-tile.potatologistics.energy_connector.desc=Connect energy to your machines
+tile.potatologistics.energy_connector.desc=Provides energy to your machines
 
 item.potatologistics.wire_spool.name=LV Wire Spool
-item.potatologistics.wire_spool.desc=Use to connect two connectors
+item.potatologistics.wire_spool.desc=Used to connect two connectors.
 
 item.potatologistics.redstone_alloy.name=Redstone Alloy
 item.potatologistics.redstone_alloy.desc=Who needs copper anyway?
 
-item.potatologistics.redstone_iron_mix.name=Redstone Iron Mix
-item.potatologistics.redstone_iron_mix.desc=Try baking it
+item.potatologistics.redstone_iron_mix.name=Redstone-Iron Mix
+item.potatologistics.redstone_iron_mix.desc=Try melting it!
 
 tile.potatologistics.potato.name=Potato Block
-tile.potatologistics.potato.desc=Don't thrust him
+tile.potatologistics.potato.desc=Not to be trusted!
 
 item.potatologistics.iron_gear.name=Iron Gear
-item.potatologistics.iron_gear.desc=Can turn
+item.potatologistics.iron_gear.desc=It turns.
 
 item.potatologistics.steel_gear.name=Steel Gear
-item.potatologistics.steel_gear.desc=Can turn but better
+item.potatologistics.steel_gear.desc=It turns better.
 
 tile.potatologistics.pipe.name=Pipe
-tile.potatologistics.pipe.desc=It does not fit a Italian
+tile.potatologistics.pipe.desc=Doesn't contain a warp zone.
 
 tile.potatologistics.filter.name=Filter
-tile.potatologistics.filter.desc=It works like magic
+tile.potatologistics.filter.desc=Does what you should do to your room.
 
 tile.potatologistics.directional_pipe.name=Directional Pipe
-tile.potatologistics.directional_pipe.desc=Shiny
+tile.potatologistics.directional_pipe.desc=Shiny.
 
 tile.potatologistics.block_crusher.name=Block Crusher
-tile.potatologistics.block_crusher.desc=It crushes blocks
+tile.potatologistics.block_crusher.desc=Crushes blocks, but not candy.
 
 tile.potatologistics.block_placer.name=Block Placer
-tile.potatologistics.block_placer.desc=It will rePlace your job
+tile.potatologistics.block_placer.desc=It will rePlace your job.
 
 tile.potatologistics.tree_chopper.name=Tree Chopper
-tile.potatologistics.tree_chopper.desc=For you who are too lazy to cut down trees
+tile.potatologistics.tree_chopper.desc=For those who are too lazy to cut down trees.
 
 tile.potatologistics.iron_machine_block.name=Iron Machine Block
-tile.potatologistics.iron_machine_block.desc=A basic building block for simple machines
+tile.potatologistics.iron_machine_block.desc=A basic building block for simple machines.
 
 tile.potatologistics.steel_machine_block.name=Steel Machine Block
-tile.potatologistics.steel_machine_block.desc=A basic building block for more advanced machines
+tile.potatologistics.steel_machine_block.desc=A basic building block for more advanced machines.
 
 tile.potatologistics.mining_drill.name=Mining Drill
-tile.potatologistics.mining_drill.desc=Mines for you
+tile.potatologistics.mining_drill.desc=THIS IS NOT A DRILL!
 
 tile.potatologistics.advanced_dispenser.name=Advanced Dispenser
-tile.potatologistics.advanced_dispenser.desc=It can use bone meal
+tile.potatologistics.advanced_dispenser.desc=It can use bone meal.
 
 tile.potatologistics.furnace_burner.name=Furnace Burner
-tile.potatologistics.furnace_burner.desc=Burn fuel to generate heat
+tile.potatologistics.furnace_burner.desc=Getting hot in here!
 
 tile.potatologistics.furnace_burner_on.name=Furnace Burner
-tile.potatologistics.furnace_burner_on.desc=Burn fuel to generate heat
+tile.potatologistics.furnace_burner_on.desc=Getting hot in here!
 
 tile.potatologistics.stirling_engine_lv.name=LV Stirling Engine
-tile.potatologistics.stirling_engine_lv.desc=Transform heat from bellow into kinetic energy above
+tile.potatologistics.stirling_engine_lv.desc=From hot to kinetic, party hard!
 
 tile.potatologistics.stirling_engine_mv.name=MV Stirling Engine
-tile.potatologistics.stirling_engine_mv.desc=Transform heat from bellow into kinetic energy above
+tile.potatologistics.stirling_engine_mv.desc=Party harder!
 
 tile.potatologistics.coil.name=LV Coil
-tile.potatologistics.coil.desc=Transform kinetic energy bellow into electric energy
+tile.potatologistics.coil.desc=Transforms kinetic energy bellow into electric energy.
 
 tile.potatologistics.test_area_maker.name=Test Area Maker
-tile.potatologistics.test_area_maker.desc=Turn the chunk placed into a flat surface, it will destroy all blocks above
+tile.potatologistics.test_area_maker.desc=Makes your chunk a perfect testing area, removes all blocks above.
 
 tile.potatologistics.auto_crafter.name=Auto Crafter
-tile.potatologistics.auto_crafter.desc=No, it does not have a face
+tile.potatologistics.auto_crafter.desc=No, it does not have a face, you're delusional.
 
 tile.potatologistics.capacitor.name=LV Capacitor
-tile.potatologistics.capacitor.desc=Stores 100000 Eu
+tile.potatologistics.capacitor.desc=Stores 100000 Eu.
 
 tile.potatologistics.heater.name=Heater
-tile.potatologistics.heater.desc=Heats furnaces with Eu
+tile.potatologistics.heater.desc=Heats furnaces with Eu.
 
 tile.potatologistics.dust.name=Dust
-tile.potatologistics.dust.desc=It's coarser and rougher...
+tile.potatologistics.dust.desc=Not angel, do not consume.
 

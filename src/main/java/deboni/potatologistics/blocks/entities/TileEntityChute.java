@@ -2,8 +2,11 @@ package deboni.potatologistics.blocks.entities;
 
 import com.mojang.nbt.CompoundTag;
 import com.mojang.nbt.ListTag;
+import deboni.potatologistics.Util;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockChest;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.block.entity.TileEntityChest;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.player.EntityPlayer;
@@ -11,21 +14,23 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.Packet140TileEntityData;
+import net.minecraft.core.player.inventory.IInventory;
+import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.world.World;
 
 import java.util.*;
 
-public class TileEntityAutoBasket extends TileEntity {
+public class TileEntityChute extends TileEntity {
 
     public int numUnitsInside = 0;
-    public final Map<TileEntityAutoBasket.BasketEntry, Integer> contents = new HashMap<>();
+    public final Map<ChuteEntry, Integer> contents = new HashMap<>();
 
     public void dropAllItems() {
         Random rand = new Random();
-        for (Map.Entry<TileEntityAutoBasket.BasketEntry, Integer> entry : this.contents.entrySet()) {
+        for (Map.Entry<ChuteEntry, Integer> entry : this.contents.entrySet()) {
             int stackSize;
-            TileEntityAutoBasket.BasketEntry be = entry.getKey();
+            ChuteEntry be = entry.getKey();
             for (int numItems = entry.getValue(); numItems > 0; numItems -= stackSize) {
                 int maxStackSize;
                 stackSize = maxStackSize = be.getItem().getItemStackLimit();
@@ -43,8 +48,8 @@ public class TileEntityAutoBasket extends TileEntity {
 
     private void updateNumUnits() {
         this.numUnitsInside = 0;
-        for (Map.Entry<TileEntityAutoBasket.BasketEntry, Integer> entry : this.contents.entrySet()) {
-            TileEntityAutoBasket.BasketEntry be = entry.getKey();
+        for (Map.Entry<ChuteEntry, Integer> entry : this.contents.entrySet()) {
+            ChuteEntry be = entry.getKey();
             int numItems = entry.getValue();
             int unitsPerItem = this.getItemSizeUnits(be.getItem());
             this.numUnitsInside += unitsPerItem * numItems;
@@ -76,12 +81,12 @@ public class TileEntityAutoBasket extends TileEntity {
     }
 
     public void givePlayerAllItems(World world, EntityPlayer player) {
-        List<BasketEntry> toRemove = new ArrayList<>();
+        List<ChuteEntry> toRemove = new ArrayList<>();
         Iterator var4 = this.contents.entrySet().iterator();
 
         while(var4.hasNext()) {
             Map.Entry entry = (Map.Entry)var4.next();
-            BasketEntry basketEntry = (BasketEntry)entry.getKey();
+            ChuteEntry basketEntry = (ChuteEntry)entry.getKey();
             ItemStack basketEntryStack = new ItemStack(basketEntry.id, (Integer)entry.getValue(), basketEntry.metadata, basketEntry.tag);
             player.inventory.insertItem(basketEntryStack, true);
             this.contents.put(basketEntry, basketEntryStack.stackSize);
@@ -93,7 +98,7 @@ public class TileEntityAutoBasket extends TileEntity {
         var4 = toRemove.iterator();
 
         while(var4.hasNext()) {
-            BasketEntry entry = (BasketEntry)var4.next();
+            ChuteEntry entry = (ChuteEntry)var4.next();
             this.contents.remove(entry);
         }
 
@@ -101,9 +106,9 @@ public class TileEntityAutoBasket extends TileEntity {
         this.worldObj.notifyBlockChange(this.x, this.y, this.z, Block.basket.id);
     }
     public ItemStack removeOneItem() {
-        TileEntityAutoBasket.BasketEntry firstKey = null;
+        ChuteEntry firstKey = null;
         int itemCount = 0;
-        for (Map.Entry<TileEntityAutoBasket.BasketEntry, Integer> entry : this.contents.entrySet()) {
+        for (Map.Entry<ChuteEntry, Integer> entry : this.contents.entrySet()) {
             firstKey = entry.getKey();
             itemCount = entry.getValue();
             break;
@@ -134,7 +139,7 @@ public class TileEntityAutoBasket extends TileEntity {
         this.contents.clear();
         for (int i = 0; i < itemsTag.tagCount(); ++i) {
             CompoundTag itemTag = (CompoundTag)itemsTag.tagAt(i);
-            TileEntityAutoBasket.BasketEntry entry = TileEntityAutoBasket.BasketEntry.read(itemTag);
+            ChuteEntry entry = ChuteEntry.read(itemTag);
             short count = itemTag.getShort("Count");
             this.contents.put(entry, (int) count);
         }
@@ -163,10 +168,40 @@ public class TileEntityAutoBasket extends TileEntity {
             this.worldObj.notifyBlockChange(this.x, this.y, this.z, Block.basket.id);
             this.updateNumUnits();
         }
+
+        TileEntity outTe = Util.getBlockTileEntity(worldObj, x, y-1, z) ;
+        if (outTe instanceof IInventory) {
+            ItemStack itemToRemove = this.removeOneItem();
+
+            if (itemToRemove != null) {
+                boolean hasInserted = false;
+
+                IInventory inventory;
+                if (outTe instanceof TileEntityChest) {
+                    inventory = BlockChest.getInventory(worldObj, x, y - 1, z);
+                } else {
+                    inventory = (IInventory) outTe;
+                }
+
+                if (inventory != null) {
+                    hasInserted = Util.insertOnInventory(inventory, itemToRemove, Direction.DOWN, new TileEntityPipe[0]);
+                }
+                if (!hasInserted) {
+                    importItemStack(itemToRemove);
+                }
+            }
+        } else if (outTe instanceof TileEntityChute) {
+            ItemStack itemToRemove = this.removeOneItem();
+            if (itemToRemove != null) {
+                if (!((TileEntityChute)outTe).importItemStack(itemToRemove)) {
+                    this.importItemStack(itemToRemove);
+                }
+            }
+        }
     }
 
-    private boolean importItemStack(ItemStack stack) {
-        TileEntityAutoBasket.BasketEntry entry = new TileEntityAutoBasket.BasketEntry(stack.itemID, stack.getMetadata(), stack.getData());
+    public boolean importItemStack(ItemStack stack) {
+        ChuteEntry entry = new ChuteEntry(stack.itemID, stack.getMetadata(), stack.getData());
         int sizeUnits = this.getItemSizeUnits(stack.getItem());
         int freeUnits = this.getMaxUnits() - this.numUnitsInside;
         int itemsToTake = Math.min(freeUnits / sizeUnits, stack.stackSize);
@@ -183,10 +218,10 @@ public class TileEntityAutoBasket extends TileEntity {
     public void writeToNBT(CompoundTag tag) {
         super.writeToNBT(tag);
         ListTag itemsTag = new ListTag();
-        for (Map.Entry<TileEntityAutoBasket.BasketEntry, Integer> entry : this.contents.entrySet()) {
+        for (Map.Entry<ChuteEntry, Integer> entry : this.contents.entrySet()) {
             CompoundTag itemTag = new CompoundTag();
             itemTag.putShort("Count", (short)entry.getValue().intValue());
-            TileEntityAutoBasket.BasketEntry.write(itemTag, entry.getKey());
+            ChuteEntry.write(itemTag, entry.getKey());
             itemsTag.addTag(itemTag);
         }
         tag.put("Items", itemsTag);
@@ -197,27 +232,25 @@ public class TileEntityAutoBasket extends TileEntity {
         return new Packet140TileEntityData(this);
     }
 
-
-
-    public static final class BasketEntry {
+    public static final class ChuteEntry {
         public final int id;
         public final int metadata;
         public final CompoundTag tag;
 
-        public BasketEntry(int id, int metadata, CompoundTag tag) {
+        public ChuteEntry(int id, int metadata, CompoundTag tag) {
             this.id = id;
             this.metadata = metadata;
             this.tag = tag;
         }
 
-        public static TileEntityAutoBasket.BasketEntry read(CompoundTag tag) {
+        public static ChuteEntry read(CompoundTag tag) {
             short id = tag.getShort("id");
             short damage = tag.getShort("Damage");
             CompoundTag data = tag.getCompound("Data");
-            return new TileEntityAutoBasket.BasketEntry(id, damage, data);
+            return new ChuteEntry(id, damage, data);
         }
 
-        public static void write(CompoundTag tag, TileEntityAutoBasket.BasketEntry entry) {
+        public static void write(CompoundTag tag, ChuteEntry entry) {
             tag.putShort("id", (short)entry.id);
             tag.putShort("Damage", (short)entry.metadata);
             tag.putCompound("Data", entry.tag);
@@ -228,10 +261,10 @@ public class TileEntityAutoBasket extends TileEntity {
         }
 
         public boolean equals(Object obj) {
-            if (!(obj instanceof TileEntityAutoBasket.BasketEntry)) {
+            if (!(obj instanceof ChuteEntry)) {
                 return false;
             }
-            TileEntityAutoBasket.BasketEntry other = (TileEntityAutoBasket.BasketEntry)obj;
+            ChuteEntry other = (ChuteEntry)obj;
             if (this.id != other.id || this.metadata != other.metadata) {
                 return false;
             }
