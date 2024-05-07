@@ -43,7 +43,7 @@ public class BlockPipe extends BlockTileEntity {
         super.onNeighborBlockChange(world, x, y, z, blockId);
         TileEntityPipe te = (TileEntityPipe)Util.getBlockTileEntity(world, x, y, z);
         if (te != null) {
-            te.calcVisualConnections();
+            te.needToChangeVisuals = true;
         }
     }
 

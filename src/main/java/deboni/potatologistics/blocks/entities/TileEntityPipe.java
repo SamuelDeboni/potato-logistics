@@ -34,6 +34,8 @@ public class TileEntityPipe extends TileEntity {
     public int visualConnections = 0;
     public int visualColor = 0;
 
+    public boolean needToChangeVisuals = false;
+
     private static final int[][] offsets = {
             { 0, -1,  0},
             { 0,  1,  0},
@@ -183,7 +185,10 @@ public class TileEntityPipe extends TileEntity {
 
         super.tick();
 
-        //calcVisualConnections();
+        if (needToChangeVisuals) {
+            calcVisualConnections();
+            needToChangeVisuals = false;
+        }
 
         //if (!stacks.isEmpty()) worldObj.markBlockNeedsUpdate(this.x, this.y, this.z);
 
