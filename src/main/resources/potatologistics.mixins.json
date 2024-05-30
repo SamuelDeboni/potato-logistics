@@ -4,10 +4,12 @@
   "package": "deboni.potatologistics.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "EntityTrackerEntryMixin"
   ],
   "client": [
     "BlockModelRenderBlocksMixin",
-    "RenderBlocksMixin"
+    "RenderBlocksMixin",
+    "NetClientHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
